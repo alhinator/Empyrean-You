@@ -1,6 +1,9 @@
 {
   "dependencies": {
     "com.chaser324.unity-wireframe": "https://github.com/insominx/unity-wireframe.git?path=/Packages/unity-wireframe",
+    "com.unity.cinemachine": "2.10.3",
+    "com.unity.ide.visualstudio": "2.0.22",
+    "com.unity.ide.vscode": "1.2.5",
     "com.unity.render-pipelines.universal": "14.0.11",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
