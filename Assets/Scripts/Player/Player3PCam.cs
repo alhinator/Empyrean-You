@@ -22,11 +22,16 @@ public class Player3PCam : MonoBehaviour
     private bool isGrounded;
     public float jumpForce;
     public float airMultiplier;
+    public float hoverMultiplier;
+
     public float jumpCooldown;
     private float canJump;
     public float doubleTapDelay;
     private float dashTapCount;
     public float dashForce;
+    public float maxMidairBoosts;
+    private float currMidairBoosts;
+    private bool hovering;
 
     private void Start()
     {
@@ -39,7 +44,7 @@ public class Player3PCam : MonoBehaviour
     private void Update()
     {
         Do3PCameraMovement();
-        AssignGroundDrag();
+        GroundedCheckAndDrag();
         DoSpeedControl();
         DoJumpCheck();
         DoDashCheck();
@@ -109,14 +114,19 @@ public class Player3PCam : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
         }
     }
-    private void AssignGroundDrag()
+    private void GroundedCheckAndDrag()
     {
         //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
         isGrounded = Physics.Raycast(player.transform.position, Vector3.down, playerHeight * 0.5f + 0.05f, terrainMask);
         playerObj.GetComponentInChildren<Animator>().SetBool("Grounded", isGrounded);
-
-
+        if (isGrounded) { currMidairBoosts = maxMidairBoosts; }
+        if (isGrounded) { hovering = false; }
         rb.drag = isGrounded ? groundDrag : groundDrag / 3;
+        if (!isGrounded && hovering)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * hoverMultiplier, rb.velocity.z);
+
+        }
     }
     private void DoSpeedControl()
     {
@@ -139,7 +149,33 @@ public class Player3PCam : MonoBehaviour
             playerObj.GetComponentInChildren<Animator>().SetTrigger("Jump");
             StartCoroutine(DoActualJump());
         }
+        else if (Input.GetButtonDown("SPACE") && !isGrounded)
+        {
+            StartCoroutine(BoostOrHover());
+        }
+        else if (Input.GetButtonUp("SPACE") && !isGrounded)
+        {
+            hovering = false;
+        }
     }
+    private IEnumerator BoostOrHover()
+    {
+        yield return new WaitForSeconds(doubleTapDelay);
+        //if button is up, that means they've released and want to boost upwards. if it's still down they want to hover indefinitely.
+        if (Input.GetAxis("SPACE") == 0 && currMidairBoosts > 0)
+        {
+            currMidairBoosts--;
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(player.transform.up * jumpForce * 1.5f, ForceMode.Impulse);
+        }
+        else
+        {
+            hovering = true;
+        }
+
+    }
+
+
     private IEnumerator DoActualJump()
     {
         yield return new WaitForSeconds(0.2f);
@@ -190,8 +226,16 @@ public class Player3PCam : MonoBehaviour
             }
             else
             {
-                rb.AddForce((playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce, ForceMode.Impulse);
                 //do extended dash stuff here.
+                if (isGrounded)
+                {
+                    rb.AddForce((playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce, ForceMode.Impulse);
+                }
+                else if (!isGrounded && currMidairBoosts > 0)
+                {
+                    currMidairBoosts--;
+                    rb.AddForce((playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce, ForceMode.Impulse);
+                }
             }
 
         }
