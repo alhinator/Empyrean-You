@@ -26,7 +26,7 @@ public class HUDManager : MonoBehaviour
     {
         //Boost bar squares
         string tmp = "";
-        for (int i = 0; i < player3PCam.BoostsRemaining; i++) { tmp += "■"; }
+        for (int i = 0; i < player3PCam.BoostsRemaining; i++) { tmp += "*"; }
         BoostBars.text = tmp;
     }
 }

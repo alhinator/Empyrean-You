@@ -15,6 +15,11 @@ public class Player3PCam : MonoBehaviour
     public float rotationSpeed;
     public bool xLookInvert = false;
     public bool yLookInvert = true;
+    public enum CameraModes{
+        Free,
+        Locked
+    }
+    public bool autoFindNewTarget = true;
 
 
     [Header("PlayerMovementVariables")]
@@ -39,6 +44,9 @@ public class Player3PCam : MonoBehaviour
     private float dashTapCount;
     private float boostTapCount;
     private float sprintDuration;
+
+    public bool inputLocked;
+    private bool dashing;
 
 
     //Unity Functions
@@ -91,10 +99,10 @@ public class Player3PCam : MonoBehaviour
         Vector3 viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
         orientation.forward = viewDir.normalized;
 
-        if ((horizontalInput != 0 || verticalInput != 0) || !isGrounded)
+        if (horizontalInput != 0 || verticalInput != 0)
         {
             Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
-            if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay)
+            if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay && isGrounded)
             {
 
                 bool a, b, c, d, e, f;
@@ -114,6 +122,7 @@ public class Player3PCam : MonoBehaviour
     }
     private void MovePlayer()
     {
+        if (dashing) { return; }
         //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
@@ -126,11 +135,11 @@ public class Player3PCam : MonoBehaviour
             if (sprinting > 0 && (horizontalInput != 0 || verticalInput != 0))
             {
                 sprintDuration += Time.deltaTime;
-
             }
-            else
+            else if (sprinting == 0 || (horizontalInput == 0 && verticalInput == 0))
             {
                 sprintDuration = 0;
+                playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
             }
             if (sprinting > 0 && sprintDuration > doubleTapDelay)
             {
@@ -235,7 +244,7 @@ public class Player3PCam : MonoBehaviour
     private void DoDashCheck()
     {
         //Code modified from https://discussions.unity.com/t/single-tap-double-tap-script/440934/5
-        if (Input.GetButtonDown("DODGE"))
+        if (Input.GetButtonDown("DODGE") && !dashing)
         {
             if (dashTapCount == 0)
             {
@@ -254,8 +263,12 @@ public class Player3PCam : MonoBehaviour
     private IEnumerator DashTap()
     {
         yield return new WaitForSeconds(doubleTapDelay);
-        if (dashTapCount == 1)
+        if (dashTapCount == 1 || (!isGrounded && dashTapCount == 2 && currMidairBoosts <= 0))
         {
+            if (dashTapCount == 2)
+            {
+                StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
+            }
             if (Input.GetButton("SPRINT"))
             { //Means they held the button down
             }
@@ -264,36 +277,34 @@ public class Player3PCam : MonoBehaviour
                 //do dash stuff here.
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 rb.AddForce(playerObj.transform.forward * -1 * dashForce / 2, ForceMode.Impulse);
+                dashing = true;
             }
         }
         else if (dashTapCount == 2)
         {
             StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
 
-            if (Input.GetButton("SPRINT"))
-            { //Means they held the button down
-            }
-            else
-            {
-                Vector3 dashDir = (playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce;
-                if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-                {
-                    dashDir = (playerObj.transform.forward * -1).normalized * dashForce;
-                }
-                //do extended dash stuff here.
-                if (isGrounded)
-                {
-                    rb.AddForce(dashDir, ForceMode.Impulse);
-                }
-                else if (!isGrounded && currMidairBoosts > 0)
-                {
-                    currMidairBoosts--;
-                    rb.AddForce(dashDir, ForceMode.Impulse);
-                }
-            }
 
+            Vector3 dashDir = (playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce;
+            if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+            {
+                dashDir = (playerObj.transform.forward * -1).normalized * dashForce;
+            }
+            //do extended dash stuff here.
+            if (isGrounded)
+            {
+                rb.AddForce(dashDir, ForceMode.Impulse);
+            }
+            else if (!isGrounded && currMidairBoosts > 0)
+            {
+                currMidairBoosts--;
+                rb.AddForce(dashDir, ForceMode.Impulse);
+            }
+            dashing = true;
         }
         dashTapCount = 0;
+        yield return new WaitForSeconds(0.25f);
+        dashing = false;
 
 
     }

@@ -14,7 +14,10 @@ public class InputTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<TMP_Text>().text = "horiz:" + Input.GetAxis("Horizontal") + "\nvert:"+ Input.GetAxis("Vertical") + " \npan L/R:"+ Input.GetAxis("Mouse X") + " \npan U/D:" + Input.GetAxis("Mouse Y");
-
+        string txt = "horiz:" + Input.GetAxis("Horizontal") + "\nvert:"+ Input.GetAxis("Vertical") + " \npan L/R:"+ Input.GetAxis("Mouse X") + " \npan U/D:" + Input.GetAxis("Mouse Y");
+        if(Input.GetButton("DODGE")){txt += "\ndodge or sprint";}
+        if(Input.GetButton("SPACE")){txt += "\njump";}
+        if(Input.GetButton("CAMLOCK")){txt += "\ncam lock";}
+        GetComponent<TMP_Text>().text = txt;
     }
 }
