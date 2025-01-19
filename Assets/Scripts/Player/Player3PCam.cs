@@ -1,10 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
-using TreeEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Player3PCam : MonoBehaviour
 {
@@ -19,6 +15,7 @@ public class Player3PCam : MonoBehaviour
     [Header("PlayerMovementVariables")]
     public Rigidbody rb;
     public float moveSpeed;
+    public float sprintSpeed;
     public float playerHeight;
     public LayerMask terrainMask;
     public float groundDrag;
@@ -27,6 +24,9 @@ public class Player3PCam : MonoBehaviour
     public float airMultiplier;
     public float jumpCooldown;
     private float canJump;
+    public float doubleTapDelay;
+    private float dashTapCount;
+    public float dashForce;
 
     private void Start()
     {
@@ -42,10 +42,15 @@ public class Player3PCam : MonoBehaviour
         AssignGroundDrag();
         DoSpeedControl();
         DoJumpCheck();
+        DoDashCheck();
 
+        //DEBUG CODE ONLY
+        if (Input.GetKeyDown(KeyCode.Joystick1Button7))
+        {
+            player.transform.position = new Vector3(0, 2f, 0);
+            rb.velocity = Vector3.zero;
+        }
     }
-
-
 
     private void FixedUpdate()
     {
@@ -65,7 +70,13 @@ public class Player3PCam : MonoBehaviour
 
         if (horizontalInput != 0 || verticalInput != 0)
         {
-            playerObj.forward = Vector3.Slerp(playerObj.forward, orientation.forward, Time.deltaTime * rotationSpeed);
+            Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
+            if (Input.GetAxis("SPRINT") > 0 && verticalInput > 0)
+            {
+                offset = Quaternion.AngleAxis(45 * horizontalInput, Vector3.up) * offset;
+            }
+            playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
+
         }
 
     }
@@ -74,12 +85,23 @@ public class Player3PCam : MonoBehaviour
         //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+        float sprinting = Input.GetAxis("SPRINT");
 
         Vector3 moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (isGrounded)
         {
-            rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Force);
+            if (sprinting > 0 && verticalInput > 0)
+            {
+                playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
+                rb.AddForce(moveDirection.normalized * sprintSpeed, ForceMode.Force);
+            }
+            else
+            {
+                playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
+                rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Force);
+            }
+
 
         }
         else if (!isGrounded)
@@ -94,7 +116,7 @@ public class Player3PCam : MonoBehaviour
         playerObj.GetComponentInChildren<Animator>().SetBool("Grounded", isGrounded);
 
 
-        rb.drag = isGrounded ? groundDrag : 0;
+        rb.drag = isGrounded ? groundDrag : groundDrag / 3;
     }
     private void DoSpeedControl()
     {
@@ -102,7 +124,7 @@ public class Player3PCam : MonoBehaviour
         Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         if (flatVelocity.magnitude > moveSpeed)
         {
-            float forwardsBoost = Input.GetAxis("Vertical") == 1 ? moveSpeed * 2 : 0;
+            float forwardsBoost = Input.GetAxis("Vertical") == 1 && isGrounded ? moveSpeed * 2 : 0;
             Vector3 limitedVelocity = flatVelocity.normalized * (moveSpeed + forwardsBoost);
             rb.velocity = new Vector3(limitedVelocity.x, 0f, limitedVelocity.z);
         }
@@ -122,6 +144,62 @@ public class Player3PCam : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(player.transform.up * jumpForce, ForceMode.Impulse);
     }
+
+    private void DoDashCheck()
+    {
+        //Code modified from https://discussions.unity.com/t/single-tap-double-tap-script/440934/5
+        if (Input.GetButtonDown("DODGE"))
+        {
+            if (dashTapCount == 0)
+            {
+                Debug.Log("Taps = 1");
+                dashTapCount = 1;
+                StartCoroutine(DashTap());
+            }
+            else if (dashTapCount == 1)
+            {
+                Debug.Log("Taps = 2");
+                dashTapCount = 2;
+                StartCoroutine(DashTap());
+            }
+        }
+    }
+
+    private IEnumerator DashTap()
+    {
+        yield return new WaitForSeconds(doubleTapDelay);
+        if (dashTapCount == 1)
+        {
+            if (Input.GetButton("SPRINT"))
+            { //Means they held the button down
+            }
+            else
+            {
+                //do dash stuff here.
+                rb.AddForce(playerObj.transform.forward * -1 * dashForce / 2, ForceMode.Impulse);
+            }
+        }
+        else if (dashTapCount == 2)
+        {
+            StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
+
+            if (Input.GetButton("SPRINT"))
+            { //Means they held the button down
+            }
+            else
+            {
+                rb.AddForce((playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce, ForceMode.Impulse);
+                //do extended dash stuff here.
+            }
+
+        }
+        dashTapCount = 0;
+
+
+    }
+
 }
+
+
