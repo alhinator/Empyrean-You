@@ -1405,10 +1405,12 @@ MonoBehaviour:
     m_Bits: 1024
   groundDrag: 4
   jumpForce: 6
-  airMultiplier: 0.1
-  jumpCooldown: 0.5
+  airMultiplier: 0.2
+  hoverMultiplier: 0.8
+  jumpCooldown: 0.2
   doubleTapDelay: 0.3
   dashForce: 12
+  maxMidairBoosts: 10
 --- !u!1 &1163608071
 GameObject:
   m_ObjectHideFlags: 0
