@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.Rendering.Universal.Internal;
 
 public class Player3PCam : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class Player3PCam : MonoBehaviour
     public Transform combatFocus;
     public Transform playerObj;
     public float rotationSpeed;
+    public bool xLookInvert = false;
+    public bool yLookInvert = true;
 
 
     [Header("PlayerMovementVariables")]
@@ -58,6 +62,17 @@ public class Player3PCam : MonoBehaviour
         {
             player.transform.position = new Vector3(0, 2f, 0);
             rb.velocity = Vector3.zero;
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            xLookInvert = !xLookInvert;
+            GetComponent<CinemachineFreeLook>().m_XAxis.m_InvertInput = xLookInvert;
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            yLookInvert = !yLookInvert;
+            GetComponent<CinemachineFreeLook>().m_YAxis.m_InvertInput = yLookInvert;
+
         }
     }
     private void FixedUpdate()
@@ -108,20 +123,22 @@ public class Player3PCam : MonoBehaviour
 
         if (isGrounded)
         {
-            if (sprinting > 0)
+            if (sprinting > 0 && (horizontalInput != 0 || verticalInput != 0))
             {
                 sprintDuration += Time.deltaTime;
 
             }
-            else if (sprinting > 0 && sprintDuration > doubleTapDelay && (horizontalInput != 0 || verticalInput != 0))
+            else
+            {
+                sprintDuration = 0;
+            }
+            if (sprinting > 0 && sprintDuration > doubleTapDelay)
             {
                 playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
                 rb.AddForce(moveDirection.normalized * sprintSpeed, ForceMode.Force);
             }
             else
             {
-                sprintDuration = 0;
-                playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
                 rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Force);
             }
 
@@ -130,6 +147,9 @@ public class Player3PCam : MonoBehaviour
         else if (!isGrounded)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
+            playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
+            sprintDuration = 0;
+
         }
     }
     private void GroundedCheckAndDrag()
