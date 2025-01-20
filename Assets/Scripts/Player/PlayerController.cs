@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
 {
     private Animator animController;
 
+
+
     private void Start()
     {
         animController = GetComponentInChildren<Animator>();

@@ -1,25 +1,34 @@
 using System;
 using System.Collections;
+using System.Diagnostics.SymbolStore;
+using System.Net.WebSockets;
 using Cinemachine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Rendering.Universal.Internal;
+using UnityEngine.Video;
 
 public class Player3PCam : MonoBehaviour
 {
     [Header("ThirdPersonCameraVariables")]
     public Transform orientation;
     public Transform player;
-    public Transform combatFocus;
     public Transform playerObj;
     public float rotationSpeed;
     public bool xLookInvert = false;
     public bool yLookInvert = true;
-    public enum CameraModes{
+    public enum CameraMode
+    {
         Free,
         Locked
     }
+    public CameraMode currCamMode;
+    public GameObject currentTargetLock;
     public bool autoFindNewTarget = true;
+    private CinemachineFreeLook myCamera;
+
+    public CinemachineFreeLook combatLockCamera;
 
 
     [Header("PlayerMovementVariables")]
@@ -46,7 +55,8 @@ public class Player3PCam : MonoBehaviour
     private float sprintDuration;
 
     public bool inputLocked;
-    private bool dashing;
+    private bool dashing = false;
+    private bool allowedToDash = true;
 
 
     //Unity Functions
@@ -56,6 +66,8 @@ public class Player3PCam : MonoBehaviour
         Cursor.visible = false;
         rb = player.GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        myCamera = GetComponent<CinemachineFreeLook>();
+        ActiveCameraMode = CameraMode.Free;
     }
     private void Update()
     {
@@ -65,22 +77,34 @@ public class Player3PCam : MonoBehaviour
         DoJumpCheck();
         DoDashCheck();
 
+        if (Input.GetButtonDown("CAMLOCK"))
+        {
+            if (ActiveCameraMode == CameraMode.Free)
+            {
+                ActiveCameraMode = CameraMode.Locked;
+            }
+            else
+            {
+                ActiveCameraMode = CameraMode.Free;
+            }
+        }
+
         //DEBUG CODE ONLY
         if (Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
-            player.transform.position = new Vector3(0, 2f, 0);
+            rb.position = new Vector3(0, 2f, 0);
             rb.velocity = Vector3.zero;
+
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
             xLookInvert = !xLookInvert;
-            GetComponent<CinemachineFreeLook>().m_XAxis.m_InvertInput = xLookInvert;
+            myCamera.m_XAxis.m_InvertInput = xLookInvert;
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
             yLookInvert = !yLookInvert;
-            GetComponent<CinemachineFreeLook>().m_YAxis.m_InvertInput = yLookInvert;
-
+            myCamera.m_YAxis.m_InvertInput = yLookInvert;
         }
     }
     private void FixedUpdate()
@@ -95,15 +119,25 @@ public class Player3PCam : MonoBehaviour
 
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-
-        Vector3 viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
+        Vector3 viewDir = player.position - new Vector3(myCamera.transform.position.x, player.position.y, myCamera.transform.position.z);
         orientation.forward = viewDir.normalized;
 
-        if (horizontalInput != 0 || verticalInput != 0)
+        if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
         {
             Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
-            if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay && isGrounded)
+            if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
             {
+                if (verticalInput >= 0)
+                {
+                    myCamera.m_Follow = playerObj;
+                    myCamera.m_RecenterToTargetHeading.m_enabled = true;
+                }
+                else
+                {
+                    myCamera.m_RecenterToTargetHeading.m_enabled = false;
+                    myCamera.m_Follow = player;
+                }
+
 
                 bool a, b, c, d, e, f;
                 a = verticalInput == 0;
@@ -115,20 +149,38 @@ public class Player3PCam : MonoBehaviour
                 float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
                 offset = Quaternion.AngleAxis(offAngle, Vector3.up) * offset;
             }
+            else
+            {
+                myCamera.m_RecenterToTargetHeading.m_enabled = false;
+                myCamera.m_Follow = player;
+            }
+
+
             playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
 
         }
+
+
+
+        Debug.DrawRay(player.position, player.forward * 10, Color.green);
+        Debug.DrawRay(orientation.position, orientation.forward * 10, Color.red);
+        Debug.DrawRay(playerObj.position, playerObj.forward, Color.cyan);
+
+
 
     }
     private void MovePlayer()
     {
         if (dashing) { return; }
         //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
         float sprinting = Input.GetAxis("SPRINT");
 
+
         Vector3 moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        Debug.DrawRay(playerObj.position, moveDirection.normalized, Color.yellow);
 
         if (isGrounded)
         {
@@ -244,77 +296,154 @@ public class Player3PCam : MonoBehaviour
     private void DoDashCheck()
     {
         //Code modified from https://discussions.unity.com/t/single-tap-double-tap-script/440934/5
-        if (Input.GetButtonDown("DODGE") && !dashing)
+        if (Input.GetButtonDown("DODGE") && !dashing && allowedToDash)
         {
-            if (dashTapCount == 0)
-            {
-                Debug.Log("Taps = 1");
-                dashTapCount = 1;
-                StartCoroutine(DashTap());
-            }
-            else if (dashTapCount == 1)
-            {
-                Debug.Log("Taps = 2");
-                dashTapCount = 2;
-                StartCoroutine(DashTap());
-            }
+            // if (dashTapCount == 0)
+            // {
+            //     Debug.Log("Taps = 1");
+            //     dashTapCount = 1;
+            //     StartCoroutine(DashTap());
+            // }
+            // else if (dashTapCount == 1)
+            // {
+            //     Debug.Log("Taps = 2");
+            //     dashTapCount = 2;
+            //     StartCoroutine(DashTap());
+            // }
+
+            //Active code version: Tap once to dash, and tap with no directional inputs to backstep.
+            StartCoroutine(DashTap());
         }
     }
     private IEnumerator DashTap()
     {
-        yield return new WaitForSeconds(doubleTapDelay);
-        if (dashTapCount == 1 || (!isGrounded && dashTapCount == 2 && currMidairBoosts <= 0))
-        {
-            if (dashTapCount == 2)
-            {
-                StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
-            }
-            if (Input.GetButton("SPRINT"))
-            { //Means they held the button down
-            }
-            else
-            {
-                //do dash stuff here.
-                rb.velocity = new Vector3(0, rb.velocity.y, 0);
-                rb.AddForce(playerObj.transform.forward * -1 * dashForce / 2, ForceMode.Impulse);
-                dashing = true;
-            }
-        }
-        else if (dashTapCount == 2)
-        {
-            StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
+
+        // if (dashTapCount == 1 || (!isGrounded && dashTapCount == 2 && currMidairBoosts <= 0))
+        // {
+        //     if (dashTapCount == 2)
+        //     {
+        //         StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
+        //     }
+        //     if (Input.GetButton("SPRINT"))
+        //     { //Means they held the button down
+        //     }
+        //     else
+        //     {
+        //         //do dash stuff here.
+        //         rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        //         rb.AddForce(playerObj.transform.forward * -1 * dashForce / 2, ForceMode.Impulse);
+        //         dashing = true;
+        //     }
+        // }
+        // else if (dashTapCount == 2)
+        // {
+        //     StopCoroutine(DashTap()); //Stop the other occurence of this coroutine.
 
 
-            Vector3 dashDir = (playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce;
-            if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-            {
-                dashDir = (playerObj.transform.forward * -1).normalized * dashForce;
-            }
-            //do extended dash stuff here.
-            if (isGrounded)
-            {
-                rb.AddForce(dashDir, ForceMode.Impulse);
-            }
-            else if (!isGrounded && currMidairBoosts > 0)
-            {
-                currMidairBoosts--;
-                rb.AddForce(dashDir, ForceMode.Impulse);
-            }
-            dashing = true;
+        //     Vector3 dashDir = (playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized * dashForce;
+        //     if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+        //     {
+        //         dashDir = (playerObj.transform.forward * -1).normalized * dashForce;
+        //     }
+        //     //do extended dash stuff here.
+        //     if (isGrounded)
+        //     {
+        //         rb.AddForce(dashDir, ForceMode.Impulse);
+        //     }
+        //     else if (!isGrounded && currMidairBoosts > 0)
+        //     {
+        //         currMidairBoosts--;
+        //         rb.AddForce(dashDir, ForceMode.Impulse);
+        //     }
+        //     dashing = true;
+        // }
+        // dashTapCount = 0;
+        // yield return new WaitForSeconds(0.25f);
+        // dashing = false;
+        //Active code: Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
+        allowedToDash = false;
+        yield return new WaitForSeconds(doubleTapDelay / 2);
+        if (Input.GetButton("DODGE")) { allowedToDash = true; yield break; }
+        dashing = true;
+
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+        if (horizontalInput == 0 && verticalInput == 0)
+        {
+            //do backstep
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            rb.AddForce(playerObj.transform.forward * -1 * dashForce / 2, ForceMode.Impulse);
+            yield return new WaitForSeconds(0.2f);
+
+
         }
-        dashTapCount = 0;
-        yield return new WaitForSeconds(0.25f);
+        else if (isGrounded || (!isGrounded && currMidairBoosts > 0))
+        {
+            //do full directional dash
+
+            //Get direction of the dash based on player input
+            Vector3 dashDir = (playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized;
+            rb.AddForce(dashDir * dashForce, ForceMode.Impulse);
+            //subtract if not grounded
+            if (!isGrounded) { currMidairBoosts--; }
+            yield return new WaitForSeconds(0.25f);
+
+        }
         dashing = false;
-
+        yield return new WaitForSeconds(0.2f);
+        allowedToDash = true;
 
     }
 
+    private void FindLockableTarget()
+    {
+        GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
+        myCamera.m_LookAt = lockables[0].transform;
+
+    }
     //  Public Getters & Setters
     public int BoostsRemaining
     {
         get
         {
             return currMidairBoosts;
+        }
+    }
+    public bool IsDashing
+    {
+        get
+        {
+            return dashing;
+        }
+    }
+    public bool CanDash
+    {
+        get
+        {
+            return allowedToDash;
+        }
+    }
+
+    public CameraMode ActiveCameraMode
+    {
+        get
+        {
+            return currCamMode;
+        }
+        set
+        {
+            currCamMode = value;
+            if (value == CameraMode.Free)
+            {
+                currentTargetLock = null;
+                myCamera.enabled = true;
+                combatLockCamera.enabled = false;
+            }
+            else
+            {
+                combatLockCamera.enabled = true;
+                FindLockableTarget();
+            }
         }
     }
 
