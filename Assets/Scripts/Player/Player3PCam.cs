@@ -4,6 +4,7 @@ using System.Diagnostics.SymbolStore;
 using System.Net.WebSockets;
 using Cinemachine;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Rendering.Universal.Internal;
@@ -24,7 +25,7 @@ public class Player3PCam : MonoBehaviour
         Locked
     }
     public CameraMode currCamMode;
-    public GameObject currentTargetLock;
+    public Transform currentTargetLock;
     public bool autoFindNewTarget = true;
     private CinemachineFreeLook myCamera;
 
@@ -119,18 +120,38 @@ public class Player3PCam : MonoBehaviour
 
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        Vector3 viewDir = player.position - new Vector3(myCamera.transform.position.x, player.position.y, myCamera.transform.position.z);
-        orientation.forward = viewDir.normalized;
 
-        if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
+
+        if (currCamMode == CameraMode.Free)
         {
-            Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
-            if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
+            Vector3 viewDir = player.position - new Vector3(myCamera.transform.position.x, player.position.y, myCamera.transform.position.z);
+            orientation.forward = viewDir.normalized;
+            if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
             {
-                if (verticalInput >= 0)
+                Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
+                if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
                 {
-                    myCamera.m_Follow = playerObj;
-                    myCamera.m_RecenterToTargetHeading.m_enabled = true;
+                    if (verticalInput >= 0)
+                    {
+                        myCamera.m_Follow = playerObj;
+                        myCamera.m_RecenterToTargetHeading.m_enabled = true;
+                    }
+                    else
+                    {
+                        myCamera.m_RecenterToTargetHeading.m_enabled = false;
+                        myCamera.m_Follow = player;
+                    }
+
+
+                    bool a, b, c, d, e, f;
+                    a = verticalInput == 0;
+                    b = horizontalInput == 0;
+                    c = verticalInput == 1;
+                    d = horizontalInput == 1;
+                    e = verticalInput == -1;
+                    f = horizontalInput == -1;
+                    float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
+                    offset = Quaternion.AngleAxis(offAngle, Vector3.up) * offset;
                 }
                 else
                 {
@@ -139,26 +160,26 @@ public class Player3PCam : MonoBehaviour
                 }
 
 
-                bool a, b, c, d, e, f;
-                a = verticalInput == 0;
-                b = horizontalInput == 0;
-                c = verticalInput == 1;
-                d = horizontalInput == 1;
-                e = verticalInput == -1;
-                f = horizontalInput == -1;
-                float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
-                offset = Quaternion.AngleAxis(offAngle, Vector3.up) * offset;
+                playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
             }
-            else
-            {
-                myCamera.m_RecenterToTargetHeading.m_enabled = false;
-                myCamera.m_Follow = player;
-            }
-
-
-            playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
-
         }
+        else if (currCamMode == CameraMode.Locked)
+        {
+            combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
+            combatLockCamera.m_Follow = playerObj;
+            Vector3 viewDir = currentTargetLock.position - new Vector3(player.position.x, player.position.y, player.position.z);
+            if (isGrounded)
+            {
+                viewDir.y = 0;
+            }
+            orientation.forward = viewDir.normalized;
+
+            playerObj.forward = Vector3.Slerp(playerObj.forward, orientation.forward, Time.deltaTime * rotationSpeed);
+        }
+
+
+
+
 
 
 
@@ -179,6 +200,7 @@ public class Player3PCam : MonoBehaviour
 
 
         Vector3 moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
 
         Debug.DrawRay(playerObj.position, moveDirection.normalized, Color.yellow);
 
@@ -372,7 +394,11 @@ public class Player3PCam : MonoBehaviour
         {
             //do backstep
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
-            rb.AddForce(playerObj.transform.forward * -1 * dashForce / 2, ForceMode.Impulse);
+            Vector3 dashDir = playerObj.transform.forward * -1;
+            //Backstepping is not affected by player rotation
+            dashDir.y = 0;
+            dashDir.Normalize();
+            rb.AddForce(dashDir * dashForce / 2, ForceMode.Impulse);
             yield return new WaitForSeconds(0.2f);
 
 
@@ -382,7 +408,9 @@ public class Player3PCam : MonoBehaviour
             //do full directional dash
 
             //Get direction of the dash based on player input
-            Vector3 dashDir = (playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical")).normalized;
+            Vector3 dashDir = playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical");
+
+            dashDir.Normalize();
             rb.AddForce(dashDir * dashForce, ForceMode.Impulse);
             //subtract if not grounded
             if (!isGrounded) { currMidairBoosts--; }
@@ -398,7 +426,7 @@ public class Player3PCam : MonoBehaviour
     private void FindLockableTarget()
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
-        myCamera.m_LookAt = lockables[0].transform;
+        currentTargetLock = lockables[0].transform;
 
     }
     //  Public Getters & Setters
