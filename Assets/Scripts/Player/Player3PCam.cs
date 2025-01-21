@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Cinemachine;
 
@@ -127,8 +128,7 @@ public class Player3PCam : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
-        void adjustOffsetToSprint()
+        Vector3 adjustOffsetToSprint(Vector3 original)
         {
             bool a, b, c, d, e, f;
             a = verticalInput == 0;
@@ -138,7 +138,7 @@ public class Player3PCam : MonoBehaviour
             e = verticalInput == -1;
             f = horizontalInput == -1;
             float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
-            offset = Quaternion.AngleAxis(offAngle, Vector3.up) * offset;
+            return Quaternion.AngleAxis(offAngle, Vector3.up) * original;
         }
         if (currCamMode == CameraMode.Free)
         {
@@ -147,6 +147,7 @@ public class Player3PCam : MonoBehaviour
             orientationFlat.forward = viewDir.normalized;
             if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
             {
+                Vector3 offset = orientationFlat.forward;
                 if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
                 {
                     if (verticalInput >= 0)
@@ -159,7 +160,7 @@ public class Player3PCam : MonoBehaviour
                         unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
                         unlockLookCamera.m_Follow = player;
                     }
-                    adjustOffsetToSprint();
+                    offset = adjustOffsetToSprint(orientationFlat.forward);
                 }
                 else
                 {
@@ -180,21 +181,26 @@ public class Player3PCam : MonoBehaviour
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
             aerialCombatCamera.m_Follow = orientation;
 
-
-
             Vector3 viewDir = currentTargetLock.position - new Vector3(player.position.x, player.position.y, player.position.z);
+            Vector3 offset;
             if (isGrounded)
             {
-                viewDir.y = 0;
+
                 orientation.forward = viewDir.normalized;
+                viewDir.y = 0;
                 orientationFlat.forward = viewDir.normalized;
+                offset = orientationFlat.forward;
             }
             else
             {
-                viewDir.y = Mathf.Clamp(viewDir.y, -75, 75);
                 orientation.forward = viewDir.normalized;
+                Debug.Log(orientation.localRotation.x);
+                float rot = orientation.localRotation.x;
+                rot = Mathf.Clamp(rot, -70, 70);
+                orientation.localRotation = Quaternion.Euler(rot, orientation.localRotation.y, orientation.localRotation.z);
                 viewDir.y = 0;
                 orientationFlat.forward = viewDir.normalized;
+                offset = orientation.forward;
 
 
             }
@@ -202,7 +208,7 @@ public class Player3PCam : MonoBehaviour
             {
                 if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
                 {
-                    adjustOffsetToSprint();
+                    offset = adjustOffsetToSprint(offset);
                 }
             }
             AdjustCameraOrbit();
@@ -214,8 +220,8 @@ public class Player3PCam : MonoBehaviour
 
 
         Debug.DrawRay(player.position, player.forward * 10, Color.green);
-        Debug.DrawRay(orientation.position, orientation.forward * 10, Color.red);
-        Debug.DrawRay(orientationFlat.position, orientation.forward * 6, Color.red);
+        Debug.DrawRay(orientation.position, orientation.forward * 10, Color.white);
+        Debug.DrawRay(orientationFlat.position, orientationFlat.forward * 6, Color.red);
         Debug.DrawRay(playerObj.position, playerObj.forward, Color.cyan);
 
 
@@ -245,7 +251,6 @@ public class Player3PCam : MonoBehaviour
         k = Mathf.Pow(10, kUpper);
 
         float idealRadius = h * Mathf.Log10(k * Mathf.Clamp(slope, minSlopeValue, maxSlopeValue));
-        Debug.Log("slope =" + slope);
 
         Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
 
@@ -346,13 +351,11 @@ public class Player3PCam : MonoBehaviour
     {
         if (boostTapCount == 0)
         {
-            Debug.Log("boost Taps = 1");
             boostTapCount = 1;
             StartCoroutine(BoostOrHover());
         }
         else if (boostTapCount == 1)
         {
-            Debug.Log("Taps = 2");
             boostTapCount = 2;
             StartCoroutine(BoostOrHover());
         }
@@ -393,7 +396,7 @@ public class Player3PCam : MonoBehaviour
         //Code modified from https://discussions.unity.com/t/single-tap-double-tap-script/440934/5
         //Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
         allowedToDash = false;
-        yield return new WaitForSeconds(doubleTapDelay / 2);
+        yield return new WaitForSeconds(doubleTapDelay);
         if (Input.GetButton("DODGE")) { allowedToDash = true; yield break; }
         dashing = true;
 
