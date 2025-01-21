@@ -22,16 +22,19 @@ public class Player3PCam : MonoBehaviour
     }
     public CameraMode currCamMode;
     public Transform currentTargetLock;
+    public Transform actualLookPosition;
     public bool autoFindNewTarget = true;
     public Camera actualCamera;
     public CinemachineFreeLook unlockLookCamera;
     public CinemachineFreeLook combatLockCamera;
     public CinemachineFreeLook aerialCombatCamera;
+    public CinemachineFreeLook aerialCloseCamera;
     public float minimumRadius;
     public float maximumRadius;
     public float minSlopeValue;
     public float maxSlopeValue;
     public float myMaxLockonRange;
+    public float bumpDuration;
 
 
     [Header("PlayerMovementVariables")]
@@ -90,6 +93,10 @@ public class Player3PCam : MonoBehaviour
                 ActiveCameraMode = CameraMode.Free;
             }
         }
+
+        DetectTargetBumps();
+
+
 
         //DEBUG CODE ONLY
         if (Input.GetKeyDown(KeyCode.Joystick1Button7))
@@ -175,13 +182,31 @@ public class Player3PCam : MonoBehaviour
         {
             combatLockCamera.enabled = isGrounded;
             aerialCombatCamera.enabled = !isGrounded;
+            Vector3 tg = actualLookPosition.position;
+            Vector3 here = player.transform.position;
+            if (flatDist < 3 || (flatDist < 5 && Math.Abs(here.y - tg.y) > 10))
+            {
+                if (aerialCombatCamera.enabled)
+                {
+                    aerialCombatCamera.enabled = false;
+                    aerialCloseCamera.enabled = true;
+                }
+                else
+                {
+                    if (aerialCloseCamera.enabled)
+                    {
+                        aerialCombatCamera.enabled = true;
+                        aerialCloseCamera.enabled = false;
+                    }
+                }
+            }
 
             combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
             combatLockCamera.m_Follow = orientationFlat;
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
             aerialCombatCamera.m_Follow = orientation;
 
-            Vector3 viewDir = currentTargetLock.position - new Vector3(player.position.x, player.position.y, player.position.z);
+            Vector3 viewDir = actualLookPosition.position - new Vector3(player.position.x, player.position.y, player.position.z);
             Vector3 offset;
             if (isGrounded)
             {
@@ -197,6 +222,7 @@ public class Player3PCam : MonoBehaviour
                 viewDir.y = 0;
 
                 orientationFlat.forward = viewDir.normalized;
+                //orientation.forward = new Vector3(orientation.forward.normalized.x,orientation.forward.normalized.y , 0);
 
                 offset = orientation.forward;
 
@@ -229,10 +255,9 @@ public class Player3PCam : MonoBehaviour
     {
 
         //Adjust camera orbit if the radio between player-height-target-height-distance is high. AND the player is grounded.
-        Vector3 tg = currentTargetLock.position;
+        Vector3 tg = actualLookPosition.position;
         Vector3 here = player.transform.position;
         float yDist = Mathf.Abs(tg.y - here.y);
-        float flatDist = Vector2.Distance(new(tg.x, tg.z), new(here.x, here.z));
         float slope = flatDist / yDist;
 
         //Log function from https://math.stackexchange.com/questions/716152/graphing-given-two-points-on-a-graph-find-the-logarithmic-function-that-passes
@@ -253,12 +278,23 @@ public class Player3PCam : MonoBehaviour
         Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
 
         int i = 0;
+
         foreach (var orbeez in combatLockCamera.m_Orbits)
         {
             float currRad = orbeez.m_Radius;
             combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, Time.deltaTime);
+            //And adjust close camera
+
+            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius, Time.deltaTime);
+            aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y)/1.5f, rotationSpeed * Time.deltaTime);
+            combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y)/2, rotationSpeed * Time.deltaTime);
+            aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y)/-4, rotationSpeed * Time.deltaTime);
+
             i++;
+
         }
+
+
     }
     private void MovePlayer()
     {
@@ -418,7 +454,7 @@ public class Player3PCam : MonoBehaviour
             //do full directional dash
 
             //Get direction of the dash based on player input
-            Vector3 dashDir = playerObj.transform.right * Input.GetAxis("Horizontal") + playerObj.transform.forward * Input.GetAxis("Vertical");
+            Vector3 dashDir = orientationFlat.transform.right * Input.GetAxis("Horizontal") + orientationFlat.transform.forward * Input.GetAxis("Vertical");
 
             dashDir.Normalize();
             rb.AddForce(dashDir * dashForce, ForceMode.Impulse);
@@ -433,28 +469,82 @@ public class Player3PCam : MonoBehaviour
 
     }
 
-    private bool FindLockableTarget()
+    private bool FindLockableTarget(Transform origin, Vector3 direction, int LayerMask, float angleTolerance)
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
-        //currentTargetLock = lockables[0].transform;
-        Debug.DrawRay(actualCamera.transform.position, actualCamera.transform.forward * 10, Color.green, 3f);
+        Debug.DrawRay(origin.position, direction * 10, Color.green, 3f);
+        GameObject potentialTarget = null;
         foreach (var tg in lockables)
         {
             bool inRange = Vector3.Distance(player.position, tg.transform.position) < myMaxLockonRange;
-            //only lock onto enemies that are within 30 degrees of the current camera orientation.
-            bool ahead = Vector3.Angle(actualCamera.transform.forward, (tg.transform.position - actualCamera.transform.position).normalized) <= 30;
-            Physics.Raycast(actualCamera.transform.position, (tg.transform.position - actualCamera.transform.position).normalized, out RaycastHit hit, 100);
+            //only lock onto enemies that are within angle tolerance degrees of the current camera orientation.
+            bool ahead = Vector3.Angle(direction, (tg.transform.position - origin.position).normalized) <= angleTolerance;
+            Physics.Raycast(origin.position, (tg.transform.position - origin.position).normalized, out RaycastHit hit, 100, LayerMask);
             bool los = hit.collider && hit.collider.gameObject == tg;
-            Debug.Log("" + inRange + " " + ahead + " " + los);
-            //finds first available one
-            if (inRange && ahead && los)
+            //finds closest available tg
+
+            bool closest = !potentialTarget || Vector3.Distance(player.position, tg.transform.position) < Vector3.Distance(player.position, potentialTarget.transform.position);
+
+            if (inRange && ahead && closest && los)
             {
-                currentTargetLock = tg.transform;
-                return true;
+                potentialTarget = tg;
+                Debug.DrawLine(origin.position, potentialTarget.transform.position, Color.black, 3f);
             }
+
+        }
+        if (potentialTarget != null)
+        {
+            if (currentTargetLock == null)
+            {
+                Debug.Log("snapping actual look pos");
+                actualLookPosition.position = potentialTarget.transform.position;
+            }
+            currentTargetLock = potentialTarget.transform;
+            combatLockCamera.m_LookAt = actualLookPosition;
+            aerialCombatCamera.m_LookAt = actualLookPosition;
+            aerialCloseCamera.m_LookAt = actualLookPosition;
+            return true;
         }
         return false;
     }
+    private void DetectTargetBumps()
+    {
+        if (currCamMode != CameraMode.Locked) { return; }
+
+
+        if (Vector3.Distance(actualLookPosition.position, currentTargetLock.position) < 0.1f)
+        {
+            //actualLookPosition.position = currentTargetLock.position; ;
+        }
+        else
+        {
+            actualLookPosition.position = Vector3.Slerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed * Time.deltaTime);
+        }
+
+
+        if (Mathf.Abs(Input.GetAxis("Mouse X")) < 0.2 && Mathf.Abs(Input.GetAxis("Mouse Y")) < 0.2)
+        {
+            bumpDuration = 0;
+        }
+        else
+        {
+            bumpDuration += Time.deltaTime;
+        }
+
+        if (bumpDuration >= doubleTapDelay / 2)
+        {
+            bumpDuration = -0.5f;
+            Vector3 adjustedBumpDirection = (Input.GetAxis("Mouse Y") * Vector3.up + Vector3.right * Input.GetAxis("Mouse X")).normalized;
+            Vector3 lookDirection = actualLookPosition.position - new Vector3(player.position.x, player.position.y, player.position.z);
+            lookDirection += adjustedBumpDirection;
+            lookDirection.Normalize();
+            Debug.DrawRay(actualCamera.transform.position, lookDirection, Color.magenta, 3f);
+
+
+            FindLockableTarget(actualCamera.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 10);
+        }
+    }
+
     //  Public Getters & Setters
     public int BoostsRemaining
     {
@@ -497,7 +587,7 @@ public class Player3PCam : MonoBehaviour
             }
             else
             {
-                if (FindLockableTarget())
+                if (FindLockableTarget(actualCamera.transform, actualCamera.transform.forward, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30))
                 {
                     combatLockCamera.enabled = isGrounded;
                     aerialCombatCamera.enabled = !isGrounded;
@@ -519,6 +609,16 @@ public class Player3PCam : MonoBehaviour
             {
                 return Vector3.zero;
             }
+        }
+    }
+    private float flatDist
+    {
+        get
+        {
+            if (!currentTargetLock) { return -1; }
+            Vector3 tg = currentTargetLock.position;
+            Vector3 here = player.transform.position;
+            return Vector2.Distance(new(tg.x, tg.z), new(here.x, here.z));
         }
     }
 
