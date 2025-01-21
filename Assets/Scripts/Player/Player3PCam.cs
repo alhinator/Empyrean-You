@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using Cinemachine;
-using Unity.Mathematics;
-using UnityEditor.ShaderGraph.Internal;
+
 using UnityEngine;
 
 
@@ -26,10 +24,12 @@ public class Player3PCam : MonoBehaviour
     public Camera actualCamera;
     public CinemachineFreeLook unlockLookCamera;
     public CinemachineFreeLook combatLockCamera;
+    public CinemachineFreeLook aerialCombatCamera;
     public float minimumRadius;
     public float maximumRadius;
     public float minSlopeValue;
     public float maxSlopeValue;
+    public float offsetWhenClose;
     public float myMaxLockonRange;
 
 
@@ -89,6 +89,10 @@ public class Player3PCam : MonoBehaviour
             {
                 ActiveCameraMode = CameraMode.Free;
             }
+        }
+        if (currentTargetLock && Vector3.Distance(player.position, currentTargetLock.position) > myMaxLockonRange)
+        {
+            ActiveCameraMode = CameraMode.Free;
         }
 
         //DEBUG CODE ONLY
@@ -166,18 +170,26 @@ public class Player3PCam : MonoBehaviour
         }
         else if (currCamMode == CameraMode.Locked)
         {
+            combatLockCamera.enabled = isGrounded;
+            aerialCombatCamera.enabled = !isGrounded;
+
             combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
             combatLockCamera.m_Follow = orientation;
+            aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
+            aerialCombatCamera.m_Follow = orientation;
+
 
 
             Vector3 viewDir = currentTargetLock.position - new Vector3(player.position.x, player.position.y, player.position.z);
             if (isGrounded)
             {
                 viewDir.y = 0;
-
-
+                orientation.forward = viewDir.normalized;
             }
-            orientation.forward = viewDir.normalized;
+            else
+            {
+                orientation.forward = new Vector3(viewDir.normalized.x, Mathf.Lerp(orientation.forward.y, viewDir.normalized.y, Time.deltaTime * 2), viewDir.normalized.z);
+            }
             if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
             {
                 if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
@@ -202,12 +214,7 @@ public class Player3PCam : MonoBehaviour
     }
     private void AdjustCameraOrbit()
     {
-        if (!isGrounded)
-        {
-            float cRad = combatLockCamera.m_Orbits[1].m_Radius;
-            combatLockCamera.m_Orbits[1].m_Radius = Mathf.Lerp(cRad, maximumRadius, 0.9f * Time.deltaTime);
-            return;
-        }
+
         //Adjust camera orbit if the radio between player-height-target-height-distance is high. AND the player is grounded.
         Vector3 tg = currentTargetLock.position;
         Vector3 here = player.transform.position;
@@ -233,8 +240,13 @@ public class Player3PCam : MonoBehaviour
 
         Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
 
-        float currRad = combatLockCamera.m_Orbits[1].m_Radius;
-        combatLockCamera.m_Orbits[1].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.5f);
+        int i = 0;
+        foreach (var orbeez in combatLockCamera.m_Orbits)
+        {
+            float currRad = orbeez.m_Radius;
+            combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, Time.deltaTime);
+            i++;
+        }
     }
     private void MovePlayer()
     {
@@ -528,6 +540,7 @@ public class Player3PCam : MonoBehaviour
                 currentTargetLock = null;
                 unlockLookCamera.enabled = true;
                 combatLockCamera.enabled = false;
+                aerialCombatCamera.enabled = false;
                 currCamMode = value;
 
             }
@@ -535,13 +548,15 @@ public class Player3PCam : MonoBehaviour
             {
                 if (FindLockableTarget())
                 {
-                    combatLockCamera.enabled = true;
+                    combatLockCamera.enabled = isGrounded;
+                    aerialCombatCamera.enabled = !isGrounded;
                     unlockLookCamera.enabled = false;
                     currCamMode = value;
                 }
             }
         }
     }
+
 
     public Vector3 DistanceFromCurrentTarget
     {
