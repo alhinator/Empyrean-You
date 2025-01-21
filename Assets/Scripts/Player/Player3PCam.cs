@@ -28,6 +28,8 @@ public class Player3PCam : MonoBehaviour
     public CinemachineFreeLook combatLockCamera;
     public float minimumRadius;
     public float maximumRadius;
+    public float minSlopeValue;
+    public float maxSlopeValue;
     public float myMaxLockonRange;
 
 
@@ -172,6 +174,8 @@ public class Player3PCam : MonoBehaviour
             if (isGrounded)
             {
                 viewDir.y = 0;
+
+
             }
             orientation.forward = viewDir.normalized;
             if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
@@ -181,46 +185,9 @@ public class Player3PCam : MonoBehaviour
                     adjustOffsetToSprint();
                 }
             }
-
-
-            //Adjust camera orbit if the radio between player-height-target-height-distance is high.
-            Vector3 tg = currentTargetLock.position;
-            Vector3 here = player.transform.position;
-            float yDist = Mathf.Abs(tg.y - here.y);
-            float flatDist = Vector2.Distance(new(tg.x, tg.z), new(here.x, here.z));
-            float slope = yDist / flatDist;
-            //I want the log function to track smoothly between the input values of 0.2 and 25
-            //(0.2 is when the player starts leaving view, 25 is the largest distance that should matter)
-            // Debug.Log(slope);
-            // slope = Mathf.Clamp(slope, 0.2f, 25);
-            // float idealRadius = (float)math.remap(0.2f, 25, minimumRadius, maximumRadius, slope);
-
-            //Log function from https://math.stackexchange.com/questions/716152/graphing-given-two-points-on-a-graph-find-the-logarithmic-function-that-passes
-            //Implementation assistance from Jack Green jtg002@ucsd.edu
-            float a, b, c, d, h, k;
-            a = 0.2f;
-            b = minimumRadius;
-            c = 50;
-            d = maximumRadius;
-
-            h = (b - d) / Mathf.Log(a / c);
-
-            float kUpper = (d * Mathf.Log(a) - b * Mathf.Log(c)) / (b - d);
-            k = Mathf.Pow((float)Math.E, kUpper);
-
-            float idealRadius = h * Mathf.Log(k * slope);
-            Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
-            Debug.Log(idealRadius);
-
-            // float currRad = combatLockCamera.m_Orbits[1].m_Radius;
-            // combatLockCamera.m_Orbits[1].m_Radius = Mathf.Lerp(currRad, idealRadius, Time.deltaTime * 0.4f);
+            AdjustCameraOrbit();
             //Always adjust the player model rotation.
             playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
-
-
-
-
-
 
         }
 
@@ -232,6 +199,42 @@ public class Player3PCam : MonoBehaviour
 
 
 
+    }
+    private void AdjustCameraOrbit()
+    {
+        if (!isGrounded)
+        {
+            float cRad = combatLockCamera.m_Orbits[1].m_Radius;
+            combatLockCamera.m_Orbits[1].m_Radius = Mathf.Lerp(cRad, maximumRadius, 0.9f * Time.deltaTime);
+            return;
+        }
+        //Adjust camera orbit if the radio between player-height-target-height-distance is high. AND the player is grounded.
+        Vector3 tg = currentTargetLock.position;
+        Vector3 here = player.transform.position;
+        float yDist = Mathf.Abs(tg.y - here.y);
+        float flatDist = Vector2.Distance(new(tg.x, tg.z), new(here.x, here.z));
+        float slope = flatDist / yDist;
+
+        //Log function from https://math.stackexchange.com/questions/716152/graphing-given-two-points-on-a-graph-find-the-logarithmic-function-that-passes
+        //Implementation assistance from Jack Green jtg002@ucsd.edu
+        float a, b, c, d, h, k;
+        a = minSlopeValue;
+        b = minimumRadius;
+        c = maxSlopeValue;
+        d = maximumRadius;
+
+        h = (b - d) / Mathf.Log10(a / c);
+
+        float kUpper = (d * Mathf.Log10(a) - b * Mathf.Log10(c)) / (b - d);
+        k = Mathf.Pow(10, kUpper);
+
+        float idealRadius = h * Mathf.Log10(k * Mathf.Clamp(slope, minSlopeValue, maxSlopeValue));
+        Debug.Log("slope =" + slope);
+
+        Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
+
+        float currRad = combatLockCamera.m_Orbits[1].m_Radius;
+        combatLockCamera.m_Orbits[1].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.5f);
     }
     private void MovePlayer()
     {
