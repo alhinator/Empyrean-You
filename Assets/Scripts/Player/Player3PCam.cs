@@ -194,12 +194,10 @@ public class Player3PCam : MonoBehaviour
             else
             {
                 orientation.forward = viewDir.normalized;
-                Debug.Log(orientation.localRotation.x);
-                float rot = orientation.localRotation.x;
-                rot = Mathf.Clamp(rot, -70, 70);
-                orientation.localRotation = Quaternion.Euler(rot, orientation.localRotation.y, orientation.localRotation.z);
                 viewDir.y = 0;
+
                 orientationFlat.forward = viewDir.normalized;
+
                 offset = orientation.forward;
 
 
