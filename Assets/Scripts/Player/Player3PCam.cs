@@ -1,14 +1,10 @@
 using System;
 using System.Collections;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
 using Cinemachine;
-using TMPro;
 using Unity.Mathematics;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.Android;
-using UnityEngine.Rendering.Universal.Internal;
-using UnityEngine.Video;
+
 
 public class Player3PCam : MonoBehaviour
 {
@@ -27,9 +23,12 @@ public class Player3PCam : MonoBehaviour
     public CameraMode currCamMode;
     public Transform currentTargetLock;
     public bool autoFindNewTarget = true;
-    private CinemachineFreeLook myCamera;
-
+    public Camera actualCamera;
+    public CinemachineFreeLook unlockLookCamera;
     public CinemachineFreeLook combatLockCamera;
+    public float minimumRadius;
+    public float maximumRadius;
+    public float myMaxLockonRange;
 
 
     [Header("PlayerMovementVariables")]
@@ -39,7 +38,9 @@ public class Player3PCam : MonoBehaviour
     public float playerHeight;
     public LayerMask terrainMask;
     public float groundDrag;
+    public float airDrag;
     public float jumpForce;
+    public float airJumpForce;
     public float airMultiplier;
     public float hoverMultiplier;
     public float jumpCooldown;
@@ -51,7 +52,6 @@ public class Player3PCam : MonoBehaviour
     private bool hovering;
     private bool isGrounded;
     private float canJump;
-    private float dashTapCount;
     private float boostTapCount;
     private float sprintDuration;
 
@@ -67,7 +67,6 @@ public class Player3PCam : MonoBehaviour
         Cursor.visible = false;
         rb = player.GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        myCamera = GetComponent<CinemachineFreeLook>();
         ActiveCameraMode = CameraMode.Free;
     }
     private void Update()
@@ -100,12 +99,12 @@ public class Player3PCam : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             xLookInvert = !xLookInvert;
-            myCamera.m_XAxis.m_InvertInput = xLookInvert;
+            unlockLookCamera.m_XAxis.m_InvertInput = xLookInvert;
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
             yLookInvert = !yLookInvert;
-            myCamera.m_YAxis.m_InvertInput = yLookInvert;
+            unlockLookCamera.m_YAxis.m_InvertInput = yLookInvert;
         }
     }
     private void FixedUpdate()
@@ -121,65 +120,109 @@ public class Player3PCam : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-
+        Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
+        void adjustOffsetToSprint()
+        {
+            bool a, b, c, d, e, f;
+            a = verticalInput == 0;
+            b = horizontalInput == 0;
+            c = verticalInput == 1;
+            d = horizontalInput == 1;
+            e = verticalInput == -1;
+            f = horizontalInput == -1;
+            float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
+            offset = Quaternion.AngleAxis(offAngle, Vector3.up) * offset;
+        }
         if (currCamMode == CameraMode.Free)
         {
-            Vector3 viewDir = player.position - new Vector3(myCamera.transform.position.x, player.position.y, myCamera.transform.position.z);
+            Vector3 viewDir = player.position - new Vector3(unlockLookCamera.transform.position.x, player.position.y, unlockLookCamera.transform.position.z);
             orientation.forward = viewDir.normalized;
             if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
             {
-                Vector3 offset = new Vector3(orientation.forward.x, orientation.forward.y, orientation.forward.z);
                 if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
                 {
                     if (verticalInput >= 0)
                     {
-                        myCamera.m_Follow = playerObj;
-                        myCamera.m_RecenterToTargetHeading.m_enabled = true;
+                        unlockLookCamera.m_Follow = playerObj;
+                        unlockLookCamera.m_RecenterToTargetHeading.m_enabled = true;
                     }
                     else
                     {
-                        myCamera.m_RecenterToTargetHeading.m_enabled = false;
-                        myCamera.m_Follow = player;
+                        unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+                        unlockLookCamera.m_Follow = player;
                     }
-
-
-                    bool a, b, c, d, e, f;
-                    a = verticalInput == 0;
-                    b = horizontalInput == 0;
-                    c = verticalInput == 1;
-                    d = horizontalInput == 1;
-                    e = verticalInput == -1;
-                    f = horizontalInput == -1;
-                    float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
-                    offset = Quaternion.AngleAxis(offAngle, Vector3.up) * offset;
+                    adjustOffsetToSprint();
                 }
                 else
                 {
-                    myCamera.m_RecenterToTargetHeading.m_enabled = false;
-                    myCamera.m_Follow = player;
+                    unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+                    unlockLookCamera.m_Follow = player;
                 }
-
-
+                //only adjust the player model rotation if there is a movement input or the player is off the ground.
                 playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
             }
         }
         else if (currCamMode == CameraMode.Locked)
         {
             combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
-            combatLockCamera.m_Follow = playerObj;
+            combatLockCamera.m_Follow = orientation;
+
+
             Vector3 viewDir = currentTargetLock.position - new Vector3(player.position.x, player.position.y, player.position.z);
             if (isGrounded)
             {
                 viewDir.y = 0;
             }
             orientation.forward = viewDir.normalized;
+            if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
+            {
+                if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
+                {
+                    adjustOffsetToSprint();
+                }
+            }
 
-            playerObj.forward = Vector3.Slerp(playerObj.forward, orientation.forward, Time.deltaTime * rotationSpeed);
+
+            //Adjust camera orbit if the radio between player-height-target-height-distance is high.
+            Vector3 tg = currentTargetLock.position;
+            Vector3 here = player.transform.position;
+            float yDist = Mathf.Abs(tg.y - here.y);
+            float flatDist = Vector2.Distance(new(tg.x, tg.z), new(here.x, here.z));
+            float slope = yDist / flatDist;
+            //I want the log function to track smoothly between the input values of 0.2 and 25
+            //(0.2 is when the player starts leaving view, 25 is the largest distance that should matter)
+            // Debug.Log(slope);
+            // slope = Mathf.Clamp(slope, 0.2f, 25);
+            // float idealRadius = (float)math.remap(0.2f, 25, minimumRadius, maximumRadius, slope);
+
+            //Log function from https://math.stackexchange.com/questions/716152/graphing-given-two-points-on-a-graph-find-the-logarithmic-function-that-passes
+            //Implementation assistance from Jack Green jtg002@ucsd.edu
+            float a, b, c, d, h, k;
+            a = 0.2f;
+            b = minimumRadius;
+            c = 50;
+            d = maximumRadius;
+
+            h = (b - d) / Mathf.Log(a / c);
+
+            float kUpper = (d * Mathf.Log(a) - b * Mathf.Log(c)) / (b - d);
+            k = Mathf.Pow((float)Math.E, kUpper);
+
+            float idealRadius = h * Mathf.Log(k * slope);
+            Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
+            Debug.Log(idealRadius);
+
+            // float currRad = combatLockCamera.m_Orbits[1].m_Radius;
+            // combatLockCamera.m_Orbits[1].m_Radius = Mathf.Lerp(currRad, idealRadius, Time.deltaTime * 0.4f);
+            //Always adjust the player model rotation.
+            playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
+
+
+
+
+
+
         }
-
-
-
-
 
 
 
@@ -242,7 +285,7 @@ public class Player3PCam : MonoBehaviour
         playerObj.GetComponentInChildren<Animator>().SetBool("Grounded", isGrounded);
         if (isGrounded) { currMidairBoosts = maxMidairBoosts; }
         if (isGrounded) { hovering = false; }
-        rb.drag = isGrounded ? groundDrag : groundDrag / 3;
+        rb.drag = isGrounded ? groundDrag : airDrag;
         if (!isGrounded && hovering)
         {
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * hoverMultiplier, rb.velocity.z);
@@ -299,7 +342,7 @@ public class Player3PCam : MonoBehaviour
             hovering = false;
             currMidairBoosts--;
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(1.5f * jumpForce * player.transform.up, ForceMode.Impulse);
+            rb.AddForce(1.5f * airJumpForce * player.transform.up, ForceMode.Impulse);
         }
         else if (boostTapCount == 2 || (boostTapCount == 1 && currMidairBoosts <= 0))
         {
@@ -418,16 +461,32 @@ public class Player3PCam : MonoBehaviour
 
         }
         dashing = false;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         allowedToDash = true;
 
     }
 
-    private void FindLockableTarget()
+    private bool FindLockableTarget()
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
-        currentTargetLock = lockables[0].transform;
-
+        //currentTargetLock = lockables[0].transform;
+        Debug.DrawRay(actualCamera.transform.position, actualCamera.transform.forward * 10, Color.green, 3f);
+        foreach (var tg in lockables)
+        {
+            bool inRange = Vector3.Distance(player.position, tg.transform.position) < myMaxLockonRange;
+            //only lock onto enemies that are within 30 degrees of the current camera orientation.
+            bool ahead = Vector3.Angle(actualCamera.transform.forward, (tg.transform.position - actualCamera.transform.position).normalized) <= 30;
+            Physics.Raycast(actualCamera.transform.position, (tg.transform.position - actualCamera.transform.position).normalized, out RaycastHit hit, 100);
+            bool los = hit.collider && hit.collider.gameObject == tg;
+            Debug.Log("" + inRange + " " + ahead + " " + los);
+            //finds first available one
+            if (inRange && ahead && los)
+            {
+                currentTargetLock = tg.transform;
+                return true;
+            }
+        }
+        return false;
     }
     //  Public Getters & Setters
     public int BoostsRemaining
@@ -460,17 +519,38 @@ public class Player3PCam : MonoBehaviour
         }
         set
         {
-            currCamMode = value;
+
             if (value == CameraMode.Free)
             {
                 currentTargetLock = null;
-                myCamera.enabled = true;
+                unlockLookCamera.enabled = true;
                 combatLockCamera.enabled = false;
+                currCamMode = value;
+
             }
             else
             {
-                combatLockCamera.enabled = true;
-                FindLockableTarget();
+                if (FindLockableTarget())
+                {
+                    combatLockCamera.enabled = true;
+                    unlockLookCamera.enabled = false;
+                    currCamMode = value;
+                }
+            }
+        }
+    }
+
+    public Vector3 DistanceFromCurrentTarget
+    {
+        get
+        {
+            if (currentTargetLock != null)
+            {
+                return currentTargetLock.position - player.transform.position;
+            }
+            else
+            {
+                return Vector3.zero;
             }
         }
     }
