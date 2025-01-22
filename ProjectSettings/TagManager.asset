@@ -6,6 +6,8 @@ TagManager:
   tags:
   - TargetPoint
   - HighPrioTarget
+  - PlayerSpecialMesh
+  - PlayerMesh
   layers:
   - Default
   - TransparentFX
