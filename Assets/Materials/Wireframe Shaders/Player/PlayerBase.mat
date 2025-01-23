@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerInvisible
-  m_Shader: {fileID: 4800000, guid: a64caad055200da45b6df1c7c80839ed, type: 3}
+  m_Name: PlayerBase
+  m_Shader: {fileID: 4800000, guid: a7de4bf0f370ca243b4604b8cd314ffc, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -77,12 +77,12 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WireSmoothness: 20
-    - _WireThickness: 600
+    - _WireSmoothness: 2
+    - _WireThickness: 385
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 0}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WireColor: {r: 1, g: 1, b: 1, a: 1}
+    - _WireColor: {r: 0.4433962, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
