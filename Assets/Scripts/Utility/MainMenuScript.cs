@@ -8,6 +8,7 @@ public class MainMenuScript : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
     }
 
     // Update is called once per frame
