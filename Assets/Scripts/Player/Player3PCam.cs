@@ -81,7 +81,6 @@ public class Player3PCam : MonoBehaviour
     // new stuff for new input system
 
     [Header("Control Variables")]
-    private PlayerInput playerControls;
     private Vector2 rawMoveInput;
     private Coroutine lastBoostCo;
 
@@ -94,7 +93,6 @@ public class Player3PCam : MonoBehaviour
         rb = player.GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         ActiveCameraMode = CameraMode.Free;
-        playerControls = GetComponent<PlayerInput>();
     }
     private void Update()
     {
@@ -105,17 +103,7 @@ public class Player3PCam : MonoBehaviour
         Do3PCameraMovement();
 
 
-        DetectTargetBumps();
-
-
-
-        //DEBUG CODE ONLY
-        if (Input.GetKeyDown(KeyCode.Joystick1Button7))
-        {
-            rb.position = new Vector3(0, 2f, 0);
-            rb.velocity = Vector3.zero;
-
-        }
+        DetectTargetBumps();        
 
     }
     private void FixedUpdate()
@@ -344,7 +332,7 @@ public class Player3PCam : MonoBehaviour
         Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         if (flatVelocity.magnitude > moveSpeed)
         {
-            float forwardsBoost = Input.GetAxis("Vertical") == 1 && isGrounded ? moveSpeed * 2 : 0;
+            float forwardsBoost = rawMoveInput.y > 0 && isGrounded ? moveSpeed * 1.5f : 0;
             Vector3 limitedVelocity = flatVelocity.normalized * (moveSpeed + forwardsBoost);
             rb.velocity = new Vector3(limitedVelocity.x, 0f, limitedVelocity.z);
         }
@@ -429,7 +417,7 @@ public class Player3PCam : MonoBehaviour
         if (currCamMode != CameraMode.Locked) { return; }
 
 
-        if (Mathf.Abs(Input.GetAxis("Mouse X")) < 0.2 && Mathf.Abs(Input.GetAxis("Mouse Y")) < 0.2)
+        if (Mathf.Abs(rawMoveInput.x) < 0.2 && Mathf.Abs(rawMoveInput.y) < 0.2)
         {
             bumpDuration = 0;
         }
@@ -441,7 +429,7 @@ public class Player3PCam : MonoBehaviour
         if (bumpDuration >= doubleTapDelay / 2)
         {
             bumpDuration = -0.5f;
-            Vector2 adjustedBumpDirection = (Input.GetAxis("Mouse Y") * Vector2.down + Vector2.right * Input.GetAxis("Mouse X")).normalized * 15; // transfer 15 degrees then check 15 degrees
+            Vector2 adjustedBumpDirection = (rawMoveInput.y * Vector2.down + Vector2.right * rawMoveInput.x).normalized * 15; // transfer 15 degrees then check 15 degrees
             Vector3 lookDirection = Quaternion.AngleAxis(adjustedBumpDirection.x, Vector3.up) * orientation.transform.forward;
             lookDirection = Quaternion.AngleAxis(adjustedBumpDirection.y, Vector3.right) * lookDirection;
             lookDirection.Normalize();
@@ -602,6 +590,10 @@ public class Player3PCam : MonoBehaviour
             StopCoroutine(lastBoostCo);
             hovering = !hovering;
         } 
+    }
+    public void OnDebugReset(){
+            rb.position = new Vector3(0, 2f, 0);
+            rb.velocity = Vector3.zero;
     }
 
     //  Public Getters & Setters
