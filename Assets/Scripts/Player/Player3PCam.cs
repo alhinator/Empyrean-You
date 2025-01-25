@@ -81,8 +81,10 @@ public class Player3PCam : MonoBehaviour
     // new stuff for new input system
 
     [Header("Control Variables")]
+    private PlayerInput playerInput;
     private Vector2 rawMoveInput;
     private Coroutine lastBoostCo;
+    public bool invertYLook = true;
 
 
     //Unity Functions
@@ -93,6 +95,7 @@ public class Player3PCam : MonoBehaviour
         rb = player.GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         ActiveCameraMode = CameraMode.Free;
+        playerInput = GetComponent<PlayerInput>();
     }
     private void Update()
     {
@@ -103,7 +106,7 @@ public class Player3PCam : MonoBehaviour
         Do3PCameraMovement();
 
 
-        DetectTargetBumps();        
+        DetectTargetBumps();
 
     }
     private void FixedUpdate()
@@ -383,14 +386,17 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
-            // if (currentTargetLock == null)
-            // {
-            //     actualLookPosition.position = potentialTarget.transform.position;
-            // }
+            if (currentTargetLock) //place lookAt position between player and target if a previous target didn't exist
+            {
+                currentTargetLock = potentialTarget.transform;
+            }
+            else
+            {
+                currentTargetLock = potentialTarget.transform;
+                actualLookPosition.position = Vector3.Lerp(player.position, currentTargetLock.position, 0.5f);
+            }
 
 
-            currentTargetLock = potentialTarget.transform;
-            actualLookPosition.position = Vector3.Lerp(player.position, currentTargetLock.position, 0.5f);
             combatLockCamera.m_LookAt = actualLookPosition;
             aerialCombatCamera.m_LookAt = actualLookPosition;
             aerialCloseCamera.m_LookAt = actualLookPosition;
@@ -408,7 +414,7 @@ public class Player3PCam : MonoBehaviour
         }
         else
         {
-            actualLookPosition.position = Vector3.Lerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed * Time.deltaTime);
+            actualLookPosition.position = Vector3.Lerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed/2 * Time.deltaTime);
         }
 
     }
@@ -416,8 +422,9 @@ public class Player3PCam : MonoBehaviour
     {
         if (currCamMode != CameraMode.Locked) { return; }
 
-
-        if (Mathf.Abs(rawMoveInput.x) < 0.2 && Mathf.Abs(rawMoveInput.y) < 0.2)
+        Vector2 LookDelta = playerInput.actions.FindAction("Look").ReadValue<Vector2>();
+        if(invertYLook){LookDelta.y *= -1;}
+        if (Mathf.Abs(LookDelta.x) < 0.2 && Mathf.Abs(LookDelta.y) < 0.2)
         {
             bumpDuration = 0;
         }
@@ -429,14 +436,14 @@ public class Player3PCam : MonoBehaviour
         if (bumpDuration >= doubleTapDelay / 2)
         {
             bumpDuration = -0.5f;
-            Vector2 adjustedBumpDirection = (rawMoveInput.y * Vector2.down + Vector2.right * rawMoveInput.x).normalized * 15; // transfer 15 degrees then check 15 degrees
+            Vector2 adjustedBumpDirection = (LookDelta.y * Vector2.down + Vector2.right * LookDelta.x).normalized * 30; // transfer 30 degrees then check 30 degrees
             Vector3 lookDirection = Quaternion.AngleAxis(adjustedBumpDirection.x, Vector3.up) * orientation.transform.forward;
             lookDirection = Quaternion.AngleAxis(adjustedBumpDirection.y, Vector3.right) * lookDirection;
             lookDirection.Normalize();
             Debug.DrawRay(orientation.transform.position, lookDirection * 30, Color.magenta, 3f);
 
 
-            FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 15, true, "angle");
+            FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 30, true, "angle");
         }
     }
 
@@ -589,11 +596,12 @@ public class Player3PCam : MonoBehaviour
             Debug.Log("got a hover input");
             StopCoroutine(lastBoostCo);
             hovering = !hovering;
-        } 
+        }
     }
-    public void OnDebugReset(){
-            rb.position = new Vector3(0, 2f, 0);
-            rb.velocity = Vector3.zero;
+    public void OnDebugReset()
+    {
+        rb.position = new Vector3(0, 2f, 0);
+        rb.velocity = Vector3.zero;
     }
 
     //  Public Getters & Setters
