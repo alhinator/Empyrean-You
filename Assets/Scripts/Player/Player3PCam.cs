@@ -38,12 +38,14 @@ public class Player3PCam : MonoBehaviour
     public CinemachineFreeLook combatLockCamera;
     public CinemachineFreeLook aerialCombatCamera;
     public CinemachineFreeLook aerialCloseCamera;
+    public CinemachineBrain cinemachineBrain;
     public float minimumRadius;
     public float maximumRadius;
     public float minSlopeValue;
     public float maxSlopeValue;
     public float myMaxLockonRange;
     public float bumpDuration;
+    private float timeInLockedCam;
 
 
     [Header("PlayerMovementVariables")]
@@ -99,22 +101,13 @@ public class Player3PCam : MonoBehaviour
     {
         CheckTargetLoSRange();
         DetermineActiveCamera();
-        Do3PCameraMovement();
+        AdjustActualLookPos();
 
+        Do3PCameraMovement();
         DoJumpCheck();
         DoDashCheck();
 
-        if (Input.GetButtonDown("CAMLOCK"))
-        {
-            if (ActiveCameraMode == CameraMode.Free)
-            {
-                ActiveCameraMode = CameraMode.Locked;
-            }
-            else
-            {
-                ActiveCameraMode = CameraMode.Free;
-            }
-        }
+
 
         DetectTargetBumps();
 
@@ -162,32 +155,34 @@ public class Player3PCam : MonoBehaviour
     {
         if (currCamMode == CameraMode.Free)
         {
-            unlockLookCamera.enabled = true;
-            combatLockCamera.enabled = false;
-            aerialCloseCamera.enabled = false;
-            aerialCombatCamera.enabled = false;
+            unlockLookCamera.Priority = 11;
+            combatLockCamera.Priority = -1;
+            aerialCloseCamera.Priority = -1;
+            aerialCombatCamera.Priority = -1;
+            timeInLockedCam = 0;
         }
         else if (currCamMode == CameraMode.Locked)
         {
-            unlockLookCamera.enabled = false;
+            timeInLockedCam += Time.deltaTime;
+            unlockLookCamera.Priority = -1;
             if (!isGrounded && flatDist < 5)
             {
-                aerialCombatCamera.enabled = false;
-                aerialCloseCamera.enabled = true;
+                aerialCombatCamera.Priority = -1;
+                aerialCloseCamera.Priority = 11;
 
             }
-            else if (!isGrounded && flatDist >=5)
+            else if (!isGrounded && flatDist >= 5)
             {
-                aerialCombatCamera.enabled = true;
-                aerialCloseCamera.enabled = false;
+                aerialCombatCamera.Priority = 11;
+                aerialCloseCamera.Priority = -1;
 
             }
             else if (isGrounded)
             {
-                aerialCombatCamera.enabled = false;
-                aerialCloseCamera.enabled = false;
+                aerialCombatCamera.Priority = -1;
+                aerialCloseCamera.Priority = 11;
             }
-            combatLockCamera.enabled = isGrounded;
+            combatLockCamera.Priority = isGrounded ? 11 : -1;
         }
 
     }
@@ -261,7 +256,7 @@ public class Player3PCam : MonoBehaviour
             //only adjust the player model rotation if there is a movement input or the player is off the ground.
             if (rawMoveInput.magnitude > 0 || !isGrounded)
             {
-                playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
+                playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
             }
         }
         else if (currCamMode == CameraMode.Locked)
@@ -272,6 +267,12 @@ public class Player3PCam : MonoBehaviour
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
             aerialCombatCamera.m_Follow = orientation;
             aerialCloseCamera.m_Follow = playerObj;
+            if (!cinemachineBrain.IsBlending && timeInLockedCam >= 0.5f)
+            {
+                unlockLookCamera.m_XAxis.Value = orientationFlat.localEulerAngles.y;
+                unlockLookCamera.m_YAxis.Value = 0.5f;
+            }
+
 
             AdjustCameraOrbit();
             //Always adjust the player model rotation.
@@ -320,7 +321,7 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.5f * Time.deltaTime);
             //And adjust close camera
 
-            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius*2, Time.deltaTime);
+            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius * 2, Time.deltaTime);
             aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 1.5f, rotationSpeed * Time.deltaTime);
             combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 2, rotationSpeed * Time.deltaTime);
             aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 4, rotationSpeed * Time.deltaTime);
@@ -489,7 +490,6 @@ public class Player3PCam : MonoBehaviour
                 closest = !potentialTarget || Vector3.Distance(player.position, tg.transform.position) < Vector3.Distance(player.position, potentialTarget.transform.position);
 
             }
-            //if (currentTargetLock && tg == currentTargetLock.gameObject) { Debug.Log("looking at curr"); }
 
             if (inRange && ahead && closest && los)
             {
@@ -505,12 +505,14 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
-            if (currentTargetLock == null)
-            {
-                Debug.Log("snapping actual look pos");
-                actualLookPosition.position = potentialTarget.transform.position;
-            }
+            // if (currentTargetLock == null)
+            // {
+            //     actualLookPosition.position = potentialTarget.transform.position;
+            // }
+
+
             currentTargetLock = potentialTarget.transform;
+            actualLookPosition.position = Vector3.Lerp(player.position, currentTargetLock.position, 0.5f);
             combatLockCamera.m_LookAt = actualLookPosition;
             aerialCombatCamera.m_LookAt = actualLookPosition;
             aerialCloseCamera.m_LookAt = actualLookPosition;
@@ -518,19 +520,23 @@ public class Player3PCam : MonoBehaviour
         }
         return false;
     }
-    private void DetectTargetBumps()
+    private void AdjustActualLookPos()
     {
         if (currCamMode != CameraMode.Locked) { return; }
 
-
-        if (Vector3.Distance(actualLookPosition.position, currentTargetLock.position) < 0.5f)
+        if (Vector3.Distance(actualLookPosition.position, currentTargetLock.position) <= 0.1f)
         {
             actualLookPosition.position = currentTargetLock.position;
         }
         else
         {
-            actualLookPosition.position = Vector3.Slerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed * Time.deltaTime);
+            actualLookPosition.position = Vector3.Lerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed * Time.deltaTime);
         }
+
+    }
+    private void DetectTargetBumps()
+    {
+        if (currCamMode != CameraMode.Locked) { return; }
 
 
         if (Mathf.Abs(Input.GetAxis("Mouse X")) < 0.2 && Mathf.Abs(Input.GetAxis("Mouse Y")) < 0.2)
@@ -614,7 +620,17 @@ public class Player3PCam : MonoBehaviour
 
     }
 
-
+    public void OnCameraLock()
+    {
+        if (ActiveCameraMode == CameraMode.Free)
+        {
+            ActiveCameraMode = CameraMode.Locked;
+        }
+        else
+        {
+            ActiveCameraMode = CameraMode.Free;
+        }
+    }
 
     //  Public Getters & Setters
     public int BoostsRemaining
@@ -651,7 +667,6 @@ public class Player3PCam : MonoBehaviour
             {
                 currentTargetLock = null;
                 currCamMode = value;
-
             }
             else
             {
