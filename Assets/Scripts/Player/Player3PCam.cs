@@ -303,7 +303,7 @@ public class Player3PCam : MonoBehaviour
         foreach (var orbeez in combatLockCamera.m_Orbits)
         {
             float currRad = orbeez.m_Radius;
-            combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.5f * Time.deltaTime);
+            combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.1f * Time.deltaTime);
             //And adjust close camera
 
             aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius * 2, Time.deltaTime);
