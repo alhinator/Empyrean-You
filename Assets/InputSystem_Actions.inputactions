@@ -29,7 +29,7 @@
                     "id": "cdafb2ed-7b59-4593-b408-568fac28703a",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -38,7 +38,7 @@
                     "id": "53a9be20-68fc-46a6-bb80-cb8decb5c07e",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "MultiTap",
                     "initialStateCheck": false
                 },
                 {
@@ -189,7 +189,7 @@
                     "name": "",
                     "id": "fdb43a2a-a08d-4749-89ce-8a64aa619f51",
                     "path": "<Keyboard>/space",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Jump",
@@ -200,7 +200,7 @@
                     "name": "",
                     "id": "a294dcb9-883c-4e5b-8733-ba4f76079f2e",
                     "path": "<Gamepad>/buttonSouth",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Jump",
@@ -343,7 +343,7 @@
                     "name": "",
                     "id": "2054540d-373b-4428-a839-a0988181e090",
                     "path": "<Keyboard>/space",
-                    "interactions": "MultiTap",
+                    "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Hover",

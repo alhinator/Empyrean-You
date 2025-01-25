@@ -13,7 +13,8 @@ using UnityEngine.Rendering;
 Basic udlr movement updated.
 sprint updated
 basic look updated
-dash updateds
+dash updated
+jump updated
 **/
 
 public class Player3PCam : MonoBehaviour
@@ -65,13 +66,10 @@ public class Player3PCam : MonoBehaviour
     public float doubleTapDelay;
     public float dashForce;
     public int maxMidairBoosts;
-
     private int currMidairBoosts;
     private bool hovering;
     private bool isGrounded;
-    private float canJump;
-    private float boostTapCount;
-
+    private bool canJump = true;
     public bool inputLocked;
     private bool dashing = false;
     private bool sprinting = false;
@@ -85,7 +83,7 @@ public class Player3PCam : MonoBehaviour
     [Header("Control Variables")]
     private PlayerInput playerControls;
     private Vector2 rawMoveInput;
-
+    private Coroutine lastBoostCo;
 
 
     //Unity Functions
@@ -105,8 +103,6 @@ public class Player3PCam : MonoBehaviour
         AdjustActualLookPos();
 
         Do3PCameraMovement();
-        DoJumpCheck();
-
 
 
         DetectTargetBumps();
@@ -353,58 +349,7 @@ public class Player3PCam : MonoBehaviour
             rb.velocity = new Vector3(limitedVelocity.x, 0f, limitedVelocity.z);
         }
     }
-    private void DoJumpCheck()
-    {
-        canJump = Mathf.Clamp(canJump - Time.deltaTime, 0, jumpCooldown);
-        if (Input.GetAxis("SPACE") == 1 && isGrounded && canJump <= 0)
-        {
-            canJump = jumpCooldown;
-            playerObj.GetComponentInChildren<Animator>().SetTrigger("Jump");
-            StartCoroutine(DoActualJump());
-        }
-        else if (Input.GetButtonDown("SPACE") && !isGrounded)
-        {
-            DoMidairBoostCheck();
-        }
 
-    }
-    private void DoMidairBoostCheck()
-    {
-        if (boostTapCount == 0)
-        {
-            boostTapCount = 1;
-            StartCoroutine(BoostOrHover());
-        }
-        else if (boostTapCount == 1)
-        {
-            boostTapCount = 2;
-            StartCoroutine(BoostOrHover());
-        }
-    }
-    private IEnumerator BoostOrHover()
-    {
-        yield return new WaitForSeconds(doubleTapDelay);
-        if (boostTapCount == 1 && currMidairBoosts > 0)
-        { //means they want to boost upwards
-            hovering = false;
-            currMidairBoosts--;
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(1.5f * airJumpForce * player.transform.up, ForceMode.Impulse);
-        }
-        else if (boostTapCount == 2 || (boostTapCount == 1 && currMidairBoosts <= 0))
-        {
-            StopCoroutine(BoostOrHover());
-            hovering = !hovering;
-        }
-        boostTapCount = 0;
-
-    }
-    private IEnumerator DoActualJump()
-    {
-        yield return new WaitForSeconds(0.2f);
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(player.transform.up * jumpForce, ForceMode.Impulse);
-    }
     private bool FindLockableTarget(Transform origin, Vector3 direction, int LayerMask, float angleTolerance, bool ignoreCurrentTarget, string method = "close")
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
@@ -578,7 +523,7 @@ public class Player3PCam : MonoBehaviour
     }
     public void OnDodge()
     {
-        if(!allowedToDash){return;}
+        if (!allowedToDash) { return; }
         //Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
         allowedToDash = false;
         dashing = true;
@@ -612,6 +557,51 @@ public class Player3PCam : MonoBehaviour
         dashing = false;
         yield return new WaitForSeconds(0.1f);
         allowedToDash = true;
+    }
+    public void OnJump()
+    {
+        if (!canJump) { return; }
+        if (isGrounded)
+        {
+            playerObj.GetComponentInChildren<Animator>().SetTrigger("Jump");
+            StartCoroutine(DoActualJump());
+        }
+        else if (!isGrounded && currMidairBoosts > 0)
+        {
+            //Particle trigger here? Or perhaps separate script.
+            Debug.Log("Starting Boost");
+            lastBoostCo = StartCoroutine(Boost());
+        }
+        canJump = false;
+        StartCoroutine(JumpCooldown(0.2f));
+    }
+    private IEnumerator JumpCooldown(float dur)
+    {
+        yield return new WaitForSeconds(dur);
+        canJump = true;
+    }
+    private IEnumerator DoActualJump()
+    {
+        yield return new WaitForSeconds(0.2f);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(player.transform.up * jumpForce, ForceMode.Impulse);
+    }
+    private IEnumerator Boost()
+    {
+        yield return new WaitForSeconds(0.3f);
+        hovering = false;
+        currMidairBoosts--;
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(1.5f * airJumpForce * player.transform.up, ForceMode.Impulse);
+    }
+    public void OnHover()
+    {
+        if (!isGrounded)
+        {
+            Debug.Log("got a hover input");
+            StopCoroutine(lastBoostCo);
+            hovering = !hovering;
+        } 
     }
 
     //  Public Getters & Setters
