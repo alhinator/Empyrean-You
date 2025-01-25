@@ -29,7 +29,7 @@ public class PlayerMatSwapper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButtonDown("SPACE"))
         {
             DebugInvis = !DebugInvis;
             SetInvis(DebugInvis);

@@ -3,7 +3,17 @@ using System.Collections;
 using Cinemachine;
 
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
+//Contains edited code adapted from https://www.youtube.com/watch?v=f473C43s8nE
+
+//Notes for new input system:
+/**
+Basic udlr movement updated.
+sprint updated
+basic look updated
+**/
 
 public class Player3PCam : MonoBehaviour
 {
@@ -13,8 +23,7 @@ public class Player3PCam : MonoBehaviour
     public Transform player;
     public Transform playerObj;
     public float rotationSpeed;
-    public bool xLookInvert = false;
-    public bool yLookInvert = true;
+
     public enum CameraMode
     {
         Free,
@@ -63,7 +72,19 @@ public class Player3PCam : MonoBehaviour
 
     public bool inputLocked;
     private bool dashing = false;
+    private bool sprinting = false;
     private bool allowedToDash = true;
+
+
+
+
+    // new stuff for new input system
+
+    [Header("Control Variables")]
+    private PlayerInput playerControls;
+    private Vector2 rawMoveInput;
+    private Vector2 cameraInputDirection;
+
 
 
     //Unity Functions
@@ -74,9 +95,12 @@ public class Player3PCam : MonoBehaviour
         rb = player.GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         ActiveCameraMode = CameraMode.Free;
+        playerControls = GetComponent<PlayerInput>();
     }
     private void Update()
     {
+        CheckTargetLoSRange();
+        DetermineActiveCamera();
         Do3PCameraMovement();
 
         DoJumpCheck();
@@ -105,16 +129,7 @@ public class Player3PCam : MonoBehaviour
             rb.velocity = Vector3.zero;
 
         }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            xLookInvert = !xLookInvert;
-            unlockLookCamera.m_XAxis.m_InvertInput = xLookInvert;
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            yLookInvert = !yLookInvert;
-            unlockLookCamera.m_YAxis.m_InvertInput = yLookInvert;
-        }
+
     }
     private void FixedUpdate()
     {
@@ -122,148 +137,138 @@ public class Player3PCam : MonoBehaviour
         MovePlayer();
         DoSpeedControl();
     }
-
     //Private Functions
-    private void Do3PCameraMovement()
+
+    private void CheckTargetLoSRange()
     {
-        //Code adapted from https://www.youtube.com/watch?v=UCwwn2q4Vys
+        //Need to implement LoS. Only does range at the moment.
         if (currentTargetLock && Vector3.Distance(player.position, currentTargetLock.position) > myMaxLockonRange)
         {
             ActiveCameraMode = CameraMode.Free;
         }
+    }
+    private void DetermineActiveCamera()
+    {
+        if (currCamMode == CameraMode.Free)
+        {
+            unlockLookCamera.enabled = true;
+            combatLockCamera.enabled = false;
+            aerialCloseCamera.enabled = false;
+            aerialCombatCamera.enabled = false;
+        }
+        else if (currCamMode == CameraMode.Locked)
+        {
+            Vector3 tg = actualLookPosition.position;
+            Vector3 here = player.transform.position;
+            if (!isGrounded && (flatDist < 3 || (flatDist < 5 && Math.Abs(here.y - tg.y) > 10)))
+            {
+                aerialCombatCamera.enabled = false;
+                aerialCloseCamera.enabled = true;
+            }
+            else if (!isGrounded && (flatDist > 9 || (flatDist > 7 && Math.Abs(here.y - tg.y) < 10)))
+            {
+                aerialCombatCamera.enabled = true;
+                aerialCloseCamera.enabled = false;
 
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+            }
+            else if (!isGrounded)
+            {
+                aerialCombatCamera.enabled = true;
+                aerialCloseCamera.enabled = false;
+            }
+            else if (isGrounded)
+            {
+                aerialCombatCamera.enabled = false;
+                aerialCloseCamera.enabled = false;
+            }
+            combatLockCamera.enabled = isGrounded;
+        }
+
+    }
+
+    private void Do3PCameraMovement()
+    {
+        //Code adapted from https://www.youtube.com/watch?v=UCwwn2q4Vys
+
+
+        //Set viewDir based on which camera is active.
+        Vector3 viewDir = new Vector3();
+        if (currCamMode == CameraMode.Free)
+        {
+            viewDir = player.position - new Vector3(unlockLookCamera.transform.position.x, player.position.y, unlockLookCamera.transform.position.z);
+        }
+        else if (currCamMode == CameraMode.Locked)
+        {
+            viewDir = actualLookPosition.position - new Vector3(player.position.x, player.position.y, player.position.z);
+        }
+
+        //Set orientation and flat orientation.
+        orientation.forward = viewDir.normalized;
+        orientationFlat.forward = new Vector3(viewDir.normalized.x, 0, viewDir.normalized.z);
 
         Vector3 adjustOffsetToSprint(Vector3 original)
         {
             bool a, b, c, d, e, f;
-            a = verticalInput == 0;
-            b = horizontalInput == 0;
-            c = verticalInput == 1;
-            d = horizontalInput == 1;
-            e = verticalInput == -1;
-            f = horizontalInput == -1;
+
+            a = rawMoveInput.y <= 0.1 && rawMoveInput.y >= -0.1;
+            b = rawMoveInput.x <= 0.1 && rawMoveInput.x >= -0.1;
+            c = rawMoveInput.y > 0;
+            d = rawMoveInput.x > 0;
+            e = rawMoveInput.y < 0;
+            f = rawMoveInput.x < 0;
             float offAngle = (a && b) || (b && c) ? 0 : a && d ? 90 : a && f ? -90 : b && e ? 180 : c && d ? 45 : c && f ? -45 : e && f ? -135 : d && e ? 135 : 0;
             return Quaternion.AngleAxis(offAngle, Vector3.up) * original;
         }
+
+        //Set camera to turn automatically if player is sprinting forwards or sideways
+        //Additionally , allow player to rotate freely of camera if sprinting.
+        Vector3 offset = currCamMode == CameraMode.Free ? orientationFlat.forward : orientation.forward;
+        if (sprinting && rawMoveInput.magnitude > 0 && isGrounded)
+        {
+            if (rawMoveInput.y >= 0)
+            {
+                unlockLookCamera.m_Follow = playerObj;
+                unlockLookCamera.m_RecenterToTargetHeading.m_enabled = true;
+            }
+            else
+            {
+                unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+                unlockLookCamera.m_Follow = player;
+            }
+            offset = adjustOffsetToSprint(orientationFlat.forward);
+        }
+
+
+
+        //Now adjust player forward and other housekeeping based on which cameras are active
         if (currCamMode == CameraMode.Free)
         {
-            Vector3 viewDir = player.position - new Vector3(unlockLookCamera.transform.position.x, player.position.y, unlockLookCamera.transform.position.z);
-            orientation.forward = viewDir.normalized;
-            orientationFlat.forward = viewDir.normalized;
-            if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
+            //only adjust the player model rotation if there is a movement input or the player is off the ground.
+            if (rawMoveInput.magnitude > 0 || !isGrounded)
             {
-                Vector3 offset = orientationFlat.forward;
-                if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
-                {
-                    if (verticalInput >= 0)
-                    {
-                        unlockLookCamera.m_Follow = playerObj;
-                        unlockLookCamera.m_RecenterToTargetHeading.m_enabled = true;
-                    }
-                    else
-                    {
-                        unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
-                        unlockLookCamera.m_Follow = player;
-                    }
-                    offset = adjustOffsetToSprint(orientationFlat.forward);
-                }
-                else
-                {
-                    unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
-                    unlockLookCamera.m_Follow = player;
-                }
-                //only adjust the player model rotation if there is a movement input or the player is off the ground.
                 playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
             }
         }
         else if (currCamMode == CameraMode.Locked)
         {
 
-
-            DetermineActiveCombatCam();
-
-
             combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
             combatLockCamera.m_Follow = orientationFlat;
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
             aerialCombatCamera.m_Follow = orientation;
 
-            Vector3 viewDir = actualLookPosition.position - new Vector3(player.position.x, player.position.y, player.position.z);
-            Vector3 offset;
-            if (isGrounded)
-            {
-
-                orientation.forward = viewDir.normalized;
-                viewDir.y = 0;
-                orientationFlat.forward = viewDir.normalized;
-                offset = orientationFlat.forward;
-            }
-            else
-            {
-                orientation.forward = viewDir.normalized;
-                viewDir.y = 0;
-
-                orientationFlat.forward = viewDir.normalized;
-                //orientation.forward = new Vector3(orientation.forward.normalized.x,orientation.forward.normalized.y , 0);
-
-                offset = orientation.forward;
-
-
-            }
-            if (horizontalInput != 0 || verticalInput != 0 || !isGrounded)
-            {
-                if (Input.GetAxis("SPRINT") > 0 && sprintDuration > doubleTapDelay / 2 && isGrounded)
-                {
-                    offset = adjustOffsetToSprint(offset);
-                }
-            }
             AdjustCameraOrbit();
             //Always adjust the player model rotation.
             playerObj.forward = Vector3.Slerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
 
         }
 
-
-
         Debug.DrawRay(player.position, player.forward * 10, Color.green);
         Debug.DrawRay(orientation.position, orientation.forward * 10, Color.white);
         Debug.DrawRay(orientationFlat.position, orientationFlat.forward * 6, Color.red);
         Debug.DrawRay(playerObj.position, playerObj.forward, Color.cyan);
-
-
-
     }
 
-    private void DetermineActiveCombatCam()
-    {
-        Vector3 tg = actualLookPosition.position;
-        Vector3 here = player.transform.position;
-        if (!isGrounded && (flatDist < 3 || (flatDist < 5 && Math.Abs(here.y - tg.y) > 10)))
-        {
-            aerialCombatCamera.enabled = false;
-            aerialCloseCamera.enabled = true;
-        }
-        else if (!isGrounded && (flatDist > 9 || (flatDist > 7 && Math.Abs(here.y - tg.y) < 10)))
-        {
-            aerialCombatCamera.enabled = true;
-            aerialCloseCamera.enabled = false;
-
-        }
-        else if (!isGrounded)
-        {
-            aerialCombatCamera.enabled = true;
-            aerialCloseCamera.enabled = false;
-        }
-        else if (isGrounded)
-        {
-            aerialCombatCamera.enabled = false;
-            aerialCloseCamera.enabled = false;
-        }
-        combatLockCamera.enabled = isGrounded;
-
-    }
 
     private void AdjustCameraOrbit()
     {
@@ -309,51 +314,7 @@ public class Player3PCam : MonoBehaviour
 
 
     }
-    private void MovePlayer()
-    {
-        if (dashing) { return; }
-        //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
-        float sprinting = Input.GetAxis("SPRINT");
 
-
-        Vector3 moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
-
-        Debug.DrawRay(playerObj.position, moveDirection.normalized, Color.yellow);
-
-        if (isGrounded)
-        {
-            if (sprinting > 0 && (horizontalInput != 0 || verticalInput != 0))
-            {
-                sprintDuration += Time.deltaTime;
-            }
-            else if (sprinting == 0 || (horizontalInput == 0 && verticalInput == 0))
-            {
-                sprintDuration = 0;
-                playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
-            }
-            if (sprinting > 0 && sprintDuration > doubleTapDelay)
-            {
-                playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
-                rb.AddForce(moveDirection.normalized * sprintSpeed, ForceMode.Force);
-            }
-            else
-            {
-                rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Force);
-            }
-
-
-        }
-        else if (!isGrounded)
-        {
-            rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
-            playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
-            sprintDuration = 0;
-
-        }
-    }
     private void GroundedCheckAndDrag()
     {
         //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
@@ -579,6 +540,54 @@ public class Player3PCam : MonoBehaviour
         }
     }
 
+    private void MovePlayer()
+    {
+        if (dashing) { return; } //If player is mid-dash do not adjust movement
+
+        Vector3 moveDirection = orientation.forward * rawMoveInput.y + orientation.right * rawMoveInput.x;
+        moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
+        Debug.DrawRay(playerObj.position, moveDirection.normalized, Color.yellow);
+        if (isGrounded)
+        {
+
+            if (sprinting)
+            {
+                rb.AddForce(moveDirection.normalized * sprintSpeed, ForceMode.Force);
+            }
+            else
+            {
+                rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Force);
+            }
+        }
+        else if (!isGrounded)
+        {
+            rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
+        }
+    }
+    // New input functions
+    public void OnMove(InputValue v) //Does not actually move player - only updates movement vector
+    {
+        rawMoveInput = v.Get<Vector2>();
+    }
+
+    public void OnSprint(InputValue v)
+    {
+        if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded)
+        {
+            sprinting = true;
+            playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
+
+        }
+        else
+        {
+            playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
+            sprinting = false;
+        }
+
+    }
+
+
+
     //  Public Getters & Setters
     public int BoostsRemaining
     {
@@ -613,9 +622,6 @@ public class Player3PCam : MonoBehaviour
             if (value == CameraMode.Free)
             {
                 currentTargetLock = null;
-                unlockLookCamera.enabled = true;
-                combatLockCamera.enabled = false;
-                aerialCombatCamera.enabled = false;
                 currCamMode = value;
 
             }
@@ -623,9 +629,6 @@ public class Player3PCam : MonoBehaviour
             {
                 if (FindLockableTarget(actualCamera.transform, actualCamera.transform.forward, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, false))
                 {
-                    combatLockCamera.enabled = isGrounded;
-                    aerialCombatCamera.enabled = !isGrounded;
-                    unlockLookCamera.enabled = false;
                     currCamMode = value;
                 }
             }

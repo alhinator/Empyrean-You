@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputTracker : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class InputTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string txt = "horiz:" + Input.GetAxis("Horizontal") + "\nvert:" + Input.GetAxis("Vertical") + " \npan L/R:" + Input.GetAxis("Mouse X") + " \npan U/D:" + Input.GetAxis("Mouse Y");
+        string txt = "horiz:" + InputSystem.actions.FindAction("Move").ReadValue<Vector2>().x + "\nvert:" + InputSystem.actions.FindAction("Move").ReadValue<Vector2>().y + " \npan L/R:" + Input.GetAxis("Mouse X") + " \npan U/D:" + Input.GetAxis("Mouse Y");
         txt += "\ndashing:" + player3PCam.IsDashing;
         txt += "\ncan dash:" + player3PCam.CanDash;
         Vector3 d = player3PCam.DistanceFromCurrentTarget;
