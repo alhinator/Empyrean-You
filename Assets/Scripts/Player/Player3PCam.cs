@@ -13,6 +13,7 @@ using UnityEngine.Rendering;
 Basic udlr movement updated.
 sprint updated
 basic look updated
+dash updateds
 **/
 
 public class Player3PCam : MonoBehaviour
@@ -105,7 +106,6 @@ public class Player3PCam : MonoBehaviour
 
         Do3PCameraMovement();
         DoJumpCheck();
-        DoDashCheck();
 
 
 
@@ -186,7 +186,6 @@ public class Player3PCam : MonoBehaviour
         }
 
     }
-
     private void Do3PCameraMovement()
     {
         //Code adapted from https://www.youtube.com/watch?v=UCwwn2q4Vys
@@ -286,7 +285,6 @@ public class Player3PCam : MonoBehaviour
         Debug.DrawRay(playerObj.position, playerObj.forward, Color.cyan);
     }
 
-
     private void AdjustCameraOrbit()
     {
 
@@ -331,7 +329,6 @@ public class Player3PCam : MonoBehaviour
 
 
     }
-
     private void GroundedCheckAndDrag()
     {
         //Code adapted from https://www.youtube.com/watch?v=f473C43s8nE
@@ -356,7 +353,6 @@ public class Player3PCam : MonoBehaviour
             rb.velocity = new Vector3(limitedVelocity.x, 0f, limitedVelocity.z);
         }
     }
-
     private void DoJumpCheck()
     {
         canJump = Mathf.Clamp(canJump - Time.deltaTime, 0, jumpCooldown);
@@ -409,57 +405,6 @@ public class Player3PCam : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(player.transform.up * jumpForce, ForceMode.Impulse);
     }
-    private void DoDashCheck()
-    {
-        if (Input.GetButtonDown("DODGE") && !dashing && allowedToDash)
-        {
-            StartCoroutine(DashTap());
-        }
-    }
-    private IEnumerator DashTap()
-    {
-        //Code modified from https://discussions.unity.com/t/single-tap-double-tap-script/440934/5
-        //Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
-        allowedToDash = false;
-        yield return new WaitForSeconds(doubleTapDelay);
-        if (Input.GetButton("DODGE")) { allowedToDash = true; yield break; }
-        dashing = true;
-
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        if (horizontalInput == 0 && verticalInput == 0)
-        {
-            //do backstep
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-            Vector3 dashDir = playerObj.transform.forward * -1;
-            //Backstepping is not affected by player rotation
-            dashDir.y = 0;
-            dashDir.Normalize();
-            rb.AddForce(dashDir * dashForce / 2, ForceMode.Impulse);
-            yield return new WaitForSeconds(0.2f);
-
-
-        }
-        else if (isGrounded || (!isGrounded && currMidairBoosts > 0))
-        {
-            //do full directional dash
-
-            //Get direction of the dash based on player input
-            Vector3 dashDir = orientationFlat.transform.right * Input.GetAxis("Horizontal") + orientationFlat.transform.forward * Input.GetAxis("Vertical");
-
-            dashDir.Normalize();
-            rb.AddForce(dashDir * dashForce, ForceMode.Impulse);
-            //subtract if not grounded
-            if (!isGrounded) { currMidairBoosts--; }
-            yield return new WaitForSeconds(0.25f);
-
-        }
-        dashing = false;
-        yield return new WaitForSeconds(0.1f);
-        allowedToDash = true;
-
-    }
-
     private bool FindLockableTarget(Transform origin, Vector3 direction, int LayerMask, float angleTolerance, bool ignoreCurrentTarget, string method = "close")
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
@@ -590,7 +535,7 @@ public class Player3PCam : MonoBehaviour
     public void OnMove(InputValue v) //Does not actually move player - only updates movement vector
     {
         rawMoveInput = v.Get<Vector2>();
-        if (rawMoveInput.magnitude == 0)
+        if (rawMoveInput.magnitude == 0 || dashing)
         {
             sprinting = false;
             playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
@@ -606,7 +551,7 @@ public class Player3PCam : MonoBehaviour
     public void OnSprint(InputValue v)
     {
         //TODO: Move animator updates to a different script
-        if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded)
+        if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded && !dashing)
         {
             sprinting = true;
             playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
@@ -630,6 +575,43 @@ public class Player3PCam : MonoBehaviour
         {
             ActiveCameraMode = CameraMode.Free;
         }
+    }
+    public void OnDodge()
+    {
+        if(!allowedToDash){return;}
+        //Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
+        allowedToDash = false;
+        dashing = true;
+
+        if (rawMoveInput.magnitude == 0)
+        {
+            //do backstep
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            Vector3 dashDir = orientationFlat.forward * -1;
+            dashDir.y = 0;
+            dashDir.Normalize();
+            rb.AddForce(dashDir * dashForce / 2, ForceMode.Impulse);
+            StartCoroutine(DashCooldown(0.15f));
+        }
+        else if (isGrounded || (!isGrounded && currMidairBoosts > 0))
+        {
+            //do full directional dash
+
+            //Get direction of the dash based on player input
+            Vector3 dashDir = orientationFlat.transform.right * rawMoveInput.x + orientationFlat.transform.forward * rawMoveInput.y;
+            dashDir.Normalize();
+            rb.AddForce(dashDir * dashForce, ForceMode.Impulse);
+            //subtract if not grounded
+            if (!isGrounded) { currMidairBoosts--; }
+            StartCoroutine(DashCooldown(0.25f));
+        }
+    }
+    private IEnumerator DashCooldown(float dashDur)
+    {
+        yield return new WaitForSeconds(dashDur);
+        dashing = false;
+        yield return new WaitForSeconds(0.1f);
+        allowedToDash = true;
     }
 
     //  Public Getters & Setters
