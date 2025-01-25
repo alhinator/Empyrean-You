@@ -68,7 +68,6 @@ public class Player3PCam : MonoBehaviour
     private bool isGrounded;
     private float canJump;
     private float boostTapCount;
-    private float sprintDuration;
 
     public bool inputLocked;
     private bool dashing = false;
@@ -83,7 +82,6 @@ public class Player3PCam : MonoBehaviour
     [Header("Control Variables")]
     private PlayerInput playerControls;
     private Vector2 rawMoveInput;
-    private Vector2 cameraInputDirection;
 
 
 
@@ -135,8 +133,21 @@ public class Player3PCam : MonoBehaviour
     {
         GroundedCheckAndDrag();
         MovePlayer();
+        BumpPlayerAwayFromTarget();
         DoSpeedControl();
     }
+
+    private void BumpPlayerAwayFromTarget()
+    {
+        if (currentTargetLock != null && flatDist < 0.3f)
+        {
+            rb.AddForce(orientationFlat.forward * -2, ForceMode.VelocityChange);
+        }
+        // if(currentTargetLock != null && flatDist < 0.1f){
+        //     rb.AddForce(Vector3.right * (player.position.x - currentTargetLock.position.x ) * 3, ForceMode.VelocityChange);
+        // } 
+    }
+
     //Private Functions
 
     private void CheckTargetLoSRange()
@@ -158,23 +169,18 @@ public class Player3PCam : MonoBehaviour
         }
         else if (currCamMode == CameraMode.Locked)
         {
-            Vector3 tg = actualLookPosition.position;
-            Vector3 here = player.transform.position;
-            if (!isGrounded && (flatDist < 3 || (flatDist < 5 && Math.Abs(here.y - tg.y) > 10)))
+            unlockLookCamera.enabled = false;
+            if (!isGrounded && flatDist < 5)
             {
                 aerialCombatCamera.enabled = false;
                 aerialCloseCamera.enabled = true;
+
             }
-            else if (!isGrounded && (flatDist > 9 || (flatDist > 7 && Math.Abs(here.y - tg.y) < 10)))
+            else if (!isGrounded && flatDist >=5)
             {
                 aerialCombatCamera.enabled = true;
                 aerialCloseCamera.enabled = false;
 
-            }
-            else if (!isGrounded)
-            {
-                aerialCombatCamera.enabled = true;
-                aerialCloseCamera.enabled = false;
             }
             else if (isGrounded)
             {
@@ -203,8 +209,12 @@ public class Player3PCam : MonoBehaviour
         }
 
         //Set orientation and flat orientation.
+        //If not grounded, and targeting something, and very close, lerp orientation to avoid camera jerkiness.
+
         orientation.forward = viewDir.normalized;
-        orientationFlat.forward = new Vector3(viewDir.normalized.x, 0, viewDir.normalized.z);
+        orientationFlat.forward = new Vector3(orientation.forward.x, 0, orientation.forward.z);
+
+
 
         Vector3 adjustOffsetToSprint(Vector3 original)
         {
@@ -222,7 +232,7 @@ public class Player3PCam : MonoBehaviour
 
         //Set camera to turn automatically if player is sprinting forwards or sideways
         //Additionally , allow player to rotate freely of camera if sprinting.
-        Vector3 offset = currCamMode == CameraMode.Free ? orientationFlat.forward : orientation.forward;
+        Vector3 offset = currCamMode == CameraMode.Free || isGrounded ? orientationFlat.forward : orientation.forward;
         if (sprinting && rawMoveInput.magnitude > 0 && isGrounded)
         {
             if (rawMoveInput.y >= 0)
@@ -236,6 +246,11 @@ public class Player3PCam : MonoBehaviour
                 unlockLookCamera.m_Follow = player;
             }
             offset = adjustOffsetToSprint(orientationFlat.forward);
+        }
+        else
+        {
+            unlockLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+            unlockLookCamera.m_Follow = player;
         }
 
 
@@ -256,6 +271,7 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.m_Follow = orientationFlat;
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
             aerialCombatCamera.m_Follow = orientation;
+            aerialCloseCamera.m_Follow = playerObj;
 
             AdjustCameraOrbit();
             //Always adjust the player model rotation.
@@ -304,10 +320,10 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.5f * Time.deltaTime);
             //And adjust close camera
 
-            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius, Time.deltaTime);
+            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius*2, Time.deltaTime);
             aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 1.5f, rotationSpeed * Time.deltaTime);
             combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 2, rotationSpeed * Time.deltaTime);
-            aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / -4, rotationSpeed * Time.deltaTime);
+            aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 4, rotationSpeed * Time.deltaTime);
 
             i++;
         }
@@ -568,10 +584,22 @@ public class Player3PCam : MonoBehaviour
     public void OnMove(InputValue v) //Does not actually move player - only updates movement vector
     {
         rawMoveInput = v.Get<Vector2>();
+        if (rawMoveInput.magnitude == 0)
+        {
+            sprinting = false;
+            playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
+
+        }
+        else if (InputSystem.actions.FindAction("Sprint").ReadValue<float>() == 1)
+        {
+            sprinting = true;
+            playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
+        }
     }
 
     public void OnSprint(InputValue v)
     {
+        //TODO: Move animator updates to a different script
         if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded)
         {
             sprinting = true;

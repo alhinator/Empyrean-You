@@ -190,7 +190,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""id"": ""c2b0b598-e6c9-4b90-b044-996430117780"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": ""InvertVector2(invertX=false)"",
+                    ""processors"": ""InvertVector2(invertX=false),NormalizeVector2"",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
