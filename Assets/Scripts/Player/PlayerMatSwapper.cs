@@ -26,11 +26,6 @@ public class PlayerMatSwapper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("SPACE"))
-        {
-            DebugInvis = !DebugInvis;
-            SetInvis(DebugInvis);
-        }
     }
 
     public void SetPlayerColor(Color line, Color fill)
