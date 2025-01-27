@@ -17,14 +17,14 @@ public class InputTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string txt = "horiz:" + InputSystem.actions.FindAction("Move").ReadValue<Vector2>().x + "\nvert:" + InputSystem.actions.FindAction("Move").ReadValue<Vector2>().y + " \npan L/R:" + Input.GetAxis("Mouse X") + " \npan U/D:" + Input.GetAxis("Mouse Y");
+        string txt = "horiz:" + InputSystem.actions.FindAction("Move").ReadValue<Vector2>().x + "\nvert:" + InputSystem.actions.FindAction("Move").ReadValue<Vector2>().y + " \npan L/R:" + InputSystem.actions.FindAction("Look").ReadValue<Vector2>().x + " \npan U/D:" + InputSystem.actions.FindAction("Look").ReadValue<Vector2>().y;
         txt += "\ndashing:" + player3PCam.IsDashing;
         txt += "\ncan dash:" + player3PCam.CanDash;
         Vector3 d = player3PCam.DistanceFromCurrentTarget;
         txt += "\n Distance to current target: (" + d.x + ", " + d.y + ", " + d.z;
-        if (Input.GetButton("DODGE")) { txt += "\ndodge or sprint"; }
-        if (Input.GetButton("SPACE")) { txt += "\njump"; }
-        if (Input.GetButton("CAMLOCK")) { txt += "\ncam lock"; }
+        if (InputSystem.actions.FindAction("Dodge").IsPressed()) { txt += "\ndodge or sprint"; }
+        if (InputSystem.actions.FindAction("Jump").IsPressed()) { txt += "\njump"; }
+        if (InputSystem.actions.FindAction("CameraLock").IsPressed()) { txt += "\ncam lock"; }
         GetComponent<TMP_Text>().text = txt;
     }
 }

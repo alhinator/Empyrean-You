@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
@@ -26,10 +27,12 @@ public class MainMenuScript : MonoBehaviour
     }
     public void StartDescent()
     {
-        StartCoroutine(DescendToHangar());
+        //StartCoroutine(DescendToHangar());
         remappingCanvas.enabled = false;
         mainMenuCanvas.enabled = false;
         eventSystem.SetSelectedGameObject(null);
+        SceneManager.LoadScene("Alaina-Testing");
+
     }
     private IEnumerator DescendToHangar()
     {

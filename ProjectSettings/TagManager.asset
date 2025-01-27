@@ -6,8 +6,8 @@ TagManager:
   tags:
   - TargetPoint
   - HighPrioTarget
-  - PlayerSpecialMesh
   - PlayerMesh
+  - ControllableCamera
   layers:
   - Default
   - TransparentFX

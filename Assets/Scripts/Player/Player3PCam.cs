@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using Cinemachine;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 //Contains edited code adapted from https://www.youtube.com/watch?v=f473C43s8nE
 
@@ -48,6 +46,8 @@ public class Player3PCam : MonoBehaviour
     public float myMaxLockonRange;
     public float bumpDuration;
     private float timeInLockedCam;
+    public bool invertX;
+    public bool invertY;
 
 
     [Header("PlayerMovementVariables")]
@@ -84,7 +84,6 @@ public class Player3PCam : MonoBehaviour
     private PlayerInput playerInput;
     private Vector2 rawMoveInput;
     private Coroutine lastBoostCo;
-    public bool invertYLook = true;
 
 
     //Unity Functions
@@ -96,6 +95,7 @@ public class Player3PCam : MonoBehaviour
         rb.freezeRotation = true;
         ActiveCameraMode = CameraMode.Free;
         playerInput = GetComponent<PlayerInput>();
+
     }
     private void Update()
     {
@@ -414,7 +414,7 @@ public class Player3PCam : MonoBehaviour
         }
         else
         {
-            actualLookPosition.position = Vector3.Lerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed/2 * Time.deltaTime);
+            actualLookPosition.position = Vector3.Lerp(actualLookPosition.position, currentTargetLock.position, rotationSpeed / 2 * Time.deltaTime);
         }
 
     }
@@ -423,8 +423,9 @@ public class Player3PCam : MonoBehaviour
         if (currCamMode != CameraMode.Locked) { return; }
 
         Vector2 LookDelta = playerInput.actions.FindAction("Look").ReadValue<Vector2>();
-        if(invertYLook){LookDelta.y *= -1;}
-        if (Mathf.Abs(LookDelta.x) < 0.2 && Mathf.Abs(LookDelta.y) < 0.2)
+        if (invertX) { LookDelta.x *= -1; }
+        if (invertY) { LookDelta.y *= -1; }
+        if (Mathf.Abs(LookDelta.x) < 0.01 && Mathf.Abs(LookDelta.y) < 0.01)
         {
             bumpDuration = 0;
         }
@@ -674,6 +675,14 @@ public class Player3PCam : MonoBehaviour
         }
     }
 
+    public void SetInvertBumps(bool[] inverts)
+    {
+        Debug.Log(inverts[0]);
+        Debug.Log(!inverts[1]);
+
+        invertX = inverts[0];
+        invertY = !inverts[1];
+    }
 }
 
 
