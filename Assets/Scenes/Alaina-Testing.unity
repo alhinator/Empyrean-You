@@ -2794,7 +2794,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 250, y: 1, z: 250}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -6879,7 +6879,8 @@ MonoBehaviour:
   maxSlopeValue: 3
   myMaxLockonRange: 100
   bumpDuration: 0
-  invertBumps: 
+  invertX: 0
+  invertY: 0
   rb: {fileID: 4854891201739624824}
   moveSpeed: 25
   sprintSpeed: 45
@@ -6915,7 +6916,7 @@ GameObject:
   - component: {fileID: 1391881242194269976}
   - component: {fileID: 2644094227116826345}
   m_Layer: 0
-  m_Name: Player
+  m_Name: f
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7057,7 +7058,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6696474663864484917}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07555451, y: 0, z: 0, w: 0.9971417}
+  m_LocalRotation: {x: 0.07555451, y: -0.000000041119826, z: 0.0000000031156937, w: 0.9971417}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
