@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 7595422702048770023}
   - component: {fileID: 8734202891998448102}
   - component: {fileID: 1074033840624783586}
+  - component: {fileID: 8827714982426353157}
   m_Layer: 0
   m_Name: Epona
   m_TagString: Untagged
@@ -204,3 +205,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8827714982426353157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3908173808120643662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30f650713579a884aa0612621bb505f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletOrigin: {fileID: 0}
+  pivotPoint: {fileID: 0}
+  primaryParticles: {fileID: 0}
+  RateOfFire: 0
+  chargeTime: 0
+  bulletDamage: 0
+  perShotRecoil: 0
+  APR: 0
+  UsesAmmunition: 0
+  UsesMaxAmmunition: 0
+  maximumAmmo: 0
+  MagazineSize: 0

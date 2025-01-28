@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 4193652748746304176}
   - component: {fileID: 7019516932941239756}
   - component: {fileID: 1050689021496618961}
+  - component: {fileID: 6639448443998396488}
   m_Layer: 0
   m_Name: Raijin
   m_TagString: Untagged
@@ -283,3 +284,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6639448443998396488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499178964622930018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b3ca0e8ac9fa44896846e16807edfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletOrigin: {fileID: 0}
+  pivotPoint: {fileID: 0}
+  primaryParticles: {fileID: 0}
+  RateOfFire: 0
+  chargeTime: 0
+  bulletDamage: 0
+  perShotRecoil: 0
+  APR: 0
+  UsesAmmunition: 0
+  UsesMaxAmmunition: 0
+  maximumAmmo: 0
+  MagazineSize: 0

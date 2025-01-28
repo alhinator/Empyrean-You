@@ -2,6 +2,7 @@ using System;
 
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class WeaponManager : MonoBehaviour
 
     private GameObject LeftWeapon;
     private GameObject RightWeapon;
+    private Gun mainGun;
+    private Gun offGun;
 
     [SerializeField] public GameObject[] WeaponPrefabs;
 
@@ -27,6 +30,15 @@ public class WeaponManager : MonoBehaviour
 
         //DEBUG CODE ONLY
         AssignWeapons(1, 1);
+
+        //Get their gun scripts
+        mainGun = RightWeapon.GetComponent<Gun>();
+        offGun = LeftWeapon.GetComponent<Gun>();
+        if(mainGun == null || offGun == null){
+            throw new System.Exception("PlayerController: Start: Missing a gun.");
+        } else {
+            Debug.Log(offGun.GetType());
+        }
     }
 
     public void AssignWeapons(int left_id, int right_id)
@@ -49,6 +61,35 @@ public class WeaponManager : MonoBehaviour
         RightWeapon.GetComponent<ParentConstraint>().constraintActive = true;
 
 
+    }
+
+    public void OnFire1(InputValue v)
+    {
+        if (v.Get<float>() == 1)
+        {
+            //gun fire down;
+            mainGun.TriggerDown();
+        }
+        else
+        {
+            //gun fire up
+            mainGun.TriggerUp();
+
+        }
+    }
+    public void OnFire2(InputValue v)
+    {
+
+        if (v.Get<float>() == 1)
+        {
+            //gun fire down;
+            offGun.TriggerDown();
+        }
+        else
+        {
+            //gun fire up
+            offGun.TriggerUp();
+        }
     }
 
 

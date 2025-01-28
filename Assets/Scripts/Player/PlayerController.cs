@@ -1,3 +1,4 @@
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,8 +7,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private Animator animController;
-
-
 
     private void Start()
     {
@@ -21,4 +20,5 @@ public class PlayerController : MonoBehaviour
         animController.SetFloat("InputXAxis", rawInput.x);
         animController.SetFloat("InputYAxis", rawInput.y);
     }
+    
 }
