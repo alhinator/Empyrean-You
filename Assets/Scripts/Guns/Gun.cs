@@ -1,5 +1,6 @@
 
 using System;
+using TMPro;
 using UnityEngine;
 
 public abstract class Gun : MonoBehaviour
@@ -26,6 +27,9 @@ public abstract class Gun : MonoBehaviour
     /// </summary>
     public AudioClip shootSound;
     public WeaponManager weaponManager;
+
+    public TMP_Text myHudText;
+    public TMP_Text myHudSecondaryText;
 
 
     [Header("Gun Attributes")]

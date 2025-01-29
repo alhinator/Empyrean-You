@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 public class Artemis : Gun
@@ -9,6 +10,7 @@ public class Artemis : Gun
     void Start()
     {
         firedParticles.transform.parent = null;
+        myHudSecondaryText.text = "CHG";
     }
     void Update()
     {
@@ -22,6 +24,8 @@ public class Artemis : Gun
             audioSource.loop = true;
             audioSource.Play();
         }
+        myHudText.text = ((int)Math.Clamp(currCharge / chargeTime * 100, 0, 100)).ToString();
+
     }
     public override void TriggerDown()
     {
@@ -73,8 +77,8 @@ public class Artemis : Gun
         //Particle system line code modified from https://discussions.unity.com/t/emit-particles-throughout-a-line-ray/227355/3
 
         Vector3 particlePosition = (endposition - startPosition) / 2 + startPosition; // particle system position is delta middle + start position
-        float distance = Vector3.Distance(endposition, startPosition) / 2 ; //distance is half the total distance since line extends both ways
-        int numParticles = (int)(distance * 100);
+        float distance = Vector3.Distance(endposition, startPosition) / 2; //distance is half the total distance since line extends both ways
+        int numParticles = (int)(distance * 50);
 
         firedParticles.transform.position = particlePosition; //update the system's position
         firedParticles.transform.LookAt(endposition); //adjust the look rotation. NOTE: the particle system has a y rotation of 90 in the shape module for this to work.

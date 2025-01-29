@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 
 using UnityEngine;
 using UnityEngine.Animations;
@@ -18,6 +19,10 @@ public class WeaponManager : MonoBehaviour
     private GameObject RightWeapon;
     private Gun mainGun;
     private Gun offGun;
+    public TMP_Text leftPrimaryUIText;
+    public TMP_Text rightPrimaryUIText;
+    public TMP_Text leftSecondaryUIText;
+    public TMP_Text rightSecondaryUIText;
 
     [SerializeField] public GameObject[] WeaponPrefabs;
 
@@ -25,6 +30,7 @@ public class WeaponManager : MonoBehaviour
     public Transform aimPoint;
     public Camera realCamera;
     private Player3PCam player3PCam;
+    private HUDManager Hud;
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +47,10 @@ public class WeaponManager : MonoBehaviour
         //Get their gun scripts
         mainGun = RightWeapon.GetComponent<Gun>();
         offGun = LeftWeapon.GetComponent<Gun>();
+        mainGun.myHudText = leftPrimaryUIText;
+        offGun.myHudText = rightPrimaryUIText;
+        mainGun.myHudSecondaryText = leftSecondaryUIText;
+        offGun.myHudSecondaryText = rightSecondaryUIText;
         if (mainGun == null || offGun == null)
         {
             throw new System.Exception("PlayerController: Start: Missing a gun.");
@@ -52,26 +62,23 @@ public class WeaponManager : MonoBehaviour
 
         //set player3pcam variable
         player3PCam = GetComponent<Player3PCam>();
+        Hud = GetComponent<HUDManager>();
     }
     void Update()
     {
-        if (player3PCam.currentTargetLock)
+
+        float furthest = Math.Max(LeftWeapon.GetComponent<Gun>().range, RightWeapon.GetComponent<Gun>().range);
+        Vector3 direction = (Hud.reticle.transform.position - realCamera.transform.position).normalized;
+        Physics.Raycast(realCamera.transform.position, direction, out RaycastHit hit, furthest, LayerMask.GetMask("WalkableTerrain", "CameraObstacle", "Enemy"));
+        if (hit.transform)
         {
-            aimPoint.position = player3PCam.currentTargetLock.position;
+            aimPoint.position = hit.point;
         }
         else
         {
-            float furthest = Math.Max(LeftWeapon.GetComponent<Gun>().range, RightWeapon.GetComponent<Gun>().range);
-            Physics.Raycast(realCamera.transform.position, realCamera.transform.forward, out RaycastHit hit, furthest, LayerMask.GetMask("WalkableTerrain", "CameraObstacle", "Enemy"));
-            if (hit.transform)
-            {
-                aimPoint.position = hit.point;
-            }
-            else
-            {
-                aimPoint.position = realCamera.transform.position + (realCamera.transform.forward * furthest);
-            }
+            aimPoint.position = realCamera.transform.position + (direction * furthest);
         }
+
         AdjustPivotAndAimPoints();
 
 
