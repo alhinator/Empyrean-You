@@ -17,7 +17,14 @@ public abstract class Gun : MonoBehaviour
     /// The primary particle system to play when firing this weapon.
     /// </summary>
     public ParticleSystem primaryParticles;
-
+    /// <summary>
+    /// The primary audio source used for this gun.
+    /// </summary>
+    public AudioSource audioSource;
+    /// <summary>
+    /// The default audioClip to be played when firing.
+    /// </summary>
+    public AudioClip shootSound;
 
     [Header("Gun Attributes")]
     /// <summary>
@@ -30,7 +37,7 @@ public abstract class Gun : MonoBehaviour
     /// How long it takes for the gun to "wind up" before firing"
     /// </summary>
     public float chargeTime;
-
+    protected float currCharge;
     /// <summary>
     /// Damage dealt on hit
     /// </summary>

@@ -7657,6 +7657,7 @@ GameObject:
   - component: {fileID: 7546857990494600193}
   - component: {fileID: 2025372995526536679}
   - component: {fileID: 2957983042165931248}
+  - component: {fileID: 7546857990494600194}
   m_Layer: 0
   m_Name: ActualCamera
   m_TagString: Untagged
@@ -11257,7 +11258,7 @@ MonoBehaviour:
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
     m_InputAxisValue: 0
-    m_InvertInput: 0
+    m_InvertInput: 1
     m_MinValue: 0
     m_MaxValue: 1
     m_Wrap: 0
@@ -11346,6 +11347,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2364905266312182926}
   m_LocalEulerAnglesHint: {x: 3.596, y: 138.031, z: -2.796}
+--- !u!81 &7546857990494600194
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2444877833279974206}
+  m_Enabled: 1
 --- !u!1 &7589149985673891594
 GameObject:
   m_ObjectHideFlags: 3

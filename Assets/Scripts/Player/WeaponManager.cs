@@ -65,12 +65,12 @@ public class WeaponManager : MonoBehaviour
 
     public void OnFire1(InputValue v)
     {
-        if (v.Get<float>() == 1)
+        if (v.Get<float>() > InputSystem.settings.defaultButtonPressPoint)
         {
             //gun fire down;
             mainGun.TriggerDown();
         }
-        else
+        else if (v.Get<float>() < InputSystem.settings.buttonReleaseThreshold)
         {
             //gun fire up
             mainGun.TriggerUp();
@@ -80,12 +80,12 @@ public class WeaponManager : MonoBehaviour
     public void OnFire2(InputValue v)
     {
 
-        if (v.Get<float>() == 1)
+        if (v.Get<float>() > InputSystem.settings.defaultButtonPressPoint)
         {
             //gun fire down;
             offGun.TriggerDown();
         }
-        else
+        else if (v.Get<float>() < InputSystem.settings.buttonReleaseThreshold)
         {
             //gun fire up
             offGun.TriggerUp();
