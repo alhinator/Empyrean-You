@@ -27,6 +27,7 @@ public abstract class Gun : MonoBehaviour
     /// </summary>
     public AudioClip shootSound;
     public WeaponManager weaponManager;
+    public PlayerController playerReference;
 
     public TMP_Text myHudText;
     public TMP_Text myHudSecondaryText;
@@ -105,5 +106,11 @@ public abstract class Gun : MonoBehaviour
         {
             return currAmmo;
         }
+    }
+    public virtual void TriggerOnHitEffects(Shootable s){
+
+    }
+    public virtual void TriggerOnKillEffects(Shootable s){
+
     }
 }

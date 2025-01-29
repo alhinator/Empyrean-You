@@ -21,4 +21,11 @@ public class PlayerController : MonoBehaviour
         animController.SetFloat("InputYAxis", rawInput.y);
     }
     
+    public void TriggerOnHitEffects(Shootable s){
+
+    }
+    
+    public void TriggerOnKillEffects(Shootable s){
+        GetComponent<Player3PCam>().EnemyKilledEvent();
+    }
 }

@@ -29,7 +29,7 @@ public class Artemis : Gun
     }
     public override void TriggerDown()
     {
-        Debug.Log("In triggerdowm artemis");
+        //Debug.Log("In triggerdowm artemis");
         firing = true;
         audioSource.clip = chargeSound;
         audioSource.loop = false;
@@ -71,7 +71,7 @@ public class Artemis : Gun
         //This will determine our max raycast length when checking for hits against enemies.
         Physics.Raycast(bulletOrigin.position, bulletOrigin.forward, out RaycastHit hit, range, LayerMask.GetMask("WalkableTerrain", "CameraObstacle"));
         //now set our end position.
-        Debug.Log(hit.transform);
+        //Debug.Log(hit.transform);
         Vector3 endposition = hit.transform ? hit.point : bulletOrigin.position + bulletOrigin.forward * range;
         Vector3 startPosition = bulletOrigin.position;
         //Particle system line code modified from https://discussions.unity.com/t/emit-particles-throughout-a-line-ray/227355/3
@@ -91,7 +91,14 @@ public class Artemis : Gun
         em.SetBurst(0, b); //set burst to be the number of desired particles.
         firedParticles.Play();
 
-        //TODO: RaycastAll to enemy layer using endPos as our target position.
+        //Now RaycastAll to enemy layer using endPos as our target position.
+        RaycastHit[] hits = Physics.RaycastAll(new Ray(startPosition, (endposition - startPosition).normalized), distance * 2, LayerMask.GetMask("Enemy"));
+        foreach (RaycastHit h in hits){
+            h.transform.gameObject.TryGetComponent<Shootable>(out Shootable s);
+            if(s != null){
+                s.HitDetected(playerReference, this);
+            }
+        }
     }
 
 }

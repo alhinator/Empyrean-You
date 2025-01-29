@@ -30,11 +30,18 @@ public class WeaponManager : MonoBehaviour
     public Transform aimPoint;
     public Camera realCamera;
     private Player3PCam player3PCam;
+    private PlayerController playerCont;
     private HUDManager Hud;
 
     // Start is called before the first frame update
     void Start()
     {
+        //set player reference variables
+        player3PCam = GetComponent<Player3PCam>();
+        Hud = GetComponent<HUDManager>();
+        playerCont = GetComponent<PlayerController>();
+
+
         //Assign Constraints to their transforms.
         LeftConstraint.sourceTransform = LeftArmMount;
         LeftConstraint.weight = 1f;
@@ -51,6 +58,8 @@ public class WeaponManager : MonoBehaviour
         offGun.myHudText = rightPrimaryUIText;
         mainGun.myHudSecondaryText = leftSecondaryUIText;
         offGun.myHudSecondaryText = rightSecondaryUIText;
+        mainGun.playerReference = playerCont;
+        offGun.playerReference = playerCont;
         if (mainGun == null || offGun == null)
         {
             throw new System.Exception("PlayerController: Start: Missing a gun.");
@@ -60,9 +69,7 @@ public class WeaponManager : MonoBehaviour
             Debug.Log(offGun.GetType());
         }
 
-        //set player3pcam variable
-        player3PCam = GetComponent<Player3PCam>();
-        Hud = GetComponent<HUDManager>();
+        
     }
     void Update()
     {

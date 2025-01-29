@@ -5006,9 +5006,12 @@ MonoBehaviour:
   audioSource: {fileID: 432742687210322865}
   shootSound: {fileID: 8300000, guid: 780fac092f953da4dbc6eda5ef0e5f91, type: 3}
   weaponManager: {fileID: 0}
+  playerReference: {fileID: 0}
+  myHudText: {fileID: 0}
+  myHudSecondaryText: {fileID: 0}
   RateOfFire: 0
   chargeTime: 1
-  bulletDamage: 50
+  bulletDamage: 120
   perShotRecoil: 0
   APR: 1
   range: 100

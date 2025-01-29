@@ -123,9 +123,6 @@ public class Player3PCam : MonoBehaviour
         {
             rb.AddForce(orientationFlat.forward * -2, ForceMode.VelocityChange);
         }
-        // if(currentTargetLock != null && flatDist < 0.1f){
-        //     rb.AddForce(Vector3.right * (player.position.x - currentTargetLock.position.x ) * 3, ForceMode.VelocityChange);
-        // } 
     }
 
     //Private Functions
@@ -388,6 +385,8 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
+            Debug.Log("in find tg, found a tg.");
+            Debug.Log(potentialTarget.transform.name);
             if (currentTargetLock) //place lookAt position between player and target if a previous target didn't exist
             {
                 currentTargetLock = potentialTarget.transform;
@@ -408,7 +407,7 @@ public class Player3PCam : MonoBehaviour
     }
     private void AdjustActualLookPos()
     {
-        if (currCamMode != CameraMode.Locked) { return; }
+        if (currCamMode != CameraMode.Locked || !currentTargetLock) { return; }
 
         if (Vector3.Distance(actualLookPosition.position, currentTargetLock.position) <= 0.1f)
         {
@@ -449,7 +448,6 @@ public class Player3PCam : MonoBehaviour
             FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 30, true, "angle");
         }
     }
-
     private void MovePlayer()
     {
         if (dashing) { return; } //If player is mid-dash do not adjust movement
@@ -518,6 +516,23 @@ public class Player3PCam : MonoBehaviour
         {
             ActiveCameraMode = CameraMode.Free;
         }
+    }
+    public void EnemyKilledEvent()
+    {
+        Debug.Log("In enemy killed event,");
+        if (autoFindNewTarget && ActiveCameraMode == CameraMode.Locked)
+        {
+            Debug.Log("Attempting to find a new tg");
+            if(!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, true, "angle")){
+                Debug.Log("Did not find an enemy to lock");
+                ActiveCameraMode = CameraMode.Free;
+            }
+        }
+        else
+        {
+            ActiveCameraMode = CameraMode.Free;
+        }
+
     }
     public void OnDodge()
     {
@@ -641,6 +656,7 @@ public class Player3PCam : MonoBehaviour
             if (value == CameraMode.Free)
             {
                 currentTargetLock = null;
+
                 currCamMode = value;
             }
             else
