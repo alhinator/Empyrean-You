@@ -25,6 +25,8 @@ public abstract class Gun : MonoBehaviour
     /// The default audioClip to be played when firing.
     /// </summary>
     public AudioClip shootSound;
+    public WeaponManager weaponManager;
+
 
     [Header("Gun Attributes")]
     /// <summary>
@@ -54,6 +56,10 @@ public abstract class Gun : MonoBehaviour
 
     protected float fireTimer;
     protected bool firing = false;
+    /// <summary>
+    /// The number of units this weapon can check for hits.
+    /// </summary>
+    public float range;
 
     [Header("Ammunition")]
 

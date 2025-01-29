@@ -21,7 +21,7 @@ TagManager:
   - TargetPoint
   - WalkableTerrain
   - CameraObstacle
-  - 
+  - Enemy
   - 
   - 
   - 

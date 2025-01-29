@@ -239,11 +239,13 @@ public class Player3PCam : MonoBehaviour
         //Now adjust player forward and other housekeeping based on which cameras are active
         if (currCamMode == CameraMode.Free)
         {
-            //only adjust the player model rotation if there is a movement input or the player is off the ground.
-            if (rawMoveInput.magnitude > 0 || !isGrounded)
-            {
-                playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
-            }
+            // //only adjust the player model rotation if there is a movement input or the player is off the ground.
+            // if (rawMoveInput.magnitude > 0 || !isGrounded)
+            // {
+            //     playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
+            // }
+            //Updated for gun aim code: always adjust player model rotation.
+            playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
         }
         else if (currCamMode == CameraMode.Locked)
         {

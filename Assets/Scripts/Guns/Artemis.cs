@@ -1,8 +1,15 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 public class Artemis : Gun
 {
+    [Header("Artemis Unique")]
     public AudioClip chargeSound;
     public AudioClip holdSound;
+    public ParticleSystem firedParticles;
+    void Start()
+    {
+        firedParticles.transform.parent = null;
+    }
     void Update()
     {
         if (firing)
@@ -33,13 +40,14 @@ public class Artemis : Gun
         //Debug.Log(currCharge);
         if (currCharge > chargeTime)
         {
-            Debug.DrawRay(bulletOrigin.position, bulletOrigin.forward * 100, Color.red, 0.01f);
+            Debug.DrawRay(bulletOrigin.position, bulletOrigin.forward * range, Color.red, 0.01f);
             Shoot();
         }
         else
         {
             if (audioSource.isPlaying && audioSource.clip == chargeSound)
             {
+                primaryParticles.Stop();
                 audioSource.Stop();
                 audioSource.clip = null;
             }
@@ -53,7 +61,33 @@ public class Artemis : Gun
         audioSource.clip = null;
         audioSource.loop = false;
         audioSource.PlayOneShot(shootSound);
-        Debug.DrawRay(bulletOrigin.position, bulletOrigin.forward * 100, Color.cyan, 0.01f);
+        Debug.DrawRay(bulletOrigin.position, bulletOrigin.forward * range, Color.cyan, 1f);
+
+        //Firstly, we want to draw a raycast *through* the current aimPoint until we hit a scene object or hit our max range.
+        //This will determine our max raycast length when checking for hits against enemies.
+        Physics.Raycast(bulletOrigin.position, bulletOrigin.forward, out RaycastHit hit, range, LayerMask.GetMask("WalkableTerrain", "CameraObstacle"));
+        //now set our end position.
+        Debug.Log(hit.transform);
+        Vector3 endposition = hit.transform ? hit.point : bulletOrigin.position + bulletOrigin.forward * range;
+        Vector3 startPosition = bulletOrigin.position;
+        //Particle system line code modified from https://discussions.unity.com/t/emit-particles-throughout-a-line-ray/227355/3
+
+        Vector3 particlePosition = (endposition - startPosition) / 2 + startPosition; // particle system position is delta middle + start position
+        float distance = Vector3.Distance(endposition, startPosition) / 2 ; //distance is half the total distance since line extends both ways
+        int numParticles = (int)(distance * 100);
+
+        firedParticles.transform.position = particlePosition; //update the system's position
+        firedParticles.transform.LookAt(endposition); //adjust the look rotation. NOTE: the particle system has a y rotation of 90 in the shape module for this to work.
+
+        ParticleSystem.ShapeModule sm = firedParticles.shape;
+        sm.radius = distance; //adjust the line size
+
+        ParticleSystem.EmissionModule em = firedParticles.emission;
+        ParticleSystem.Burst b = new ParticleSystem.Burst(0, numParticles);
+        em.SetBurst(0, b); //set burst to be the number of desired particles.
+        firedParticles.Play();
+
+        //TODO: RaycastAll to enemy layer using endPos as our target position.
     }
 
 }
