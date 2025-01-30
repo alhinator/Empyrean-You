@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Cinemachine;
 
 using UnityEngine;
@@ -517,16 +518,24 @@ public class Player3PCam : MonoBehaviour
             ActiveCameraMode = CameraMode.Free;
         }
     }
-    public void EnemyKilledEvent()
+    public void EnemyKilledEvent(Shootable s)
     {
-        Debug.Log("In enemy killed event,");
+
         if (autoFindNewTarget && ActiveCameraMode == CameraMode.Locked)
         {
-            Debug.Log("Attempting to find a new tg");
-            if(!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, true, "angle")){
-                Debug.Log("Did not find an enemy to lock");
-                ActiveCameraMode = CameraMode.Free;
+            TargetPoint[] tgs = s.gameObject.transform.GetComponentsInChildren<TargetPoint>();
+            if (tgs.Contains(currentTargetLock.GetComponent<TargetPoint>()))
+            {
+                //if true, The currently locked target point is a child of the Shootable that just got killed.
+                //Therefore, 
+                Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
+                if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, true, "angle"))
+                {
+                    Debug.Log("Did not find an enemy to lock");
+                    ActiveCameraMode = CameraMode.Free;
+                }
             }
+
         }
         else
         {

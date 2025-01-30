@@ -26,6 +26,6 @@ public class PlayerController : MonoBehaviour
     }
     
     public void TriggerOnKillEffects(Shootable s){
-        GetComponent<Player3PCam>().EnemyKilledEvent();
+        GetComponent<Player3PCam>().EnemyKilledEvent(s);
     }
 }
