@@ -49,7 +49,7 @@ public class WeaponManager : MonoBehaviour
         RightConstraint.weight = 1f;
 
         //DEBUG CODE ONLY
-        AssignWeapons(1, 1);
+        AssignWeapons(0, 1);
 
         //Get their gun scripts
         mainGun = RightWeapon.GetComponent<Gun>();

@@ -7504,7 +7504,7 @@ MonoBehaviour:
   leftSecondaryUIText: {fileID: 989639576}
   rightSecondaryUIText: {fileID: 1334233578}
   WeaponPrefabs:
-  - {fileID: 4905213139110766437, guid: 1e735dfe80316e246b24ac2e026e77e3, type: 3}
+  - {fileID: 9025960252935059178, guid: 1e735dfe80316e246b24ac2e026e77e3, type: 3}
   - {fileID: 2631022559516490476, guid: 555533ded4c1fa8458d69849701a33aa, type: 3}
   - {fileID: 3908173808120643662, guid: 1a6d480dfd6d11e48ac2528b914ee172, type: 3}
   - {fileID: 1499178964622930018, guid: 9267433b28591cc41b8a4754c2c50c9e, type: 3}
