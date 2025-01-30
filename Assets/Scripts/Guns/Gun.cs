@@ -113,4 +113,7 @@ public abstract class Gun : MonoBehaviour
     public virtual void TriggerOnKillEffects(Shootable s){
 
     }
+    public virtual void Reload(){
+        
+    }
 }

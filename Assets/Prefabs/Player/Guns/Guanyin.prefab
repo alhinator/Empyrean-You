@@ -283,6 +283,9 @@ MonoBehaviour:
   UsesMaxAmmunition: 0
   maximumAmmo: 500
   MagazineSize: 25
+  OnHitSound: {fileID: 0}
+  ReloadSound: {fileID: 0}
+  reloading: 0
 --- !u!1 &8403472366899178663
 GameObject:
   m_ObjectHideFlags: 0
@@ -5268,3 +5271,6 @@ MonoBehaviour:
   UsesMaxAmmunition: 1
   maximumAmmo: 500
   MagazineSize: 25
+  OnHitSound: {fileID: 8300000, guid: 7d54b8c207f81f24f89f445983264e88, type: 3}
+  ReloadSound: {fileID: 8300000, guid: 7d54b8c207f81f24f89f445983264e88, type: 3}
+  reloading: 0

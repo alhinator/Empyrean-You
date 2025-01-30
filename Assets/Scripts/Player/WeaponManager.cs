@@ -69,7 +69,7 @@ public class WeaponManager : MonoBehaviour
             Debug.Log(offGun.GetType());
         }
 
-        
+
     }
     void Update()
     {
@@ -154,6 +154,12 @@ public class WeaponManager : MonoBehaviour
             //gun fire up
             offGun.TriggerUp();
         }
+    }
+
+    public void OnReload()
+    {
+        mainGun.Reload();
+        offGun.Reload();
     }
 
 
