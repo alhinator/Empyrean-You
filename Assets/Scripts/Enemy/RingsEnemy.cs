@@ -5,24 +5,21 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.ProBuilder;
 
-public class RingsEnemy : MonoBehaviour {
-    private float outerScale = 4.0f;
-    private float outerRadius1 = 101f;
-    private float outerRadius2 = 103f;
-    private float outerRadians1 = 0.0f;
-    private float outerRadians2 = 1.0f;
+public class RingsEnemy : Stateful<RingsEnemy, RingsEnemy.State> {
+    private float[] largePrimes = {
+        101f, 103f, 107f, 109f, 113f, 127f,
+        131f, 137f, 139f, 149f, 151f, 157f,
+        163f, 167f, 173f, 179f, 181f, 191f
+    };
     
-    private float middleScale = 2.0f;
-    private float middleRadius1 = 89f;
-    private float middleRadius2 = 91f;
-    private float middleRadians1 = 2.0f;
-    private float middleRadians2 = 3.0f;
+    private float outerScale = 9.0f;
+    private SO3Path outerOrientation;
+    
+    private float middleScale = 6.0f;
+    private SO3Path middleOrientation;
 
-    private float innerScale = 1.0f;
-    private float innerRadius1 = 83f;
-    private float innerRadius2 = 79f;
-    private float innerRadians1 = 4.0f;
-    private float innerRadians2 = 5.0f;
+    private float innerScale = 3.0f;
+    private SO3Path innerOrientation;
     
     [SerializeField]
     private Transform outerTransform;
@@ -30,59 +27,67 @@ public class RingsEnemy : MonoBehaviour {
     private Transform middleTransform;
     [SerializeField]
     private Transform innerTransform;
+
+    private float timeBetweenWalkSec = 10.0f;
+    private float timeSinceLastWalkSec = 0.0f;
+
+    private GameObject player;
     
-    Vector3 Sample(float radius1, float radius2, float radians1, float radians2) {
-        float x1 = radius1 * Mathf.Cos(radians1);
-        float y1 = radius1 * Mathf.Sin(radians1);
-        float x2 = radius2 * Mathf.Cos(radians2);
-        float y2 = radius2 * Mathf.Sin(radians2);
-
-        float u1 = Mathf.PerlinNoise(x1, y1);
-        float u2 = Mathf.PerlinNoise(x2, y2);
-
-        float u1Z = (u1 * 2) - 1;
-        float a = Mathf.Sqrt((1 - u1Z) * (1 + u1Z));
-        
-        float u2T = u2 * 2 * Mathf.PI;
-
-        float ux = a * Mathf.Cos(u2T);
-        float uy = a * Mathf.Sin(u2T);
-        
-        return new Vector3(ux, uy, u1Z);
+    public override State InitialState() {
+        return State.Idle.Instance.Value;
     }
     
-    Vector3 SampleOuter() => Sample(outerRadius1, outerRadius2, outerRadians1, outerRadians2);
-    Vector3 SampleMiddle() => Sample(middleRadius1, middleRadius2, middleRadians1, middleRadians2);
-    Vector3 SampleInner() => Sample(innerRadius1, innerRadius2, innerRadians1, innerRadians2);
-    
     // Start is called before the first frame update
-    void Start() {
+    new void Start() {
+        base.Start();
         
+        this.player = GameObject.FindGameObjectWithTag("Player");
+
+        this.outerOrientation = new SO3Path(this.outerScale,
+            this.largePrimes[0], this.largePrimes[1], this.largePrimes[2],
+            this.largePrimes[3], this.largePrimes[4], this.largePrimes[5],
+            0f, 1f, 2f, 3f, 4f, 5f);
+        this.middleOrientation = new SO3Path(this.middleScale,
+            this.largePrimes[6], this.largePrimes[7], this.largePrimes[8],
+            this.largePrimes[9], this.largePrimes[10], this.largePrimes[11],
+            6f, 7f, 8f, 9f, 10f, 11f);
+        this.innerOrientation = new SO3Path(this.innerScale,
+            this.largePrimes[12], this.largePrimes[13], this.largePrimes[14],
+            this.largePrimes[15], this.largePrimes[16], this.largePrimes[17],
+            12f, 13f, 14f, 15f, 16f, 17f);
     }
 
     // Update is called once per frame
-    void Update() {
-        // TODO I need to refactor this to not be so cringe
-        outerRadians1 += Time.deltaTime / (outerScale * outerRadius1);
-        outerRadians1 %= Mathf.PI * 2;
-        outerRadians2 += Time.deltaTime / (outerScale * outerRadius2);
-        outerRadians2 %= Mathf.PI * 2;
-        middleRadians1 += Time.deltaTime / (middleScale * middleRadius1);
-        middleRadians1 %= Mathf.PI * 2;
-        middleRadians2 += Time.deltaTime / (middleScale * middleRadius2);
-        middleRadians2 %= Mathf.PI * 2;
-        innerRadians1 += Time.deltaTime / (innerScale * innerRadius1);
-        innerRadians1 %= Mathf.PI * 2;
-        innerRadians2 += Time.deltaTime / (innerScale * innerRadius2);
-        innerRadians2 %= Mathf.PI * 2;
+    new void Update() {
+        base.Update();
+    }
+    
+    public abstract class State : StateTag<RingsEnemy, State> {
+        private State() {}
+
+        public sealed class Idle : State {
+            public static Lazy<Idle> Instance = new(() => new Idle());
         
-        Vector3 outer = SampleOuter();
-        this.outerTransform.localRotation = Quaternion.LookRotation(outer);
+            private Idle() { }
         
-        Vector3 middle = SampleMiddle();
-        this.middleTransform.localRotation = Quaternion.LookRotation(middle);
+            public override State Update(RingsEnemy self, float deltaTime) {
+                self.outerOrientation.Advance(deltaTime);
+                self.middleOrientation.Advance(deltaTime);
+                self.innerOrientation.Advance(deltaTime);
         
-        Vector3 inner = SampleInner();
-        this.innerTransform.localRotation = Quaternion.LookRotation(inner);
+                self.outerTransform.localRotation = self.outerOrientation.Sample();
+                self.middleTransform.localRotation = self.outerTransform.localRotation * self.middleOrientation.Sample();
+                self.innerTransform.localRotation = self.middleTransform.localRotation * self.innerOrientation.Sample();
+        
+                // TODO something better for deciding a random walk
+                // TODO figure out how to make "random events" a part of GOAP
+                self.timeSinceLastWalkSec += deltaTime;
+                if (self.timeSinceLastWalkSec > self.timeBetweenWalkSec) {
+                    self.timeSinceLastWalkSec -= self.timeBetweenWalkSec;
+                }
+
+                return null;
+            }
+        }
     }
 }
