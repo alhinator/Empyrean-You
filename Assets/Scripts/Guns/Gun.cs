@@ -1,5 +1,6 @@
 
 using System;
+using TMPro;
 using UnityEngine;
 
 public abstract class Gun : MonoBehaviour
@@ -17,6 +18,19 @@ public abstract class Gun : MonoBehaviour
     /// The primary particle system to play when firing this weapon.
     /// </summary>
     public ParticleSystem primaryParticles;
+    /// <summary>
+    /// The primary audio source used for this gun.
+    /// </summary>
+    public AudioSource audioSource;
+    /// <summary>
+    /// The default audioClip to be played when firing.
+    /// </summary>
+    public AudioClip shootSound;
+    public WeaponManager weaponManager;
+    public PlayerController playerReference;
+
+    public TMP_Text myHudText;
+    public TMP_Text myHudSecondaryText;
 
 
     [Header("Gun Attributes")]
@@ -30,7 +44,7 @@ public abstract class Gun : MonoBehaviour
     /// How long it takes for the gun to "wind up" before firing"
     /// </summary>
     public float chargeTime;
-
+    protected float currCharge;
     /// <summary>
     /// Damage dealt on hit
     /// </summary>
@@ -47,6 +61,10 @@ public abstract class Gun : MonoBehaviour
 
     protected float fireTimer;
     protected bool firing = false;
+    /// <summary>
+    /// The number of units this weapon can check for hits.
+    /// </summary>
+    public float range;
 
     [Header("Ammunition")]
 
@@ -88,5 +106,14 @@ public abstract class Gun : MonoBehaviour
         {
             return currAmmo;
         }
+    }
+    public virtual void TriggerOnHitEffects(Shootable s){
+
+    }
+    public virtual void TriggerOnKillEffects(Shootable s){
+
+    }
+    public virtual void Reload(){
+        
     }
 }

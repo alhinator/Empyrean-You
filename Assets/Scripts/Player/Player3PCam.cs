@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Cinemachine;
 
 using UnityEngine;
@@ -123,9 +124,6 @@ public class Player3PCam : MonoBehaviour
         {
             rb.AddForce(orientationFlat.forward * -2, ForceMode.VelocityChange);
         }
-        // if(currentTargetLock != null && flatDist < 0.1f){
-        //     rb.AddForce(Vector3.right * (player.position.x - currentTargetLock.position.x ) * 3, ForceMode.VelocityChange);
-        // } 
     }
 
     //Private Functions
@@ -239,11 +237,13 @@ public class Player3PCam : MonoBehaviour
         //Now adjust player forward and other housekeeping based on which cameras are active
         if (currCamMode == CameraMode.Free)
         {
-            //only adjust the player model rotation if there is a movement input or the player is off the ground.
-            if (rawMoveInput.magnitude > 0 || !isGrounded)
-            {
-                playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
-            }
+            // //only adjust the player model rotation if there is a movement input or the player is off the ground.
+            // if (rawMoveInput.magnitude > 0 || !isGrounded)
+            // {
+            //     playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
+            // }
+            //Updated for gun aim code: always adjust player model rotation.
+            playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
         }
         else if (currCamMode == CameraMode.Locked)
         {
@@ -386,6 +386,8 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
+            Debug.Log("in find tg, found a tg.");
+            Debug.Log(potentialTarget.transform.name);
             if (currentTargetLock) //place lookAt position between player and target if a previous target didn't exist
             {
                 currentTargetLock = potentialTarget.transform;
@@ -406,7 +408,7 @@ public class Player3PCam : MonoBehaviour
     }
     private void AdjustActualLookPos()
     {
-        if (currCamMode != CameraMode.Locked) { return; }
+        if (currCamMode != CameraMode.Locked || !currentTargetLock) { return; }
 
         if (Vector3.Distance(actualLookPosition.position, currentTargetLock.position) <= 0.1f)
         {
@@ -447,7 +449,6 @@ public class Player3PCam : MonoBehaviour
             FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 30, true, "angle");
         }
     }
-
     private void MovePlayer()
     {
         if (dashing) { return; } //If player is mid-dash do not adjust movement
@@ -516,6 +517,31 @@ public class Player3PCam : MonoBehaviour
         {
             ActiveCameraMode = CameraMode.Free;
         }
+    }
+    public void EnemyKilledEvent(Shootable s)
+    {
+
+        if (autoFindNewTarget && ActiveCameraMode == CameraMode.Locked)
+        {
+            TargetPoint[] tgs = s.gameObject.transform.GetComponentsInChildren<TargetPoint>();
+            if (tgs.Contains(currentTargetLock.GetComponent<TargetPoint>()))
+            {
+                //if true, The currently locked target point is a child of the Shootable that just got killed.
+                //Therefore, 
+                Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
+                if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, true, "angle"))
+                {
+                    Debug.Log("Did not find an enemy to lock");
+                    ActiveCameraMode = CameraMode.Free;
+                }
+            }
+
+        }
+        else
+        {
+            ActiveCameraMode = CameraMode.Free;
+        }
+
     }
     public void OnDodge()
     {
@@ -639,6 +665,7 @@ public class Player3PCam : MonoBehaviour
             if (value == CameraMode.Free)
             {
                 currentTargetLock = null;
+
                 currCamMode = value;
             }
             else
