@@ -9,6 +9,7 @@ public class RingEnemyShootable : Shootable
     }
     public override void HitDetected(PlayerController player, Gun incoming)
     {
+        Debug.Log("took " + incoming.bulletDamage);
         currHP -= incoming.bulletDamage;
         OnHit(player, incoming);
         if (CurrentHP < 0)
@@ -25,7 +26,7 @@ public class RingEnemyShootable : Shootable
         Debug.Log("my name is " + transform.name + " and i just died");
 
         base.OnKill(player, incoming);
-        Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
 
     }
 

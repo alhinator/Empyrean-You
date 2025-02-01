@@ -8,6 +8,7 @@ TagManager:
   - HighPrioTarget
   - PlayerMesh
   - ControllableCamera
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

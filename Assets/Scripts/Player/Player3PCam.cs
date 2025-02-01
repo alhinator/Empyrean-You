@@ -547,11 +547,12 @@ public class Player3PCam : MonoBehaviour
     {
         if (!allowedToDash) { return; }
         //Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
-        allowedToDash = false;
-        dashing = true;
 
         if (rawMoveInput.magnitude == 0)
         {
+            dashing = true;
+            allowedToDash = false;
+
             //do backstep
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
             Vector3 dashDir = orientationFlat.forward * -1;
@@ -562,6 +563,8 @@ public class Player3PCam : MonoBehaviour
         }
         else if (isGrounded || (!isGrounded && currMidairBoosts > 0))
         {
+            dashing = true;
+            allowedToDash = false;
             //do full directional dash
 
             //Get direction of the dash based on player input
@@ -627,7 +630,7 @@ public class Player3PCam : MonoBehaviour
     }
     public void OnDebugReset()
     {
-        rb.position = new Vector3(0, 2f, 0);
+        rb.position = GameObject.FindWithTag("SpawnPoint").transform.position;
         rb.velocity = Vector3.zero;
     }
 

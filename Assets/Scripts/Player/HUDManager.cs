@@ -54,8 +54,7 @@ public class HUDManager : MonoBehaviour
     {
         float dist = Vector2.Distance(reticle.transform.localPosition, reticleIdealPosition);
         float adjustedReticleSpeed = reticleSpeed * Time.deltaTime;
-        Debug.Log(dist);
-        if (dist < 10)
+        if (dist < 30)
         {
             adjustedReticleSpeed *= 3;
         }

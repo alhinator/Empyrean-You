@@ -10117,7 +10117,7 @@ MonoBehaviour:
   myHudSecondaryText: {fileID: 0}
   RateOfFire: 9.75
   chargeTime: 0
-  bulletDamage: 25
+  bulletDamage: 10
   perShotRecoil: 0.002
   recoilRecovery: 0.015
   maxRecoil: 0.03
