@@ -165,7 +165,7 @@ public class Player3PCam : MonoBehaviour
             else if (isGrounded)
             {
                 aerialCombatCamera.Priority = -1;
-                aerialCloseCamera.Priority = 11;
+                aerialCloseCamera.Priority = 10;
             }
             combatLockCamera.Priority = isGrounded ? 11 : -1;
         }

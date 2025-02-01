@@ -8,6 +8,7 @@ public class InputTracker : MonoBehaviour
 {
 
     public Player3PCam player3PCam;
+    public TMP_Text camTracker;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,5 +27,11 @@ public class InputTracker : MonoBehaviour
         if (InputSystem.actions.FindAction("Jump").IsPressed()) { txt += "\njump"; }
         if (InputSystem.actions.FindAction("CameraLock").IsPressed()) { txt += "\ncam lock"; }
         GetComponent<TMP_Text>().text = txt;
+
+
+        camTracker.text = "free:" + player3PCam.unlockLookCamera.Priority +
+        "\nlock:" + player3PCam.combatLockCamera.Priority + 
+        "\nlockaerial:" + player3PCam.aerialCombatCamera.Priority +
+        "\naerialclose:" + player3PCam.aerialCloseCamera.Priority;
     }
 }
