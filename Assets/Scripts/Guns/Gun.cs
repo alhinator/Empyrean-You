@@ -51,9 +51,18 @@ public abstract class Gun : MonoBehaviour
     /// </summary>
     public float bulletDamage;
     /// <summary>
-    /// Number of degrees to add to the gun's bullet spread per shot.
+    /// Number of units to add to the gun's bullet spread radius per shot.
     /// </summary>
     public float perShotRecoil;
+    /// <summary>
+    /// Units per second at which this gun's spread radius recovers from recoil.
+    /// </summary>
+    public float recoilRecovery;
+    /// <summary>
+    /// The maximum radius of the potential firing direction.
+    /// </summary>
+    public float maxRecoil;
+
     /// <summary>
     /// Does this weapon pierce armor?
     /// </summary>
@@ -100,6 +109,12 @@ public abstract class Gun : MonoBehaviour
 
     protected abstract void Shoot();
 
+    /// <summary>
+    /// Choose a firing direction given a starting direction and spread radius.
+    /// </summary>
+    /// <param name="aimDirection">The base direction from which to deviate with recoil.</param>
+    /// <param name="spreadRadius">The radius of the circle one unit from the muzzle, within which the recoil will be calculated.</param>
+    /// <returns></returns>
     protected Vector3 PickFiringDirection(Vector3 aimDirection, float spreadRadius)
     {
         //this code taken from https://gamedev.stackexchange.com/questions/169893/how-do-i-implement-bullet-spread-in-three-dimensional-space
@@ -113,13 +128,16 @@ public abstract class Gun : MonoBehaviour
             return currAmmo;
         }
     }
-    public virtual void TriggerOnHitEffects(Shootable s){
+    public virtual void TriggerOnHitEffects(Shootable s)
+    {
 
     }
-    public virtual void TriggerOnKillEffects(Shootable s){
+    public virtual void TriggerOnKillEffects(Shootable s)
+    {
 
     }
-    public virtual void Reload(){
-        
+    public virtual void Reload()
+    {
+
     }
 }

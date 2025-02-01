@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5158671862880277030}
   - component: {fileID: 3328140236045246893}
   m_Layer: 0
-  m_Name: FiredParticles
+  m_Name: Bullet Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5013,15 +5013,17 @@ MonoBehaviour:
   chargeTime: 1
   bulletDamage: 120
   perShotRecoil: 0
+  recoilRecovery: 0
+  maxRecoil: 0
   APR: 1
   range: 100
   UsesAmmunition: 0
   UsesMaxAmmunition: 0
-  maximumAmmo: 0
+  MaximumAmmo: 0
   MagazineSize: 0
   chargeSound: {fileID: 8300000, guid: 15dcdda58ed889548a101fc9ca03a6f0, type: 3}
   holdSound: {fileID: 8300000, guid: 90518f80634b194419d76369c80f361e, type: 3}
-  firedParticles: {fileID: 5158671862880277030}
+  bulletTrail: {fileID: 5158671862880277030}
 --- !u!1 &2797120614543130418
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,10 +6,10 @@ public class Artemis : Gun
     [Header("Artemis Unique")]
     public AudioClip chargeSound;
     public AudioClip holdSound;
-    public ParticleSystem firedParticles;
+    public ParticleSystem bulletTrail;
     void Start()
     {
-        firedParticles.transform.parent = null;
+        bulletTrail.transform.parent = null;
         myHudSecondaryText.text = "CHG";
     }
     void Update()
@@ -80,16 +80,16 @@ public class Artemis : Gun
         float distance = Vector3.Distance(endposition, startPosition) / 2; //distance is half the total distance since line extends both ways
         int numParticles = (int)(distance * 50);
 
-        firedParticles.transform.position = particlePosition; //update the system's position
-        firedParticles.transform.LookAt(endposition); //adjust the look rotation. NOTE: the particle system has a y rotation of 90 in the shape module for this to work.
+        bulletTrail.transform.position = particlePosition; //update the system's position
+        bulletTrail.transform.LookAt(endposition); //adjust the look rotation. NOTE: the particle system has a y rotation of 90 in the shape module for this to work.
 
-        ParticleSystem.ShapeModule sm = firedParticles.shape;
+        ParticleSystem.ShapeModule sm = bulletTrail.shape;
         sm.radius = distance; //adjust the line size
 
-        ParticleSystem.EmissionModule em = firedParticles.emission;
+        ParticleSystem.EmissionModule em = bulletTrail.emission;
         ParticleSystem.Burst b = new ParticleSystem.Burst(0, numParticles);
         em.SetBurst(0, b); //set burst to be the number of desired particles.
-        firedParticles.Play();
+        bulletTrail.Play();
 
         //Now RaycastAll to enemy layer using endPos as our target position.
         RaycastHit[] hits = Physics.RaycastAll(new Ray(startPosition, (endposition - startPosition).normalized), distance * 2, LayerMask.GetMask("Enemy"));
