@@ -2,6 +2,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public abstract class Gun : MonoBehaviour
 {
@@ -79,11 +80,16 @@ public abstract class Gun : MonoBehaviour
     /// <summary>
     /// The total number of rounds that can be fired before this gun no longer fires.
     /// </summary>
-    public int maximumAmmo;
+    public int MaximumAmmo;
     /// <summary>
     /// If ammunition is used, how many shots may be fired before reloading.
     /// </summary>
     public int MagazineSize;
+    /// <summary>
+    /// If a maximum ammunition is used, how much is left in reserve.
+    /// </summary>
+    protected int CurrentReserveAmmo;
+
     /// <summary>
     /// If ammunition is used, how much is remaining in the gun before needing to reload.
     /// </summary>

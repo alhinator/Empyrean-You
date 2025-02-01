@@ -49,15 +49,15 @@ public class WeaponManager : MonoBehaviour
         RightConstraint.weight = 1f;
 
         //DEBUG CODE ONLY
-        AssignWeapons(0, 1);
+        AssignWeapons(1, 0);
 
         //Get their gun scripts
         mainGun = RightWeapon.GetComponent<Gun>();
         offGun = LeftWeapon.GetComponent<Gun>();
-        mainGun.myHudText = leftPrimaryUIText;
-        offGun.myHudText = rightPrimaryUIText;
-        mainGun.myHudSecondaryText = leftSecondaryUIText;
-        offGun.myHudSecondaryText = rightSecondaryUIText;
+        offGun.myHudText = leftPrimaryUIText;
+        mainGun.myHudText = rightPrimaryUIText;
+        offGun.myHudSecondaryText = leftSecondaryUIText;
+        mainGun.myHudSecondaryText = rightSecondaryUIText;
         mainGun.playerReference = playerCont;
         offGun.playerReference = playerCont;
         if (mainGun == null || offGun == null)
@@ -116,6 +116,7 @@ public class WeaponManager : MonoBehaviour
     }
     private void AdjustPivotAndAimPoints()
     {
+        if(player3PCam.IsDashing || player3PCam.IsSprinting){return;}
         Transform lpp = LeftWeapon.GetComponent<Gun>().pivotPoint;
         Transform rpp = RightWeapon.GetComponent<Gun>().pivotPoint;
         lpp.forward = Vector3.Lerp(lpp.forward, aimPoint.position - lpp.position, Time.deltaTime).normalized;

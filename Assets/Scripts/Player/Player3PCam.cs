@@ -710,6 +710,14 @@ public class Player3PCam : MonoBehaviour
         invertX = inverts[0];
         invertY = !inverts[1];
     }
+
+    public bool IsSprinting
+    {
+        get
+        {
+            return sprinting;
+        }
+    }
 }
 
 

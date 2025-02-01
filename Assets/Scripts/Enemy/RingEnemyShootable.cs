@@ -4,7 +4,7 @@ public class RingEnemyShootable : Shootable
 {
     void Start()
     {
-        maxHP = 100;
+        maxHP = 200;
         currHP = MaximumHP;
     }
     public override void HitDetected(PlayerController player, Gun incoming)
