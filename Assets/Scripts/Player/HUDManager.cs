@@ -38,16 +38,28 @@ public class HUDManager : MonoBehaviour
         for (int i = 0; i < player3PCam.BoostsRemaining; i++) { tmp += "*"; }
         BoostBars.text = tmp;
     }
-    private void SetReticleIdealPosition(){
-        if(player3PCam.currentTargetLock){
+    private void SetReticleIdealPosition()
+    {
+        if (player3PCam.currentTargetLock)
+        {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(staticPlayerHud.GetComponent<RectTransform>(), mainCamera.WorldToScreenPoint(player3PCam.currentTargetLock.position), mainCamera, out Vector2 temp);
             reticleIdealPosition = new Vector3(temp.x, temp.y, 0);
-        }else
+        }
+        else
         {
             reticleIdealPosition = new Vector3(0, 0, 0);
         }
     }
-    private void MoveReticle(){
-        reticle.rectTransform.localPosition = Vector3.Lerp(reticle.transform.localPosition, reticleIdealPosition, reticleSpeed * Time.deltaTime);
+    private void MoveReticle()
+    {
+        float dist = Vector2.Distance(reticle.transform.localPosition, reticleIdealPosition);
+        float adjustedReticleSpeed = reticleSpeed * Time.deltaTime;
+        Debug.Log(dist);
+        if (dist < 10)
+        {
+            adjustedReticleSpeed *= 3;
+        }
+        reticle.rectTransform.localPosition = Vector3.Lerp(reticle.transform.localPosition, reticleIdealPosition, adjustedReticleSpeed);
+
     }
 }
