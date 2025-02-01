@@ -399,9 +399,9 @@ public class Player3PCam : MonoBehaviour
             }
 
 
-            combatLockCamera.m_LookAt = actualLookPosition;
-            aerialCombatCamera.m_LookAt = actualLookPosition;
-            aerialCloseCamera.m_LookAt = actualLookPosition;
+            //combatLockCamera.m_LookAt = actualLookPosition;
+            //aerialCombatCamera.m_LookAt = actualLookPosition;
+            //aerialCloseCamera.m_LookAt = actualLookPosition;
             return true;
         }
         return false;
@@ -446,7 +446,7 @@ public class Player3PCam : MonoBehaviour
             Debug.DrawRay(orientation.transform.position, lookDirection * 30, Color.magenta, 3f);
 
 
-            FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 30, true, "angle");
+            FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint", "CameraObstacle", "WalkableTerrain"), 30, true, "angle");
         }
     }
     private void MovePlayer()
@@ -529,7 +529,7 @@ public class Player3PCam : MonoBehaviour
                 //if true, The currently locked target point is a child of the Shootable that just got killed.
                 //Therefore, 
                 Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
-                if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, true, "angle"))
+                if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle", "WalkableTerrain"), 30, true, "angle"))
                 {
                     Debug.Log("Did not find an enemy to lock");
                     ActiveCameraMode = CameraMode.Free;
