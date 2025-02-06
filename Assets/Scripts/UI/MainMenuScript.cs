@@ -31,7 +31,7 @@ public class MainMenuScript : MonoBehaviour
         remappingCanvas.enabled = false;
         mainMenuCanvas.enabled = false;
         eventSystem.SetSelectedGameObject(null);
-        SceneManager.LoadScene("Alaina-Testing");
+        SceneManager.LoadScene("GrayboxMap");
 
     }
     private IEnumerator DescendToHangar()

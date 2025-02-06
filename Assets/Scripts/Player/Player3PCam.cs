@@ -165,7 +165,7 @@ public class Player3PCam : MonoBehaviour
             else if (isGrounded)
             {
                 aerialCombatCamera.Priority = -1;
-                aerialCloseCamera.Priority = 11;
+                aerialCloseCamera.Priority = 10;
             }
             combatLockCamera.Priority = isGrounded ? 11 : -1;
         }
@@ -324,7 +324,7 @@ public class Player3PCam : MonoBehaviour
         if (isGrounded) { currMidairBoosts = maxMidairBoosts; }
         if (isGrounded) { hovering = false; }
         rb.drag = isGrounded ? groundDrag : airDrag;
-        if (!isGrounded && hovering)
+        if (!isGrounded && hovering && rb.velocity.y < 0)
         {
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * hoverMultiplier, rb.velocity.z);
         }
@@ -386,8 +386,7 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
-            Debug.Log("in find tg, found a tg.");
-            Debug.Log(potentialTarget.transform.name);
+            //Debug.Log("in find tg, found a tg. " + potentialTarget.transform.name);
             if (currentTargetLock) //place lookAt position between player and target if a previous target didn't exist
             {
                 currentTargetLock = potentialTarget.transform;
@@ -399,9 +398,9 @@ public class Player3PCam : MonoBehaviour
             }
 
 
-            combatLockCamera.m_LookAt = actualLookPosition;
-            aerialCombatCamera.m_LookAt = actualLookPosition;
-            aerialCloseCamera.m_LookAt = actualLookPosition;
+            //combatLockCamera.m_LookAt = actualLookPosition;
+            //aerialCombatCamera.m_LookAt = actualLookPosition;
+            //aerialCloseCamera.m_LookAt = actualLookPosition;
             return true;
         }
         return false;
@@ -446,7 +445,7 @@ public class Player3PCam : MonoBehaviour
             Debug.DrawRay(orientation.transform.position, lookDirection * 30, Color.magenta, 3f);
 
 
-            FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint"), 30, true, "angle");
+            FindLockableTarget(orientation.transform, lookDirection, LayerMask.GetMask("TargetPoint", "CameraObstacle", "WalkableTerrain"), 30, true, "angle");
         }
     }
     private void MovePlayer()
@@ -518,20 +517,20 @@ public class Player3PCam : MonoBehaviour
             ActiveCameraMode = CameraMode.Free;
         }
     }
-    public void EnemyKilledEvent(Shootable s)
+    public void EnemyKilledEvent(CombatEntity c)
     {
 
         if (autoFindNewTarget && ActiveCameraMode == CameraMode.Locked)
         {
-            TargetPoint[] tgs = s.gameObject.transform.GetComponentsInChildren<TargetPoint>();
+            TargetPoint[] tgs = c.gameObject.transform.GetComponentsInChildren<TargetPoint>();
             if (tgs.Contains(currentTargetLock.GetComponent<TargetPoint>()))
             {
                 //if true, The currently locked target point is a child of the Shootable that just got killed.
                 //Therefore, 
-                Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
-                if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle"), 30, true, "angle"))
+                //Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
+                if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle", "WalkableTerrain"), 30, true, "angle"))
                 {
-                    Debug.Log("Did not find an enemy to lock");
+                    //Debug.Log("Did not find an enemy to lock");
                     ActiveCameraMode = CameraMode.Free;
                 }
             }
@@ -547,11 +546,12 @@ public class Player3PCam : MonoBehaviour
     {
         if (!allowedToDash) { return; }
         //Tap once to dash, tap once with no directional input to backstep. Dash input ignored when button is held.'
-        allowedToDash = false;
-        dashing = true;
 
         if (rawMoveInput.magnitude == 0)
         {
+            dashing = true;
+            allowedToDash = false;
+
             //do backstep
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
             Vector3 dashDir = orientationFlat.forward * -1;
@@ -562,6 +562,8 @@ public class Player3PCam : MonoBehaviour
         }
         else if (isGrounded || (!isGrounded && currMidairBoosts > 0))
         {
+            dashing = true;
+            allowedToDash = false;
             //do full directional dash
 
             //Get direction of the dash based on player input
@@ -591,7 +593,7 @@ public class Player3PCam : MonoBehaviour
         else if (!isGrounded && currMidairBoosts > 0)
         {
             //Particle trigger here? Or perhaps separate script.
-            Debug.Log("Starting Boost");
+            //Debug.Log("Starting Boost");
             lastBoostCo = StartCoroutine(Boost());
         }
         canJump = false;
@@ -620,14 +622,14 @@ public class Player3PCam : MonoBehaviour
     {
         if (!isGrounded)
         {
-            Debug.Log("got a hover input");
+            //Debug.Log("got a hover input");
             StopCoroutine(lastBoostCo);
             hovering = !hovering;
         }
     }
     public void OnDebugReset()
     {
-        rb.position = new Vector3(0, 2f, 0);
+        rb.position = GameObject.FindWithTag("SpawnPoint").transform.position;
         rb.velocity = Vector3.zero;
     }
 
@@ -704,11 +706,19 @@ public class Player3PCam : MonoBehaviour
 
     public void SetInvertBumps(bool[] inverts)
     {
-        Debug.Log(inverts[0]);
-        Debug.Log(!inverts[1]);
+        //Debug.Log(inverts[0]);
+        //Debug.Log(!inverts[1]);
 
         invertX = inverts[0];
         invertY = !inverts[1];
+    }
+
+    public bool IsSprinting
+    {
+        get
+        {
+            return sprinting;
+        }
     }
 }
 

@@ -1,9 +1,11 @@
 
-using System;
 using TMPro;
 using UnityEngine;
 
-public abstract class Gun : MonoBehaviour
+/// <summary>
+/// A derived class specifically for player-held weapons.
+/// </summary>
+public abstract class Gun : Weapon
 {
     [Header("Objects")]
     /// <summary>
@@ -26,12 +28,10 @@ public abstract class Gun : MonoBehaviour
     /// The default audioClip to be played when firing.
     /// </summary>
     public AudioClip shootSound;
-    public WeaponManager weaponManager;
     public PlayerController playerReference;
 
     public TMP_Text myHudText;
     public TMP_Text myHudSecondaryText;
-
 
     [Header("Gun Attributes")]
     /// <summary>
@@ -39,20 +39,25 @@ public abstract class Gun : MonoBehaviour
     /// </summary>
     public float RateOfFire;
 
-
     /// <summary>
     /// How long it takes for the gun to "wind up" before firing"
     /// </summary>
     public float chargeTime;
     protected float currCharge;
+
     /// <summary>
-    /// Damage dealt on hit
-    /// </summary>
-    public float bulletDamage;
-    /// <summary>
-    /// Number of degrees to add to the gun's bullet spread per shot.
+    /// Number of units to add to the gun's bullet spread radius per shot.
     /// </summary>
     public float perShotRecoil;
+    /// <summary>
+    /// Units per second at which this gun's spread radius recovers from recoil.
+    /// </summary>
+    public float recoilRecovery;
+    /// <summary>
+    /// The maximum radius of the potential firing direction.
+    /// </summary>
+    public float maxRecoil;
+
     /// <summary>
     /// Does this weapon pierce armor?
     /// </summary>
@@ -79,11 +84,16 @@ public abstract class Gun : MonoBehaviour
     /// <summary>
     /// The total number of rounds that can be fired before this gun no longer fires.
     /// </summary>
-    public int maximumAmmo;
+    public int MaximumAmmo;
     /// <summary>
     /// If ammunition is used, how many shots may be fired before reloading.
     /// </summary>
     public int MagazineSize;
+    /// <summary>
+    /// If a maximum ammunition is used, how much is left in reserve.
+    /// </summary>
+    protected int CurrentReserveAmmo;
+
     /// <summary>
     /// If ammunition is used, how much is remaining in the gun before needing to reload.
     /// </summary>
@@ -92,12 +102,16 @@ public abstract class Gun : MonoBehaviour
     public abstract void TriggerDown();
     public abstract void TriggerUp();
 
-    protected abstract void Shoot();
-
+    /// <summary>
+    /// Choose a firing direction given a starting direction and spread radius.
+    /// </summary>
+    /// <param name="aimDirection">The base direction from which to deviate with recoil.</param>
+    /// <param name="spreadRadius">The radius of the circle one unit from the muzzle, within which the recoil will be calculated.</param>
+    /// <returns></returns>
     protected Vector3 PickFiringDirection(Vector3 aimDirection, float spreadRadius)
     {
         //this code taken from https://gamedev.stackexchange.com/questions/169893/how-do-i-implement-bullet-spread-in-three-dimensional-space
-        Vector3 candidate = UnityEngine.Random.insideUnitSphere * spreadRadius + aimDirection;
+        Vector3 candidate = Random.insideUnitSphere * spreadRadius + aimDirection;
         return candidate.normalized;
     }
     public int CurrentAmmo
@@ -107,13 +121,13 @@ public abstract class Gun : MonoBehaviour
             return currAmmo;
         }
     }
-    public virtual void TriggerOnHitEffects(Shootable s){
+
+    public virtual void Reload()
+    {
 
     }
-    public virtual void TriggerOnKillEffects(Shootable s){
-
-    }
-    public virtual void Reload(){
-        
+    public void SetOwner(PlayerCombatManager p)
+    {
+        this.Owner = p;
     }
 }

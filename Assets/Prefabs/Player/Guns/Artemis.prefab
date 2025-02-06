@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5158671862880277030}
   - component: {fileID: 3328140236045246893}
   m_Layer: 0
-  m_Name: FiredParticles
+  m_Name: Bullet Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5000,28 +5000,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18b8403977fffc4a8c4a8116db663ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Artemis
+  Damage: 100
   bulletOrigin: {fileID: 8155393982731987366}
   pivotPoint: {fileID: 135491821282292014}
   primaryParticles: {fileID: 7696203356894934479}
   audioSource: {fileID: 432742687210322865}
   shootSound: {fileID: 8300000, guid: 780fac092f953da4dbc6eda5ef0e5f91, type: 3}
-  weaponManager: {fileID: 0}
   playerReference: {fileID: 0}
   myHudText: {fileID: 0}
   myHudSecondaryText: {fileID: 0}
   RateOfFire: 0
   chargeTime: 1
-  bulletDamage: 120
   perShotRecoil: 0
+  recoilRecovery: 0
+  maxRecoil: 0
   APR: 1
   range: 100
   UsesAmmunition: 0
   UsesMaxAmmunition: 0
-  maximumAmmo: 0
+  MaximumAmmo: 0
   MagazineSize: 0
   chargeSound: {fileID: 8300000, guid: 15dcdda58ed889548a101fc9ca03a6f0, type: 3}
   holdSound: {fileID: 8300000, guid: 90518f80634b194419d76369c80f361e, type: 3}
-  firedParticles: {fileID: 5158671862880277030}
+  bulletTrail: {fileID: 5158671862880277030}
 --- !u!1 &2797120614543130418
 GameObject:
   m_ObjectHideFlags: 0
