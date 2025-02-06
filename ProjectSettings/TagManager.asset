@@ -9,6 +9,7 @@ TagManager:
   - PlayerMesh
   - ControllableCamera
   - SpawnPoint
+  - BastShield
   layers:
   - Default
   - TransparentFX

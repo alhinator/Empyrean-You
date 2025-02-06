@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
-    CombatEntity Owner;
+    protected CombatEntity Owner;
 
     public virtual bool HitDetected(DamageInstance d)
     {
@@ -42,5 +42,9 @@ public abstract class Ability : MonoBehaviour
     public virtual bool OnDeath(DamageInstance d)
     {
         return true;
+    }
+    public void SetOwner(PlayerCombatManager p)
+    {
+        this.Owner = p;
     }
 }

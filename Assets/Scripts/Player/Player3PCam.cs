@@ -324,7 +324,7 @@ public class Player3PCam : MonoBehaviour
         if (isGrounded) { currMidairBoosts = maxMidairBoosts; }
         if (isGrounded) { hovering = false; }
         rb.drag = isGrounded ? groundDrag : airDrag;
-        if (!isGrounded && hovering)
+        if (!isGrounded && hovering && rb.velocity.y < 0)
         {
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * hoverMultiplier, rb.velocity.z);
         }

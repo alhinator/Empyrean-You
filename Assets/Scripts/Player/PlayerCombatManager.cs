@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombatManager : CombatEntity
 {
+    [Header("PlayerCombatManager Variables")]
     public Transform LeftArmMount;
     public Transform RightArmMount;
 
@@ -26,8 +27,8 @@ public class PlayerCombatManager : CombatEntity
     public Transform aimPoint;
     public Camera realCamera;
     private Player3PCam player3PCam;
-    private PlayerController playerCont;
     private HUDManager Hud;
+
 
     // Start is called before the first frame update
     void Start()
@@ -35,8 +36,6 @@ public class PlayerCombatManager : CombatEntity
         //set player reference variables
         player3PCam = GetComponent<Player3PCam>();
         Hud = GetComponent<HUDManager>();
-        playerCont = GetComponent<PlayerController>();
-
 
         //Assign Constraints to their transforms.
         LeftConstraint.sourceTransform = LeftArmMount;
@@ -49,7 +48,13 @@ public class PlayerCombatManager : CombatEntity
         AssignWeapons(1, 0);
 
         //Need to assign frame abilities here.
-        Abilities = new Ability[0];
+        Abilities = new Ability[1];
+
+        //TEST CODE ONLY
+        Abilities[0] = gameObject.AddComponent<Bast>();
+        Abilities[0].SetOwner(this);
+
+        currHP = maxHP;
 
 
     }

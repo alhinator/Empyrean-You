@@ -5,9 +5,11 @@ using UnityEngine.UI;
 public class HUDManager : MonoBehaviour
 {
     public Player3PCam player3PCam;
+    public PlayerCombatManager playerCombatManager;
     public Camera mainCamera;
     public Canvas staticPlayerHud;
-    public TMP_Text BoostBars;
+    public TMP_Text BoostBar;
+    public TMP_Text HealthBar;
     // Start is called before the first frame update
 
 
@@ -36,7 +38,13 @@ public class HUDManager : MonoBehaviour
         //Boost bar squares
         string tmp = "";
         for (int i = 0; i < player3PCam.BoostsRemaining; i++) { tmp += "*"; }
-        BoostBars.text = tmp;
+        BoostBar.text = tmp;
+
+        //Health bar squares
+        string tmp2 = "";
+        for (int i = 0; i < playerCombatManager.CurrentHP; i++) { tmp2 += "*"; }
+        HealthBar.text = tmp2;
+
     }
     private void SetReticleIdealPosition()
     {

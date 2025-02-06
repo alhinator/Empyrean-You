@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,14 +22,15 @@ public abstract class CombatEntity : MonoBehaviour
     /// </summary>
     protected Weapon[] Weapons;
 
-    /// <summary>
-    /// The current HP of this combat entity.
-    /// </summary>
-    protected float maxHP;
+    [Header("Combat Entity Variables")]
     /// <summary>
     /// The maximum HP of this combat entity.
     /// </summary>
-    protected float currHP;
+    [SerializeField] protected float maxHP;
+    /// <summary>
+    /// The current HP of this combat entity.
+    /// </summary>
+    [SerializeField] protected float currHP;
 
 
     // ----- Public Setters / Getters -----
