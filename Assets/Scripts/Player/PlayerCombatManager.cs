@@ -5,20 +5,16 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 
-public class WeaponManager : MonoBehaviour
+public class PlayerCombatManager : CombatEntity
 {
     public Transform LeftArmMount;
     public Transform RightArmMount;
-
-
 
     private ConstraintSource LeftConstraint;
     private ConstraintSource RightConstraint;
 
     private GameObject LeftWeapon;
     private GameObject RightWeapon;
-    private Gun mainGun;
-    private Gun offGun;
     public TMP_Text leftPrimaryUIText;
     public TMP_Text rightPrimaryUIText;
     public TMP_Text leftSecondaryUIText;
@@ -48,26 +44,12 @@ public class WeaponManager : MonoBehaviour
         RightConstraint.sourceTransform = RightArmMount;
         RightConstraint.weight = 1f;
 
+        Weapons = new Gun[2];
         //DEBUG CODE ONLY
         AssignWeapons(1, 0);
 
-        //Get their gun scripts
-        mainGun = RightWeapon.GetComponent<Gun>();
-        offGun = LeftWeapon.GetComponent<Gun>();
-        offGun.myHudText = leftPrimaryUIText;
-        mainGun.myHudText = rightPrimaryUIText;
-        offGun.myHudSecondaryText = leftSecondaryUIText;
-        mainGun.myHudSecondaryText = rightSecondaryUIText;
-        mainGun.playerReference = playerCont;
-        offGun.playerReference = playerCont;
-        if (mainGun == null || offGun == null)
-        {
-            throw new System.Exception("PlayerController: Start: Missing a gun.");
-        }
-        else
-        {
-            Debug.Log(offGun.GetType());
-        }
+        //Need to assign frame abilities here.
+        Abilities = new Ability[0];
 
 
     }
@@ -97,26 +79,49 @@ public class WeaponManager : MonoBehaviour
         {
             throw new Exception("WeaponManager: AssignWeapon(): Bad left or right id.");
         }
+        //Remove any previous weapons.
         Destroy(LeftWeapon);
         Destroy(RightWeapon);
 
+
+        //Instantiate the weapons.
         LeftWeapon = Instantiate(WeaponPrefabs[left_id]);
         RightWeapon = Instantiate(WeaponPrefabs[right_id]);
 
+        //Now add their constraints.
+        SetGunConstraints();
 
+        //Now get scripts & set owner variables.
+        Weapons[0] = LeftWeapon.GetComponent<Gun>();
+        Weapons[1] = RightWeapon.GetComponent<Gun>();
+        if (Weapons[0] == null || Weapons[1] == null)
+        {
+            throw new System.Exception("PlayerController: AssignWeapons: Missing a gun.");
+        }
+        (Weapons[0] as Gun).SetOwner(this);
+        (Weapons[1] as Gun).SetOwner(this);
+
+        //set UI text
+        (Weapons[0] as Gun).myHudText = leftPrimaryUIText;
+        (Weapons[0] as Gun).myHudSecondaryText = leftSecondaryUIText;
+
+        (Weapons[1] as Gun).myHudText = rightPrimaryUIText;
+        (Weapons[1] as Gun).myHudSecondaryText = rightSecondaryUIText;
+
+
+
+    }
+    private void SetGunConstraints()
+    {
         LeftWeapon.AddComponent<ParentConstraint>().AddSource(LeftConstraint);
         LeftWeapon.GetComponent<ParentConstraint>().constraintActive = true;
         LeftWeapon.transform.localScale = new Vector3(-1, 1, 1);
         RightWeapon.AddComponent<ParentConstraint>().AddSource(RightConstraint);
         RightWeapon.GetComponent<ParentConstraint>().constraintActive = true;
-
-        LeftWeapon.GetComponent<Gun>().weaponManager = this;
-        RightWeapon.GetComponent<Gun>().weaponManager = this;
-
     }
     private void AdjustPivotAndAimPoints()
     {
-        if(player3PCam.IsDashing || player3PCam.IsSprinting){return;}
+        if (player3PCam.IsDashing || player3PCam.IsSprinting) { return; }
         Transform lpp = LeftWeapon.GetComponent<Gun>().pivotPoint;
         Transform rpp = RightWeapon.GetComponent<Gun>().pivotPoint;
         lpp.forward = Vector3.Lerp(lpp.forward, aimPoint.position - lpp.position, Time.deltaTime).normalized;
@@ -133,12 +138,12 @@ public class WeaponManager : MonoBehaviour
         if (v.Get<float>() > InputSystem.settings.defaultButtonPressPoint)
         {
             //gun fire down;
-            mainGun.TriggerDown();
+            (Weapons[0] as Gun).TriggerDown();
         }
         else if (v.Get<float>() < InputSystem.settings.buttonReleaseThreshold)
         {
             //gun fire up
-            mainGun.TriggerUp();
+            (Weapons[0] as Gun).TriggerUp();
 
         }
     }
@@ -148,20 +153,24 @@ public class WeaponManager : MonoBehaviour
         if (v.Get<float>() > InputSystem.settings.defaultButtonPressPoint)
         {
             //gun fire down;
-            offGun.TriggerDown();
+            (Weapons[1] as Gun).TriggerDown();
         }
         else if (v.Get<float>() < InputSystem.settings.buttonReleaseThreshold)
         {
             //gun fire up
-            offGun.TriggerUp();
+            (Weapons[1] as Gun).TriggerUp();
         }
     }
 
     public void OnReload()
     {
-        mainGun.Reload();
-        offGun.Reload();
+        (Weapons[0] as Gun).Reload();
+        (Weapons[1] as Gun).Reload();
     }
 
-
+    public override void OnKill(DamageInstance d)
+    {
+        base.OnKill(d);
+        player3PCam.EnemyKilledEvent(d.Target);
+    }
 }

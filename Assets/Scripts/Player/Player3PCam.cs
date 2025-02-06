@@ -386,8 +386,7 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
-            Debug.Log("in find tg, found a tg.");
-            Debug.Log(potentialTarget.transform.name);
+            //Debug.Log("in find tg, found a tg. " + potentialTarget.transform.name);
             if (currentTargetLock) //place lookAt position between player and target if a previous target didn't exist
             {
                 currentTargetLock = potentialTarget.transform;
@@ -518,20 +517,20 @@ public class Player3PCam : MonoBehaviour
             ActiveCameraMode = CameraMode.Free;
         }
     }
-    public void EnemyKilledEvent(Shootable s)
+    public void EnemyKilledEvent(CombatEntity c)
     {
 
         if (autoFindNewTarget && ActiveCameraMode == CameraMode.Locked)
         {
-            TargetPoint[] tgs = s.gameObject.transform.GetComponentsInChildren<TargetPoint>();
+            TargetPoint[] tgs = c.gameObject.transform.GetComponentsInChildren<TargetPoint>();
             if (tgs.Contains(currentTargetLock.GetComponent<TargetPoint>()))
             {
                 //if true, The currently locked target point is a child of the Shootable that just got killed.
                 //Therefore, 
-                Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
+                //Debug.Log("In enemy killed event, confirmed lock, looking for new tg");
                 if (!FindLockableTarget(actualCamera.transform, (actualLookPosition.position - actualCamera.transform.position).normalized, LayerMask.GetMask("TargetPoint", "CameraObstacle", "WalkableTerrain"), 30, true, "angle"))
                 {
-                    Debug.Log("Did not find an enemy to lock");
+                    //Debug.Log("Did not find an enemy to lock");
                     ActiveCameraMode = CameraMode.Free;
                 }
             }
@@ -594,7 +593,7 @@ public class Player3PCam : MonoBehaviour
         else if (!isGrounded && currMidairBoosts > 0)
         {
             //Particle trigger here? Or perhaps separate script.
-            Debug.Log("Starting Boost");
+            //Debug.Log("Starting Boost");
             lastBoostCo = StartCoroutine(Boost());
         }
         canJump = false;
@@ -623,7 +622,7 @@ public class Player3PCam : MonoBehaviour
     {
         if (!isGrounded)
         {
-            Debug.Log("got a hover input");
+            //Debug.Log("got a hover input");
             StopCoroutine(lastBoostCo);
             hovering = !hovering;
         }
@@ -707,8 +706,8 @@ public class Player3PCam : MonoBehaviour
 
     public void SetInvertBumps(bool[] inverts)
     {
-        Debug.Log(inverts[0]);
-        Debug.Log(!inverts[1]);
+        //Debug.Log(inverts[0]);
+        //Debug.Log(!inverts[1]);
 
         invertX = inverts[0];
         invertY = !inverts[1];

@@ -56,10 +56,10 @@ public class Guanyin : Gun
         Physics.Raycast(bulletOrigin.position, FiringDir, out RaycastHit hit, range, LayerMask.GetMask("WalkableTerrain", "CameraObstacle", "Enemy", "EnemyArmor"));
         if (hit.transform != null)
         {
-            hit.transform.gameObject.TryGetComponent<Shootable>(out Shootable s);
-            if (s != null)
+            hit.transform.gameObject.TryGetComponent<CombatEntity>(out CombatEntity tg);
+            if (tg != null)
             {
-                s.HitDetected(playerReference, this);
+                new DamageInstance(this.Owner, this, tg);
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyArmor"))
             {
@@ -97,7 +97,7 @@ public class Guanyin : Gun
         Destroy(bulletClone.gameObject, bulletClone.main.startLifetime.constantMax + bulletClone.main.duration);
 
     }
-    public override void TriggerOnHitEffects(Shootable s)
+    public override void OnHit(DamageInstance d)
     {
         audioSource.PlayOneShot(OnHitSound);
     }

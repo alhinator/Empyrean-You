@@ -1,10 +1,11 @@
 
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public abstract class Gun : MonoBehaviour
+/// <summary>
+/// A derived class specifically for player-held weapons.
+/// </summary>
+public abstract class Gun : Weapon
 {
     [Header("Objects")]
     /// <summary>
@@ -27,12 +28,10 @@ public abstract class Gun : MonoBehaviour
     /// The default audioClip to be played when firing.
     /// </summary>
     public AudioClip shootSound;
-    public WeaponManager weaponManager;
     public PlayerController playerReference;
 
     public TMP_Text myHudText;
     public TMP_Text myHudSecondaryText;
-
 
     [Header("Gun Attributes")]
     /// <summary>
@@ -40,16 +39,12 @@ public abstract class Gun : MonoBehaviour
     /// </summary>
     public float RateOfFire;
 
-
     /// <summary>
     /// How long it takes for the gun to "wind up" before firing"
     /// </summary>
     public float chargeTime;
     protected float currCharge;
-    /// <summary>
-    /// Damage dealt on hit
-    /// </summary>
-    public float bulletDamage;
+
     /// <summary>
     /// Number of units to add to the gun's bullet spread radius per shot.
     /// </summary>
@@ -107,8 +102,6 @@ public abstract class Gun : MonoBehaviour
     public abstract void TriggerDown();
     public abstract void TriggerUp();
 
-    protected abstract void Shoot();
-
     /// <summary>
     /// Choose a firing direction given a starting direction and spread radius.
     /// </summary>
@@ -118,7 +111,7 @@ public abstract class Gun : MonoBehaviour
     protected Vector3 PickFiringDirection(Vector3 aimDirection, float spreadRadius)
     {
         //this code taken from https://gamedev.stackexchange.com/questions/169893/how-do-i-implement-bullet-spread-in-three-dimensional-space
-        Vector3 candidate = UnityEngine.Random.insideUnitSphere * spreadRadius + aimDirection;
+        Vector3 candidate = Random.insideUnitSphere * spreadRadius + aimDirection;
         return candidate.normalized;
     }
     public int CurrentAmmo
@@ -128,16 +121,13 @@ public abstract class Gun : MonoBehaviour
             return currAmmo;
         }
     }
-    public virtual void TriggerOnHitEffects(Shootable s)
-    {
 
-    }
-    public virtual void TriggerOnKillEffects(Shootable s)
-    {
-
-    }
     public virtual void Reload()
     {
 
+    }
+    public void SetOwner(PlayerCombatManager p)
+    {
+        this.Owner = p;
     }
 }

@@ -10106,18 +10106,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5445baa667762874aad521bd1fca8f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Guanyin
+  Damage: 15
   bulletOrigin: {fileID: 7263106083958858333}
   pivotPoint: {fileID: 7599674075181100637}
   primaryParticles: {fileID: 1389778995317785017}
   audioSource: {fileID: 8467684436097478048}
   shootSound: {fileID: 8300000, guid: d6e5e33efe24fe94a8c9d12dd3c200e0, type: 3}
-  weaponManager: {fileID: 0}
   playerReference: {fileID: 0}
   myHudText: {fileID: 0}
   myHudSecondaryText: {fileID: 0}
   RateOfFire: 9.75
   chargeTime: 0
-  bulletDamage: 10
   perShotRecoil: 0.002
   recoilRecovery: 0.015
   maxRecoil: 0.03

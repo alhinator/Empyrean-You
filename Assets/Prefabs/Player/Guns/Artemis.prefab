@@ -5000,18 +5000,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18b8403977fffc4a8c4a8116db663ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Artemis
+  Damage: 100
   bulletOrigin: {fileID: 8155393982731987366}
   pivotPoint: {fileID: 135491821282292014}
   primaryParticles: {fileID: 7696203356894934479}
   audioSource: {fileID: 432742687210322865}
   shootSound: {fileID: 8300000, guid: 780fac092f953da4dbc6eda5ef0e5f91, type: 3}
-  weaponManager: {fileID: 0}
   playerReference: {fileID: 0}
   myHudText: {fileID: 0}
   myHudSecondaryText: {fileID: 0}
   RateOfFire: 0
   chargeTime: 1
-  bulletDamage: 120
   perShotRecoil: 0
   recoilRecovery: 0
   maxRecoil: 0

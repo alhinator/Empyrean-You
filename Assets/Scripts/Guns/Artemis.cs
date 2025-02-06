@@ -94,9 +94,9 @@ public class Artemis : Gun
         //Now RaycastAll to enemy layer using endPos as our target position.
         RaycastHit[] hits = Physics.RaycastAll(new Ray(startPosition, (endposition - startPosition).normalized), distance * 2, LayerMask.GetMask("Enemy"));
         foreach (RaycastHit h in hits){
-            h.transform.gameObject.TryGetComponent<Shootable>(out Shootable s);
-            if(s != null){
-                s.HitDetected(playerReference, this);
+            h.transform.gameObject.TryGetComponent<CombatEntity>(out CombatEntity tg);
+            if(tg != null){
+                new DamageInstance(this.Owner, this, tg);
             }
         }
     }

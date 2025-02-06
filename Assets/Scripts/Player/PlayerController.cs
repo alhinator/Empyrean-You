@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private Animator animController;
 
+
     private void Start()
     {
         animController = GetComponentInChildren<Animator>();
@@ -18,13 +19,5 @@ public class PlayerController : MonoBehaviour
         Vector2 rawInput = v.Get<Vector2>();
         animController.SetFloat("InputXAxis", rawInput.x);
         animController.SetFloat("InputYAxis", rawInput.y);
-    }
-    
-    public void TriggerOnHitEffects(Shootable s){
-
-    }
-    
-    public void TriggerOnKillEffects(Shootable s){
-        GetComponent<Player3PCam>().EnemyKilledEvent(s);
     }
 }
