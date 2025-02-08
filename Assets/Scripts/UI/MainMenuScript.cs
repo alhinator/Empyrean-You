@@ -27,11 +27,11 @@ public class MainMenuScript : MonoBehaviour
     }
     public void StartDescent()
     {
-        //StartCoroutine(DescendToHangar());
+        StartCoroutine(DescendToHangar());
         remappingCanvas.enabled = false;
         mainMenuCanvas.enabled = false;
         eventSystem.SetSelectedGameObject(null);
-        SceneManager.LoadScene("GrayboxMap");
+        //SceneManager.LoadScene("GrayboxMap");
 
     }
     private IEnumerator DescendToHangar()
