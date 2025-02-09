@@ -15,5 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/GrayboxMap.unity
     guid: 86deaea500946184f94674f4593e0aef
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 7018a0bd455d1f646a34dc813232898e, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 99bb569d919b71e469c5abe766d92a41, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 5f99050165f006b45a812480e6b736f5, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: 0aa9a471317c6f54e8e95ad215d0cc72, type: 2}
