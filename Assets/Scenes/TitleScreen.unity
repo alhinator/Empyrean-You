@@ -3114,7 +3114,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 152368971}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 2
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &152368971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3813,7 +3825,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 180180357}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: D
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &180180357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4866,6 +4890,8 @@ GameObject:
   - component: {fileID: 305945243}
   - component: {fileID: 305945244}
   - component: {fileID: 305945245}
+  - component: {fileID: 305945246}
+  - component: {fileID: 305945247}
   m_Layer: 0
   m_Name: MainMenuManager
   m_TagString: Untagged
@@ -4907,7 +4933,6 @@ MonoBehaviour:
   remappingCanvas: {fileID: 1461969787}
   elevator: {fileID: 543450651805117233}
   eventSystem: {fileID: 485171194}
-  currState: 0
   selectMeAfterElevator: {fileID: 2091367454}
   subtitle: {fileID: 1195794147}
 --- !u!114 &305945244
@@ -4973,6 +4998,40 @@ MonoBehaviour:
         - localeIdentifier:
             m_Code: en-US
           value: {fileID: 0}
+--- !u!114 &305945246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305945241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa6550f538f7a714191fa70238a464be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ColorSelectHeader: {fileID: 1746730140}
+  LeftScreenHeader: {fileID: 1986499911}
+--- !u!114 &305945247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305945241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b49305aafdbebcf4f8a8093ed8a2b6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  savedMaterial: {fileID: 2100000, guid: 75393fc72c06dd64d9c644e2f7675343, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 4f94337b1bc212a4b956c1087e1de92f, type: 2}
+  variableMaterial: {fileID: 2100000, guid: 3e2b33bcc5c9ce44a91e979cba6bdc0a, type: 2}
+  invisibleMaterial: {fileID: 2100000, guid: 5d7ea0a96e1bfc14c81241692385df61, type: 2}
+  coreMaterial: {fileID: 2100000, guid: ac1cad697d9dfdd4684a2741aa9d822d, type: 2}
+  WireframeOpaque: {fileID: 4800000, guid: a7de4bf0f370ca243b4604b8cd314ffc, type: 3}
+  WireframeTrans: {fileID: 4800000, guid: 90cadb91a7902754f9fe5b4563306677, type: 3}
+  DebugInvis: 0
 --- !u!1 &324899181
 GameObject:
   m_ObjectHideFlags: 0
@@ -6306,7 +6365,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 437755954}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: B
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &437755954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7077,7 +7148,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 472844412}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 9
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &472844412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8508,7 +8591,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 598948225}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 6
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &598948225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9089,7 +9184,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 633157363}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: C
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &633157363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10748,7 +10855,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 756533076}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 0
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &756533076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11959,7 +12078,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 890420185}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 7
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &890420185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16831,7 +16962,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1175200358}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1175200358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17888,7 +18031,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1272215423}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 8
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1272215423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19916,7 +20071,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1422202665}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: ClearText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1422202665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20193,7 +20360,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1426341177}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: F
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1426341177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22197,7 +22376,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1510417460}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 4
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1510417460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24399,7 +24590,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1670352871}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 1
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1670352871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25230,7 +25433,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1702065606}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 5
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1702065606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25725,7 +25940,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 418}
+  m_AnchoredPosition: {x: 0, y: 349}
   m_SizeDelta: {x: 1100, y: 168}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1746730140
@@ -27075,7 +27290,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1885157711}
-  - component: {fileID: 1885157712}
   m_Layer: 0
   m_Name: Giant mech
   m_TagString: Untagged
@@ -27099,25 +27313,6 @@ Transform:
   - {fileID: 431609038}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &1885157712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885157709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b49305aafdbebcf4f8a8093ed8a2b6e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseMaterial: {fileID: 2100000, guid: 4f94337b1bc212a4b956c1087e1de92f, type: 2}
-  variableMaterial: {fileID: 2100000, guid: 3e2b33bcc5c9ce44a91e979cba6bdc0a, type: 2}
-  invisibleMaterial: {fileID: 2100000, guid: 5d7ea0a96e1bfc14c81241692385df61, type: 2}
-  coreMaterial: {fileID: 2100000, guid: ac1cad697d9dfdd4684a2741aa9d822d, type: 2}
-  WireframeOpaque: {fileID: 4800000, guid: a7de4bf0f370ca243b4604b8cd314ffc, type: 3}
-  WireframeTrans: {fileID: 4800000, guid: 90cadb91a7902754f9fe5b4563306677, type: 3}
-  DebugInvis: 0
 --- !u!1 &1886597966
 GameObject:
   m_ObjectHideFlags: 0
@@ -28495,7 +28690,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1947821943}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: E
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1947821943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29014,7 +29221,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 450}
-  m_SizeDelta: {x: 360, y: 50}
+  m_SizeDelta: {x: 550, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986499911
 MonoBehaviour:
@@ -29063,14 +29270,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 52
+  m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -30301,7 +30508,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2091367457}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: AppendLetter
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: A
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2091367457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30475,7 +30694,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2098701489}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: SubmitToManager
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2098701489
 MonoBehaviour:
   m_ObjectHideFlags: 0

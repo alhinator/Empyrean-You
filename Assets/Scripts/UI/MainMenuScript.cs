@@ -1,18 +1,15 @@
 using System;
 using System.Collections;
 using TMPro;
-using UnityEditor;
-using UnityEditor.Localization.Editor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
-using UnityEngine.SocialPlatforms;
+using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
-    public enum STATE { BOOTUP, ELEVATOR, COLORSELECT, POWERSELECT, GUNSELECT, NAMESELECT };
+    public enum STATE { BOOTUP, ELEVATOR, COLORSELECT, COLORSELECT2, POWERSELECT, GUNSELECT, NAMESELECT };
     private static MainMenuScript Singleton;
     [Header("Canvases")]
     public Canvas worldCanvas;
@@ -33,7 +30,7 @@ public class MainMenuScript : MonoBehaviour
 
     [Header("Color Select Variables")]
     public GameObject selectMeAfterElevator;
-    public TMP_Text LeftScreenHeader;
+    private MainMenuScreens mainMenuScreens;
 
     [Header("Localization")]
     private StringTable mmStrings;
@@ -51,6 +48,7 @@ public class MainMenuScript : MonoBehaviour
             return;
         }
         mmStrings = LocalizationSettings.StringDatabase.GetTable("Title Screen", null);
+        mainMenuScreens = GetComponent<MainMenuScreens>();
         Singleton.TransitionToState(STATE.BOOTUP);
     }
 
@@ -94,9 +92,21 @@ public class MainMenuScript : MonoBehaviour
 
                 ///play a voiceline here / display text
                 Singleton.subtitle.enabled = true;
-                Singleton.subtitle.text = mmStrings.GetEntry("title_screen.subtitle.empty").Value;
+                Singleton.subtitle.text = mmStrings.GetEntry("title_screen.subtitle.color_select").Value;
+                Singleton.mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.color_select_1").Value;
 
 
+                break;
+            case STATE.COLORSELECT2:
+                mainMenuScreens.ClearText();
+                Singleton.mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.color_select_2").Value;
+                break;
+
+            case STATE.POWERSELECT:
+                mainMenuScreens.ClearText();
+                Singleton.subtitle.text = mmStrings.GetEntry("title_screen.subtitle.power_select").Value;
+                Singleton.mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.power_select").Value;
+                SceneManager.LoadScene("GrayboxMap");
                 break;
         }
     }
@@ -110,7 +120,7 @@ public class MainMenuScript : MonoBehaviour
         for (float percent = 0; percent <= 1000; percent++)
         {
 
-            Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, Mathf.Lerp(300, 1, percent / 1000), Singleton.elevator.position.z);
+            Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, Mathf.Lerp(300, 15, percent / 1000), Singleton.elevator.position.z);
             yield return new WaitForSeconds(0.01f);
         }
         Singleton.TransitionToState(STATE.COLORSELECT);
@@ -122,6 +132,29 @@ public class MainMenuScript : MonoBehaviour
         Singleton.remappingCanvas.enabled = !Singleton.remappingCanvas.enabled;
     }
 
+    /// <summary>
+    /// A helper function to hook into UI button presses. 
+    /// </summary>
+    /// <param name="s">The hex string to set as a color.</param>
+    /// <param name="setBase">if true, set the fill color of the mech. If false, set the line color</param>
+    public void SetPlayerColor(Color c)
+    {
+        switch (currState)
+        {
+            case STATE.COLORSELECT:
+                GetComponent<PlayerMatSwapper>().SetSavedColor(c, true);
+                GetComponent<PlayerMatSwapper>().LerpPlayerColor();
 
+                TransitionToState(STATE.COLORSELECT2);
+                break;
+            case STATE.COLORSELECT2:
+                GetComponent<PlayerMatSwapper>().SetSavedColor(c, false);
+                GetComponent<PlayerMatSwapper>().LerpPlayerColor();
+                TransitionToState(STATE.POWERSELECT);
+                break;
+            default:
+                break;
+        }
+    }
 
 }

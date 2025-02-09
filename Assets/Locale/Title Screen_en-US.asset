@@ -39,7 +39,30 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8400909996032
-    m_Localized: ababbbabbabba
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15309398446080
+    m_Localized: 'SUBTITLE: My child, tell me. What is the color of your mind? The
+      color of your soul?
+
+      Do be careful - you cannot go back on your decision.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15979803414528
+    m_Localized: Body Color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16083742461952
+    m_Localized: Mind Color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 343648940167168
+    m_Localized: 'SUBTITLE: Now, reveal to me the bearer of your heart.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 344315918389248
+    m_Localized: Frame Ability
     m_Metadata:
       m_Items: []
   references:

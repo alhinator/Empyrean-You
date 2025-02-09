@@ -39,6 +39,26 @@ MonoBehaviour:
     m_Key: title_screen.subtitle.empty
     m_Metadata:
       m_Items: []
+  - m_Id: 15309398446080
+    m_Key: title_screen.subtitle.color_select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 343648940167168
+    m_Key: title_screen.subtitle.power_select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15979803414528
+    m_Key: title_screen.left_screen.color_select_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16083742461952
+    m_Key: title_screen.left_screen.color_select_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 344315918389248
+    m_Key: title_screen.left_screen.power_select
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
