@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -7,6 +8,14 @@ public class MainMenuScreens : MonoBehaviour
     private string savedLetters = "";
     [SerializeField] private TMP_Text ColorSelectHeader;
     [SerializeField] private TMP_Text LeftScreenHeader;
+    [SerializeField] private GameObject Keypad;
+    [SerializeField] private GameObject Navigator;
+
+    public enum FRAME { BAST }
+    private FRAME selectedFrame;
+
+    public enum GUN{ARTEMIS, GUANYIN}
+    private GUN selectedGun;
 
     void Start()
     {
@@ -55,4 +64,44 @@ public class MainMenuScreens : MonoBehaviour
 
     }
 
+    public bool KeypadEnabled
+    {
+        get
+        {
+            return Keypad.activeInHierarchy;
+        }
+        set
+        {
+            Keypad.SetActive(value);
+        }
+
+
+    }
+    public bool NavigatorEnabled
+    {
+        get
+        {
+            return Navigator.activeInHierarchy;
+        }
+        set
+        {
+            Navigator.SetActive(value);
+        }
+    }
+
+    public void displayFrameDetails(FRAME f)
+    {
+        switch (f)
+        {
+
+            case FRAME.BAST:
+                break;
+        }
+    }
+    public void NavNext(){
+
+    }
+    public void NavPrev(){
+
+    }
 }

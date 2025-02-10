@@ -28,8 +28,9 @@ public class MainMenuScript : MonoBehaviour
     [Header("Main Menu Variables")]
 
 
-    [Header("Color Select Variables")]
+    [Header("Select Variables")]
     public GameObject selectMeAfterElevator;
+    public GameObject selectMeAfterColors;
     private MainMenuScreens mainMenuScreens;
 
     [Header("Localization")]
@@ -69,44 +70,48 @@ public class MainMenuScript : MonoBehaviour
         switch (currState)
         {
             case STATE.BOOTUP:
-                Singleton.subtitle.enabled = false;
-                Singleton.worldCanvas.enabled = false;
-                Singleton.mainMenuCanvas.enabled = true;
-                Singleton.leftScreen.enabled = false;
-                Singleton.rightScreen.enabled = false;
-                Singleton.remappingCanvas.enabled = false;
+                subtitle.enabled = false;
+                worldCanvas.enabled = false;
+                mainMenuCanvas.enabled = true;
+                leftScreen.enabled = false;
+                rightScreen.enabled = false;
+                remappingCanvas.enabled = false;
+                mainMenuScreens.NavigatorEnabled = false;
                 break;
             case STATE.ELEVATOR:
-                Singleton.remappingCanvas.enabled = false;
-                Singleton.mainMenuCanvas.enabled = false;
-                Singleton.eventSystem.SetSelectedGameObject(null);
-                Singleton.StartCoroutine(DescendToHangar());
+                remappingCanvas.enabled = false;
+                mainMenuCanvas.enabled = false;
+                eventSystem.SetSelectedGameObject(null);
+                StartCoroutine(DescendToHangar());
                 break;
             case STATE.COLORSELECT:
-                Singleton.mainMenuCanvas.enabled = false;
-                Singleton.remappingCanvas.enabled = false;
-                Singleton.worldCanvas.enabled = true;
-                Singleton.worldCanvas.sortingOrder = 2;
-                Singleton.leftScreen.enabled = true;
-                Singleton.eventSystem.SetSelectedGameObject(Singleton.selectMeAfterElevator);
+                mainMenuCanvas.enabled = false;
+                remappingCanvas.enabled = false;
+                worldCanvas.enabled = true;
+                worldCanvas.sortingOrder = 2;
+                leftScreen.enabled = true;
+                eventSystem.SetSelectedGameObject(selectMeAfterElevator);
 
                 ///play a voiceline here / display text
-                Singleton.subtitle.enabled = true;
-                Singleton.subtitle.text = mmStrings.GetEntry("title_screen.subtitle.color_select").Value;
-                Singleton.mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.color_select_1").Value;
+                subtitle.enabled = true;
+                subtitle.text = mmStrings.GetEntry("title_screen.subtitle.color_select").Value;
+                mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.color_select_1").Value;
 
 
                 break;
             case STATE.COLORSELECT2:
                 mainMenuScreens.ClearText();
-                Singleton.mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.color_select_2").Value;
+                mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.color_select_2").Value;
                 break;
 
             case STATE.POWERSELECT:
                 mainMenuScreens.ClearText();
-                Singleton.subtitle.text = mmStrings.GetEntry("title_screen.subtitle.power_select").Value;
-                Singleton.mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.power_select").Value;
-                SceneManager.LoadScene("GrayboxMap");
+                subtitle.text = mmStrings.GetEntry("title_screen.subtitle.power_select").Value;
+                mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.power_select").Value;
+                //SceneManager.LoadScene("GrayboxMap");
+                mainMenuScreens.KeypadEnabled = false;
+                mainMenuScreens.NavigatorEnabled = true;
+                eventSystem.SetSelectedGameObject(selectMeAfterColors);
                 break;
         }
     }
@@ -120,9 +125,12 @@ public class MainMenuScript : MonoBehaviour
         for (float percent = 0; percent <= 1000; percent++)
         {
 
-            Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, Mathf.Lerp(300, 15, percent / 1000), Singleton.elevator.position.z);
-            yield return new WaitForSeconds(0.01f);
+            //Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, Mathf.Lerp(300, 15, percent / 1000), Singleton.elevator.position.z);
+            //yield return new WaitForSeconds(0.01f);
         }
+        //DEBUG TO SKIP ROLLING
+        Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, 15, Singleton.elevator.position.z);
+        yield return new WaitForSeconds(0.01f);
         Singleton.TransitionToState(STATE.COLORSELECT);
 
     }
