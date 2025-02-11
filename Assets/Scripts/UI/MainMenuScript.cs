@@ -112,6 +112,7 @@ public class MainMenuScript : MonoBehaviour
                 mainMenuScreens.KeypadEnabled = false;
                 mainMenuScreens.NavigatorEnabled = true;
                 eventSystem.SetSelectedGameObject(selectMeAfterColors);
+                mainMenuScreens.DisplayFrameDetails(MainMenuScreens.FRAME.BAST);
                 break;
         }
     }
@@ -163,6 +164,10 @@ public class MainMenuScript : MonoBehaviour
             default:
                 break;
         }
+    }
+    public static void SetSelectedFrame(MainMenuScreens.FRAME f)
+    {
+        //Singleton. ...
     }
 
 }
