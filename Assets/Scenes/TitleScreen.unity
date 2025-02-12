@@ -943,7 +943,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 25472178}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: NavPrev
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &25472178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4097,6 +4109,53 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 100, y: 100, z: 0.005}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &182641477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 182641479}
+  - component: {fileID: 182641478}
+  m_Layer: 0
+  m_Name: PlayerDataSetter
+  m_TagString: PlayerDataSetter
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &182641478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182641477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8bec262e4aed84f881dbd43804046a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Frame: 0
+  LeftWeapon: 0
+  RightWeapon: 0
+--- !u!4 &182641479
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182641477}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.6928041, y: 301.73782, z: 30.959314}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &199604834
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5300,7 +5359,7 @@ MonoBehaviour:
   LeftScreenHeader: {fileID: 1986499911}
   Keypad: {fileID: 1975738871}
   Navigator: {fileID: 79710930}
-  NavImage: {fileID: 0}
+  NavImage: {fileID: 1024413892}
   NavHeader: {fileID: 1479293788}
   NavBody: {fileID: 1152320267}
 --- !u!114 &305945247
@@ -5873,7 +5932,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 340661055}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 305945246}
+        m_TargetAssemblyTypeName: MainMenuScreens, Assembly-CSharp
+        m_MethodName: NavNext
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &340661055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39391,6 +39462,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 305945242}
+  - {fileID: 182641479}
   - {fileID: 1915479684}
   - {fileID: 543450651805117233}
   - {fileID: 1125652227}

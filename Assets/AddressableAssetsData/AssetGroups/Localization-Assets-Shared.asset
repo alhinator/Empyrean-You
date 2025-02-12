@@ -22,6 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac4b5f876dd81f449b412b6a66cdf3eb
+    m_Address: Assets/Locale/Guns Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f5b71cad913ff2c4fb81c8a779d3d425
     m_Address: Assets/Locale/en-US Strings Shared Data.asset
     m_ReadOnly: 1

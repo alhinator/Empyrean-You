@@ -65,6 +65,18 @@ MonoBehaviour:
     m_Localized: Frame Ability
     m_Metadata:
       m_Items: []
+  - m_Id: 1128406133608448
+    m_Localized: Left Hand Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1128470973353984
+    m_Localized: Right Hand Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1128757503037440
+    m_Localized: 'SUBTITLE: And choose whose arms you shall bear to battle.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

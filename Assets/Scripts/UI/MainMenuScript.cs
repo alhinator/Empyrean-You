@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
-    public enum STATE { BOOTUP, ELEVATOR, COLORSELECT, COLORSELECT2, POWERSELECT, GUNSELECT, NAMESELECT };
+    public enum STATE { BOOTUP, ELEVATOR, COLORSELECT, COLORSELECT2, POWERSELECT, GUNSELECT, GUNSELECT2, NAMESELECT };
     private static MainMenuScript Singleton;
     [Header("Canvases")]
     public Canvas worldCanvas;
@@ -23,7 +24,7 @@ public class MainMenuScript : MonoBehaviour
     public EventSystem eventSystem;
 
     [Header("State")]
-    private static STATE currState;
+    public static STATE currState;
 
     [Header("Main Menu Variables")]
 
@@ -114,6 +115,18 @@ public class MainMenuScript : MonoBehaviour
                 eventSystem.SetSelectedGameObject(selectMeAfterColors);
                 mainMenuScreens.DisplayFrameDetails(MainMenuScreens.FRAME.BAST);
                 break;
+            case STATE.GUNSELECT:
+                mainMenuScreens.DisplayGunDetails(MainMenuScreens.GUN.GUANYIN);
+                subtitle.text = mmStrings.GetEntry("title_screen.subtitle.gun_select").Value;
+                mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.gun_select").Value;
+                break;
+            case STATE.GUNSELECT2:
+                mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.gun_select_2").Value;
+                break;
+            case STATE.NAMESELECT:
+                SceneManager.LoadScene("GrayboxMap");
+                break;
+
         }
     }
     public void StartDescent()
@@ -168,6 +181,26 @@ public class MainMenuScript : MonoBehaviour
     public static void SetSelectedFrame(MainMenuScreens.FRAME f)
     {
         //Singleton. ...
+        GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().Frame = (int)f;
+
+        Singleton.TransitionToState(STATE.GUNSELECT);
+    }
+
+    public static void SetSelectedGun(MainMenuScreens.GUN g, bool left)
+    {
+        if (left)
+        {
+            //assign left hand weapon
+            GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().LeftWeapon = (int)g-1;
+
+            Singleton.TransitionToState(STATE.GUNSELECT2);
+        }
+        else
+        {
+            //assign righ hand weapon
+            GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().RightWeapon = (int)g-1;
+            Singleton.TransitionToState(STATE.NAMESELECT);
+        }
     }
 
 }

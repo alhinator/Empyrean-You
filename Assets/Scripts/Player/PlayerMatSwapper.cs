@@ -28,8 +28,8 @@ public class PlayerMatSwapper : MonoBehaviour
     void Start()
     {
         variableMaterial.shader = WireframeOpaque;
-        //on scene load, set active color to saved material.
-        SetPlayerColor(savedMaterial);
+        //on scene load, set active color to base material.
+        SetPlayerColor(baseMaterial);
         DebugInvis = false;
 
     }

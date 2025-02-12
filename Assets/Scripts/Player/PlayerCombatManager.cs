@@ -31,7 +31,7 @@ public class PlayerCombatManager : CombatEntity
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //set player reference variables
         player3PCam = GetComponent<Player3PCam>();
@@ -42,17 +42,6 @@ public class PlayerCombatManager : CombatEntity
         LeftConstraint.weight = 1f;
         RightConstraint.sourceTransform = RightArmMount;
         RightConstraint.weight = 1f;
-
-        Weapons = new Gun[2];
-        //DEBUG CODE ONLY
-        AssignWeapons(1, 0);
-
-        //Need to assign frame abilities here.
-        Abilities = new Ability[1];
-
-        //TEST CODE ONLY
-        Abilities[0] = gameObject.AddComponent<Bast>();
-        Abilities[0].SetOwner(this);
 
         currHP = maxHP;
 
@@ -80,6 +69,8 @@ public class PlayerCombatManager : CombatEntity
 
     public void AssignWeapons(int left_id, int right_id)
     {
+        Weapons = new Gun[2];
+
         if (!WeaponPrefabs[left_id] || !WeaponPrefabs[right_id])
         {
             throw new Exception("WeaponManager: AssignWeapon(): Bad left or right id.");
@@ -112,6 +103,8 @@ public class PlayerCombatManager : CombatEntity
 
         (Weapons[1] as Gun).myHudText = rightPrimaryUIText;
         (Weapons[1] as Gun).myHudSecondaryText = rightSecondaryUIText;
+
+
 
 
 
@@ -178,4 +171,14 @@ public class PlayerCombatManager : CombatEntity
         base.OnKill(d);
         player3PCam.EnemyKilledEvent(d.Target);
     }
+    public void AssignFrame(int frame_id)
+    {
+        Abilities = new Ability[1];
+
+        //eventually convert following line to actually use frame ID
+        Abilities[0] = gameObject.AddComponent<Bast>();
+        Abilities[0].SetOwner(this);
+    }
 }
+
+

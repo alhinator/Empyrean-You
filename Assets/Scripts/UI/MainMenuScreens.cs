@@ -3,8 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
-using System;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 
 public class MainMenuScreens : MonoBehaviour
 {
@@ -19,16 +17,18 @@ public class MainMenuScreens : MonoBehaviour
     [SerializeField] private TMP_Text NavBody;
 
     private StringTable abilStrings;
+    private StringTable gunStrings;
 
-    public enum FRAME { UNSELECTED, BAST }
+    public enum FRAME { UNSELECTED, BAST, LAST }
     private FRAME selectedFrame = FRAME.UNSELECTED;
 
-    public enum GUN{UNSELECTED, ARTEMIS, GUANYIN}
-    private GUN? selectedGun = GUN.UNSELECTED;
+    public enum GUN { UNSELECTED, GUANYIN, ARTEMIS, LAST }
+    private GUN selectedGun = GUN.UNSELECTED;
 
     void Start()
     {
         abilStrings = LocalizationSettings.StringDatabase.GetTable("Abilities", null);
+        gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
 
         ClearText();
     }
@@ -111,20 +111,89 @@ public class MainMenuScreens : MonoBehaviour
                 break;
         }
     }
-    public void DisplayGunDetails(GUN g){
-
-    }
-    public void NavNext(){
-
-    }
-    public void NavPrev(){
-
-    }
-    public void NavSubmit(){
-        if(selectedFrame != FRAME.UNSELECTED && selectedGun == GUN.UNSELECTED)
+    public void DisplayGunDetails(GUN g)
+    {
+        switch (g)
         {
-            DisplayGunDetails(GUN.ARTEMIS);
-            MainMenuScript.SetSelectedFrame(selectedFrame);
+            case GUN.ARTEMIS:
+                NavHeader.text = gunStrings.GetEntry("artemis.name").Value;
+                NavBody.text = gunStrings.GetEntry("artemis.splash").Value;
+                break;
+            case GUN.GUANYIN:
+                NavHeader.text = gunStrings.GetEntry("guanyin.name").Value;
+                NavBody.text = gunStrings.GetEntry("guanyin.splash").Value;
+                break;
+        }
+        selectedGun = g;
+    }
+    public void NavNext()
+    {
+        if (MainMenuScript.currState == MainMenuScript.STATE.POWERSELECT)
+        { //on frame select
+
+            selectedFrame++;
+            if (selectedFrame == FRAME.LAST)
+            {
+                selectedFrame = FRAME.UNSELECTED;
+                selectedFrame++;
+            }
+            Debug.Log(selectedFrame);
+            DisplayFrameDetails(selectedFrame);
+
+        }
+        else
+        { //on gun select
+            selectedGun++;
+            if (selectedGun == GUN.LAST)
+            {
+                selectedGun = GUN.UNSELECTED;
+                selectedGun++;
+            }
+            Debug.Log(selectedGun);
+            DisplayGunDetails(selectedGun);
+        }
+
+
+    }
+    public void NavPrev()
+    {
+        if (MainMenuScript.currState == MainMenuScript.STATE.POWERSELECT)
+        { //on frame select
+
+            selectedFrame--;
+            if (selectedFrame == FRAME.UNSELECTED)
+            {
+                selectedFrame = FRAME.LAST;
+                selectedFrame--;
+            }
+            DisplayFrameDetails(selectedFrame);
+
+        }
+        else
+        { //on gun select
+            selectedGun--;
+            if (selectedGun == GUN.UNSELECTED)
+            {
+                selectedGun = GUN.LAST;
+                selectedGun--;
+            }
+            DisplayGunDetails(selectedGun);
+        }
+    }
+    public void NavSubmit()
+    {
+
+        switch (MainMenuScript.currState)
+        {
+            case MainMenuScript.STATE.POWERSELECT:
+                MainMenuScript.SetSelectedFrame(selectedFrame);
+                break;
+            case MainMenuScript.STATE.GUNSELECT:
+                MainMenuScript.SetSelectedGun(selectedGun, true);
+                break;
+            case MainMenuScript.STATE.GUNSELECT2:
+                MainMenuScript.SetSelectedGun(selectedGun, false);
+                break;
         }
     }
 }
