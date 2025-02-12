@@ -116,7 +116,7 @@ public class MainMenuScript : MonoBehaviour
                 mainMenuScreens.DisplayFrameDetails(MainMenuScreens.FRAME.BAST);
                 break;
             case STATE.GUNSELECT:
-                mainMenuScreens.DisplayGunDetails(MainMenuScreens.GUN.GUANYIN);
+                mainMenuScreens.DisplayGunDetails(Guns.GUANYIN);
                 subtitle.text = mmStrings.GetEntry("title_screen.subtitle.gun_select").Value;
                 mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.gun_select").Value;
                 break;
@@ -186,19 +186,19 @@ public class MainMenuScript : MonoBehaviour
         Singleton.TransitionToState(STATE.GUNSELECT);
     }
 
-    public static void SetSelectedGun(MainMenuScreens.GUN g, bool left)
+    public static void SetSelectedGun(GunIndex g, bool left)
     {
         if (left)
         {
             //assign left hand weapon
-            GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().LeftWeapon = (int)g-1;
+            GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().LeftWeapon = g.index;
 
             Singleton.TransitionToState(STATE.GUNSELECT2);
         }
         else
         {
             //assign righ hand weapon
-            GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().RightWeapon = (int)g-1;
+            GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().RightWeapon = g.index;
             Singleton.TransitionToState(STATE.NAMESELECT);
         }
     }

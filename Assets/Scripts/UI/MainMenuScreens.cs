@@ -22,8 +22,7 @@ public class MainMenuScreens : MonoBehaviour
     public enum FRAME { UNSELECTED, BAST, LAST }
     private FRAME selectedFrame = FRAME.UNSELECTED;
 
-    public enum GUN { UNSELECTED, GUANYIN, ARTEMIS, LAST }
-    private GUN selectedGun = GUN.UNSELECTED;
+    private GunIndex selectedGun;
 
     void Start()
     {
@@ -111,19 +110,10 @@ public class MainMenuScreens : MonoBehaviour
                 break;
         }
     }
-    public void DisplayGunDetails(GUN g)
+    public void DisplayGunDetails(GunIndex g)
     {
-        switch (g)
-        {
-            case GUN.ARTEMIS:
-                NavHeader.text = gunStrings.GetEntry("artemis.name").Value;
-                NavBody.text = gunStrings.GetEntry("artemis.splash").Value;
-                break;
-            case GUN.GUANYIN:
-                NavHeader.text = gunStrings.GetEntry("guanyin.name").Value;
-                NavBody.text = gunStrings.GetEntry("guanyin.splash").Value;
-                break;
-        }
+        NavHeader.text = gunStrings.GetEntry(g.NameTranslationKey).Value;
+        NavBody.text = gunStrings.GetEntry(g.SplashTranslationKey).Value;
         selectedGun = g;
     }
     public void NavNext()
@@ -144,11 +134,6 @@ public class MainMenuScreens : MonoBehaviour
         else
         { //on gun select
             selectedGun++;
-            if (selectedGun == GUN.LAST)
-            {
-                selectedGun = GUN.UNSELECTED;
-                selectedGun++;
-            }
             Debug.Log(selectedGun);
             DisplayGunDetails(selectedGun);
         }
@@ -172,11 +157,6 @@ public class MainMenuScreens : MonoBehaviour
         else
         { //on gun select
             selectedGun--;
-            if (selectedGun == GUN.UNSELECTED)
-            {
-                selectedGun = GUN.LAST;
-                selectedGun--;
-            }
             DisplayGunDetails(selectedGun);
         }
     }
