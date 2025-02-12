@@ -1,5 +1,5 @@
 ﻿using UnityHFSM;
 
-public class RingEnemyAiming : EnemyState<RingEnemy, RingEnemyCombatState, RingEnemyEvent> {
+public class RingEnemyAiming : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent> {
     public RingEnemyAiming(RingEnemy enemy) : base(enemy) { }
 }

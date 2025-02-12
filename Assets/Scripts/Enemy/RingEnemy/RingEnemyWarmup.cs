@@ -1,5 +1,33 @@
-﻿using UnityHFSM;
+﻿using UnityEngine;
+using UnityHFSM;
 
-public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyCombatState, RingEnemyEvent> {
+public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent> {
+    // 1. figure out where to store angle for anim. quaternion
+    // 2. make constants for physics steps taken until aiming phase
+    // 3. figure out how to pass on (1) to aiming phase
+    // 4. exit back to idle if lost sight of player
+
     public RingEnemyWarmup(RingEnemy enemy) : base(enemy) { }
+
+    public override void OnEnter() {
+        base.OnEnter();
+
+        // Grab localRotation of all rings
+
+        // TODO this is wrong and needs to be revised
+        // We want to do the following:
+        // 1. grab a Vec3 from the sphere to the player
+        // 2. set our initial quaternion as AxisAngle(thatVec3, 0)
+        // 3. set our rotation angle as 0
+
+        // The target rotation for our rings is as follows:
+        // 1. rotate from AxisAngle(near, rotationAngle) to -targetQuaternion by 45deg
+        // 2. rotate by targetQuaternion
+        // 3. rotate by AxisAngle(near, ringOffset)
+    }
+
+    public override void OnUpdate() {
+        Vector3 targetDirection = this.Enemy.lastSeenPosition - this.Enemy.transform.position;
+        // TODO
+    }
 }

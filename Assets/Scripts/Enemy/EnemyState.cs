@@ -17,8 +17,18 @@ public abstract class EnemyState<TEnemy, TState, TEvent> : State<TState, TEvent>
         base.OnEnter();
     }
 
+    /// <summary>
+    /// For physics updates
+    /// </summary>
     public override void OnLogic() {
         base.OnLogic();
+    }
+
+    /// <summary>
+    /// For visual updates
+    /// </summary>
+    public virtual void OnUpdate() {
+        // empty
     }
 
     public override void OnExit() {
