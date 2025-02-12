@@ -8,7 +8,7 @@ public class Raijin : Gun
     public override void TriggerUp()
     {
     }
-    protected override void Shoot()
+    public override void Shoot()
     {
         Debug.DrawRay(bulletOrigin.position, bulletOrigin.forward * 100, Color.cyan, 0.01f);
     }

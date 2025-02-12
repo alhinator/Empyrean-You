@@ -1,16 +1,28 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityHFSM;
 
-public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent> {
+public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
+{
     // 1. figure out where to store angle for anim. quaternion
     // 2. make constants for physics steps taken until aiming phase
     // 3. figure out how to pass on (1) to aiming phase
-    // 4. exit back to idle if lost sight of player
+    // 4. exit back to idle if lost sight of player - DONE
+
+    /// <summary>
+    /// How long the ring enemy takes to warm up before firing.
+    /// </summary>
+    private float warmupDuration = 1f;
+    public bool IsDone = false;
 
     public RingEnemyWarmup(RingEnemy enemy) : base(enemy) { }
 
-    public override void OnEnter() {
+    public override void OnEnter()
+    {
         base.OnEnter();
+
+        //Reset warmup duration & start timer. Needs to be called by parent Enemy as this class does not derive monobehaviour
+        Enemy.StartCoroutine(WarmupTimer());
 
         // Grab localRotation of all rings
 
@@ -25,9 +37,23 @@ public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
         // 2. rotate by targetQuaternion
         // 3. rotate by AxisAngle(near, ringOffset)
     }
+    public override void OnExit()
+    {
+        IsDone = false;
+        base.OnExit();
+    }
 
-    public override void OnUpdate() {
+    public override void OnUpdate()
+    {
         Vector3 targetDirection = this.Enemy.lastSeenPosition - this.Enemy.transform.position;
         // TODO
+    }
+
+    private IEnumerator WarmupTimer()
+    {
+        IsDone = false;
+        yield return new WaitForSeconds(warmupDuration);
+        IsDone = true;
+
     }
 }

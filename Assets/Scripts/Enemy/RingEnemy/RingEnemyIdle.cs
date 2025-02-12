@@ -26,7 +26,7 @@ public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEven
         { //No hit, we can move all the way to our ideal target.
             this.targetPosition = this.Enemy.transform.position + (normalizedTarget * wanderDist);
         }
-        Debug.Log("RingEnemy: My ideal position is:" + this.targetPosition);
+        //Debug.Log("RingEnemy: My ideal position is:" + this.targetPosition);
 
 
     }
@@ -46,7 +46,7 @@ public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEven
         base.OnLogic();
         if (targetPosition.Equals(Vector3.negativeInfinity) || Vector3.Distance(this.Enemy.transform.position, targetPosition) < 2f)
         {
-            Debug.Log("Want to determine new position.");
+            //Debug.Log("Want to determine new position.");
             DetermineNewTargetPos();
             //Enemy.rb.velocity = Vector3.zero;
         }
@@ -54,6 +54,12 @@ public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEven
         {
             WalkTowardsTargetPos();
         }
+
+
+        //Move the rings back to LocalPosition center. This will undo any changes in position from other states.
+        Enemy.innerTransform.localPosition = Vector3.Lerp(Enemy.innerTransform.localPosition, Vector3.zero, 2 * Time.deltaTime);
+        Enemy.middleTransform.localPosition = Vector3.Lerp(Enemy.middleTransform.localPosition, Vector3.zero, 2 * Time.deltaTime);
+        Enemy.outerTransform.localPosition = Vector3.Lerp(Enemy.outerTransform.localPosition, Vector3.zero, 2 * Time.deltaTime);
     }
 
 

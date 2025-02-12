@@ -45,7 +45,7 @@ public class Guanyin : Gun
     {
         firing = false;
     }
-    protected override void Shoot()
+    public override void Shoot()
     {
         Vector3 FiringDir = PickFiringDirection(bulletOrigin.forward, currRecoil);
         Debug.DrawRay(bulletOrigin.position, FiringDir * range, Color.cyan, 1f);

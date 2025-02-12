@@ -1,5 +1,7 @@
 using System;
+using UnityEditor.Build.Pipeline;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityHFSM;
 using Random = UnityEngine.Random;
 
@@ -10,12 +12,14 @@ public class RingEnemy : CombatEntity
     public GameObject _player;
 
     private StateMachine<RingEnemyState, RingEnemyEvent> stateMachine;
-
+    public LineRenderer aimParticles;
+    public ParticleSystem fireParticles;
     private readonly float[] _largePrimes = {
         101f, 103f, 107f, 109f, 113f, 127f,
         131f, 137f, 139f, 149f, 151f, 157f,
         163f, 167f, 173f, 179f, 181f, 191f
     };
+    public RingEnemyAttack myAttack;
 
     // TODO should these be get; private set;?
 
@@ -38,12 +42,14 @@ public class RingEnemy : CombatEntity
     public Rigidbody rb;
 
     [Header("Vision and Detection")]
-    public float visionRange = 50;
+    public float visionRange = 75;
     public bool isInRange = false;
     public bool isInLoS = false;
     public Vector3 lastSeenPosition;
+    public Vector3 actualAttackPos;
     public float timeSinceLoS = 0;
     private const float LoSLimit = 1f;
+    public float AttackRange = 100;
 
     //[Header("DebugInfo")]
 
@@ -51,6 +57,7 @@ public class RingEnemy : CombatEntity
     private void Awake()
     {
         InitStateMachineStates();
+        aimParticles.enabled = false;
 
     }
 
@@ -61,9 +68,15 @@ public class RingEnemy : CombatEntity
         this.rb = this.GetComponent<Rigidbody>();
         this.hitbox = this.GetComponent<SphereCollider>();
 
-        maxHP = 200;
+        myAttack = GetComponent<RingEnemyAttack>();
+        myAttack.SetOwner(this);
+        Weapons = new Weapon[1];
+        Weapons[0] = myAttack;
+        fireParticles.transform.parent = null;
+        aimParticles.transform.parent = null;
+        aimParticles.useWorldSpace = true;
+
         currHP = MaximumHP;
-        this.Abilities = new Ability[0];
 
         this._player = GameObject.FindGameObjectWithTag("Player");
 
@@ -135,6 +148,9 @@ public class RingEnemy : CombatEntity
     public override bool OnDeath(DamageInstance d)
     {
         Debug.Log("my name is " + transform.name + " and i just died");
+        Destroy(aimParticles);
+        Destroy(fireParticles, fireParticles.main.duration);
+
         Destroy(this.gameObject);
         return true;
     }
@@ -170,7 +186,17 @@ public class RingEnemy : CombatEntity
         //Transition from idle to warmup when player is in range & LoS
         this.stateMachine.AddTransition(new Transition<RingEnemyState>(RingEnemyState.Idle, RingEnemyState.Warmup, (self) => { return this.isInLoS && this.isInRange; }));
 
+        //Transition from warmup to aiming when warmup is done
+        this.stateMachine.AddTransition(new Transition<RingEnemyState>(RingEnemyState.Warmup, RingEnemyState.Aiming, (self) => { return (this.stateMachine.ActiveState as RingEnemyWarmup).IsDone; }));
 
+        //Transition from aiming to lockon when aim is done
+        this.stateMachine.AddTransition(new Transition<RingEnemyState>(RingEnemyState.Aiming, RingEnemyState.Lockon, (self) => { return (this.stateMachine.ActiveState as RingEnemyAiming).IsDone; }));
+
+        //Transition from lockon to cooldown after we've fired;
+        this.stateMachine.AddTransition(new Transition<RingEnemyState>(RingEnemyState.Lockon, RingEnemyState.Cooldown, (self) => { return (this.stateMachine.ActiveState as RingEnemyLockon).IsDone; }));
+
+        //Transition from cooldown to Aiming after the recharge period is over.
+        this.stateMachine.AddTransition(new Transition<RingEnemyState>(RingEnemyState.Cooldown, RingEnemyState.Aiming, (self) => { return (this.stateMachine.ActiveState as RingEnemyCooldown).IsDone; }));
 
         // TODO transition from Aiming to Cooldown when lost sight of player
         // TODO should lost sight instead incur a chase mode?
@@ -182,7 +208,7 @@ public class RingEnemy : CombatEntity
 
     private bool CheckForLostLoS(Transition<RingEnemyState> self)
     {
-        if (this.stateMachine.ActiveState.name == RingEnemyState.Idle) { return false; }
+        if (this.stateMachine.ActiveState.name == RingEnemyState.Idle || this.stateMachine.ActiveState.name == RingEnemyState.Cooldown) { return false; }
         else if (!isInLoS && timeSinceLoS >= LoSLimit)
         {
             return true;
@@ -192,4 +218,6 @@ public class RingEnemy : CombatEntity
             return false;
         }
     }
+
+
 }

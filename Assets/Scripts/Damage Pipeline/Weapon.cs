@@ -21,7 +21,7 @@ public abstract class Weapon : MonoBehaviour
     /// <summary>
     /// Called when whatever controls this Weapon's firing system decides it's time to shoot.
     /// </summary>
-    protected abstract void Shoot();
+    public abstract void Shoot();
     //If... my raycast or projectile hits...
     //new DamageInstance(this.Owner, this, this.damage, hit.point.getComponent<CombatEntity>);
 
@@ -72,6 +72,10 @@ public abstract class Weapon : MonoBehaviour
         {
             return Owner;
         }
+    }
+    public void SetOwner(CombatEntity c)
+    {
+        Owner = c;
     }
 
 }

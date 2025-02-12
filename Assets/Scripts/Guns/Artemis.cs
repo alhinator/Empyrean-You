@@ -60,7 +60,7 @@ public class Artemis : Gun
         currCharge = 0;
         firing = false;
     }
-    protected override void Shoot()
+    public override void Shoot()
     {
         audioSource.clip = null;
         audioSource.loop = false;

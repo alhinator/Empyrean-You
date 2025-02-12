@@ -45,7 +45,9 @@ public class PlayerCombatManager : CombatEntity
 
         currHP = maxHP;
 
-
+        //DEBUG ONLY 
+        AssignWeapons(0, 0);
+        AssignFrame(0);
     }
     void Update()
     {

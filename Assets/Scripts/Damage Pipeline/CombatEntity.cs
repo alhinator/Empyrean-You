@@ -59,9 +59,12 @@ public abstract class CombatEntity : MonoBehaviour
     public virtual bool HitDetected(DamageInstance d)
     {
         bool allowed = true;
-        foreach (Ability a in Abilities)
+        if (Abilities != null && Abilities.Length != 0)
         {
-            allowed = allowed && a.HitDetected(d);
+            foreach (Ability a in Abilities)
+            {
+                allowed = allowed && a.HitDetected(d);
+            }
         }
         return allowed;
     }
@@ -71,16 +74,23 @@ public abstract class CombatEntity : MonoBehaviour
     /// </summary>
     public virtual void OnHit(DamageInstance d)
     {
-        foreach (Weapon w in Weapons)
+        if (Weapons != null && Weapons.Length > 0)
         {
-            if (w == d.AttackingWeapon)
+            foreach (Weapon w in Weapons)
             {
-                w.OnHit(d);
+                if (w == d.AttackingWeapon)
+                {
+                    w.OnHit(d);
+                }
             }
         }
-        foreach (Ability a in Abilities)
+
+        if (Abilities != null && Abilities.Length != 0)
         {
-            a.OnHit(d);
+            foreach (Ability a in Abilities)
+            {
+                a.OnHit(d);
+            }
         }
     }
     /// <summary>
@@ -88,16 +98,19 @@ public abstract class CombatEntity : MonoBehaviour
     /// </summary>
     public virtual void OnKill(DamageInstance d)
     {
-        foreach (Weapon w in Weapons)
+        if (Weapons != null && Weapons.Length > 0)
         {
-            if (w == d.AttackingWeapon)
+            foreach (Weapon w in Weapons)
             {
                 w.OnKill(d);
             }
         }
-        foreach (Ability a in Abilities)
+        if (Abilities != null && Abilities.Length != 0)
         {
-            a.OnKill(d);
+            foreach (Ability a in Abilities)
+            {
+                a.OnKill(d);
+            }
         }
     }
 
@@ -108,14 +121,23 @@ public abstract class CombatEntity : MonoBehaviour
     public virtual bool OnDamage(DamageInstance d)
     {
         //First, call my weapons' and abilities' OnDamage.
-        foreach (Weapon w in Weapons)
+        if (Weapons != null && Weapons.Length > 0)
         {
-            w.OnDamage(d);
+            foreach (Weapon w in Weapons)
+            {
+                w.OnDamage(d);
+            }
         }
-        foreach (Ability a in Abilities)
+
+        if (Abilities != null && Abilities.Length != 0)
         {
-            a.OnDamage(d);
+            foreach (Ability a in Abilities)
+            {
+                a.OnDamage(d);
+            }
         }
+
+
 
         currHP -= d.AdjustedDamage;
         if (currHP <= 0)
@@ -135,9 +157,12 @@ public abstract class CombatEntity : MonoBehaviour
     public virtual bool OnDeath(DamageInstance d)
     {
         bool actuallyDied = true;
-        foreach (Ability a in Abilities)
+        if (Abilities != null && Abilities.Length != 0)
         {
-            actuallyDied = actuallyDied && a.OnDeath(d);
+            foreach (Ability a in Abilities)
+            {
+                actuallyDied = actuallyDied && a.OnDeath(d);
+            }
         }
         return actuallyDied;
     }
