@@ -1,6 +1,4 @@
-﻿using UnityEditor.Rendering;
-using UnityEngine;
-using UnityHFSM;
+﻿using UnityEngine;
 
 public class RingEnemyCooldown : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
 {
@@ -21,7 +19,7 @@ public class RingEnemyCooldown : EnemyState<RingEnemy, RingEnemyState, RingEnemy
     public override void OnUpdate()
     {
         base.OnUpdate();
-        TimeToReEngage += Time.deltaTime;
+        TimeToReEngage += Time.deltaTime * Random.Range(0.9f, 2.2f);
 
         //Move the rings back to LocalPosition center and rotation. This will undo any changes in position from other states.
         Enemy.innerTransform.SetLocalPositionAndRotation(Vector3.Lerp(Enemy.innerTransform.localPosition, Vector3.zero, 2 * Time.deltaTime), Quaternion.identity);

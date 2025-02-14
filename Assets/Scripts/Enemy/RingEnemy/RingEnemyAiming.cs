@@ -1,17 +1,15 @@
 ﻿using UnityEngine;
-using UnityHFSM;
 
 public class RingEnemyAiming : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
 {
     public RingEnemyAiming(RingEnemy enemy) : base(enemy) { }
 
     private float TimeAiming = 0;
-    private const float TimeToLock = 2f;
+    private float TimeToLock = 2f;
     private float last = 0;
     public override void OnEnter()
     {
         base.OnEnter();
-
         TimeAiming = 0;
         last = 0;
     }

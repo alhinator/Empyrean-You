@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityHFSM;
 
 public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
 {
@@ -52,7 +51,7 @@ public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
     private IEnumerator WarmupTimer()
     {
         IsDone = false;
-        yield return new WaitForSeconds(warmupDuration);
+        yield return new WaitForSeconds(warmupDuration * Random.Range(0.9f, 2.2f));
         IsDone = true;
 
     }

@@ -46,6 +46,7 @@ public class Player3PCam : MonoBehaviour
     public float maxSlopeValue;
     public float myMaxLockonRange;
     public float bumpDuration;
+    public float sprintDuration;
     private float timeInLockedCam;
     public bool invertX;
     public bool invertY;
@@ -108,6 +109,7 @@ public class Player3PCam : MonoBehaviour
 
 
         DetectTargetBumps();
+        AdjustDamping();
 
     }
     private void FixedUpdate()
@@ -311,10 +313,30 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 2, rotationSpeed * Time.deltaTime);
             aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 4, rotationSpeed * Time.deltaTime);
 
+
+
+
             i++;
         }
 
 
+    }
+    private void AdjustDamping()
+    {
+
+        for (int i = 0; i < 3; i++)
+        {
+
+            //Modify horizontal damping if player is dashing & locked.
+
+            var clc = combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineOrbitalTransposer>();
+            clc.m_XDamping = dashing ? 1 : Mathf.Lerp(clc.m_XDamping, 0, 2 * Time.deltaTime);
+            clc.m_ZDamping = dashing ? 1 : Mathf.Lerp(clc.m_ZDamping, 0, 2 * Time.deltaTime);
+
+            var ac = aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineOrbitalTransposer>();
+            ac.m_XDamping = dashing ? 1 : Mathf.Lerp(ac.m_XDamping, 0, 2 * Time.deltaTime);
+            ac.m_ZDamping = dashing ? 1 : Mathf.Lerp(ac.m_ZDamping, 0, 2 * Time.deltaTime);
+        }
     }
     private void GroundedCheckAndDrag()
     {
@@ -323,7 +345,7 @@ public class Player3PCam : MonoBehaviour
         playerObj.GetComponentInChildren<Animator>().SetBool("Grounded", isGrounded);
         if (isGrounded) { currMidairBoosts = maxMidairBoosts; }
         if (isGrounded) { hovering = false; }
-        rb.drag = isGrounded ? groundDrag : airDrag;
+        rb.drag = dashing ? groundDrag * 1.5f : isGrounded ? groundDrag : airDrag;
         if (!isGrounded && hovering && rb.velocity.y < 0)
         {
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * hoverMultiplier, rb.velocity.z);
@@ -335,8 +357,8 @@ public class Player3PCam : MonoBehaviour
         Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         if (flatVelocity.magnitude > moveSpeed)
         {
-            float forwardsBoost = rawMoveInput.y > 0 && isGrounded ? moveSpeed * 1.5f : 0;
-            Vector3 limitedVelocity = flatVelocity.normalized * (moveSpeed + forwardsBoost);
+            float vel = dashing ? moveSpeed * 1.1f : sprinting ? sprintSpeed : moveSpeed;
+            Vector3 limitedVelocity = flatVelocity.normalized * vel;
             rb.velocity = new Vector3(limitedVelocity.x, 0f, limitedVelocity.z);
         }
     }
@@ -491,8 +513,16 @@ public class Player3PCam : MonoBehaviour
 
     public void OnSprint(InputValue v)
     {
+        if (v.Get<float>() == 1)
+        {
+            sprintDuration += Time.deltaTime;
+        }
+        else
+        {
+            sprintDuration = 0;
+        }
         //TODO: Move animator updates to a different script
-        if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded && !dashing)
+        if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded && !dashing && sprintDuration > 0.3f)
         {
             sprinting = true;
             playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);

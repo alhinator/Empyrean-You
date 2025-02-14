@@ -1,10 +1,5 @@
-using System;
-using UnityEditor.Build.Pipeline;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityHFSM;
-using Random = UnityEngine.Random;
-
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(SphereCollider))]
 public class RingEnemy : CombatEntity
 {
@@ -92,6 +87,7 @@ public class RingEnemy : CombatEntity
 
     private void DeterminePlayerInRange()
     {
+        if(!_player){return;}
         isInRange = Vector3.Distance(this.transform.position, _player.transform.position) < visionRange;
         if (isInRange)
         {
