@@ -1,27 +1,37 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
-{
-    // 1. figure out where to store angle for anim. quaternion
-    // 2. make constants for physics steps taken until aiming phase
-    // 3. figure out how to pass on (1) to aiming phase
-    // 4. exit back to idle if lost sight of player - DONE
+public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent> {
 
     /// <summary>
     /// How long the ring enemy takes to warm up before firing.
     /// </summary>
-    private float warmupDuration = 1f;
-    public bool IsDone = false;
+    private const int BasePhysicsTicks = 60;
 
+    private int totalPhysicsTicks;
+    private int elapsedPhysicsTicks;
+    public bool IsDone => elapsedPhysicsTicks >= totalPhysicsTicks;
+
+    private Quaternion initialOuter;
+    private Quaternion initialMiddle;
+    private Quaternion initialInner;
+    
+    private Quaternion targetOuter;
+    private Quaternion targetMiddle;
+    private Quaternion targetInner;
+    
     public RingEnemyWarmup(RingEnemy enemy) : base(enemy) { }
 
     public override void OnEnter()
     {
         base.OnEnter();
 
-        //Reset warmup duration & start timer. Needs to be called by parent Enemy as this class does not derive monobehaviour
-        Enemy.StartCoroutine(WarmupTimer());
+        totalPhysicsTicks = (int) (BasePhysicsTicks * Random.Range(0.9f, 2.2f));
+        elapsedPhysicsTicks = 0;
+
+        this.initialOuter = this.Enemy.outerTransform.localRotation;
+        this.initialMiddle = this.Enemy.middleTransform.localRotation;
+        this.initialInner = this.Enemy.innerTransform.localRotation;
 
         // Grab localRotation of all rings
 
@@ -35,16 +45,22 @@ public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
         // 1. rotate from AxisAngle(near, rotationAngle) to -targetQuaternion by 45deg
         // 2. rotate by targetQuaternion
         // 3. rotate by AxisAngle(near, ringOffset)
-        
+
         // TODO this can cause mega issues if the player is directly above or below
         // This rotates the vector +Z across the sphere to point at the player
         // this.Enemy.aimingDirection =
-            // Quaternion.LookRotation(this.Enemy.lastSeenPosition - this.Enemy.transform.position);
+        // Quaternion.LookRotation(this.Enemy.lastSeenPosition - this.Enemy.transform.position);
     }
-    public override void OnExit()
-    {
-        IsDone = false;
-        base.OnExit();
+
+    public override void OnUpdate() {
+        base.OnUpdate();
+        
+        this.Enemy.outerTransform.localRotation =
+            Quaternion.Slerp(this.initialOuter, this.targetOuter, this.elapsedPhysicsTicks / (float) totalPhysicsTicks);
+        this.Enemy.middleTransform.localRotation =
+            Quaternion.Slerp(this.initialMiddle, this.targetMiddle, this.elapsedPhysicsTicks / (float) totalPhysicsTicks);
+        this.Enemy.innerTransform.localRotation =
+            Quaternion.Slerp(this.initialInner, this.targetInner, this.elapsedPhysicsTicks / (float) totalPhysicsTicks);
     }
 
     public override void OnLogic() {
@@ -54,30 +70,26 @@ public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
 
         this.Enemy.aimingDirection = adjustment * this.Enemy.aimingDirection;
         
+        // This isn't exactly what I had in mind but at least it looks intentional :/
+        
         // The outermost ring should be rotated from +Z to point at the player,
         // Then from its new +Z it should be rotated -90deg around +X
-        this.Enemy.outerTransform.localRotation =
+        this.targetOuter =
             this.Enemy.aimingDirection *
             Quaternion.Euler(-90.0f, 0.0f, 0.0f);
         // The middle ring should be rotated from +Z to point at the player,
         // Then from that +Z it should be rotated -120deg around +Z
         // Then from that +Z it should be rotated -90deg around +X
-        this.Enemy.middleTransform.localRotation =
+        this.targetMiddle =
             this.Enemy.aimingDirection *
             Quaternion.Euler(0.0f, 0.0f, -120.0f) *
             Quaternion.Euler(-90.0f, 0.0f, 0.0f);
         // The inner ring is the same but with +120deg
-        this.Enemy.innerTransform.localRotation =
+        this.targetInner =
             this.Enemy.aimingDirection *
             Quaternion.Euler(0.0f, 0.0f, 120.0f) *
             Quaternion.Euler(-90.0f, 0.0f, 0.0f);
-    }
 
-    private IEnumerator WarmupTimer()
-    {
-        IsDone = false;
-        yield return new WaitForSeconds(warmupDuration * Random.Range(0.9f, 2.2f));
-        IsDone = true;
-
+        this.elapsedPhysicsTicks += 1;
     }
 }
