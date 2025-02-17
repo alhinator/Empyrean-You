@@ -35,6 +35,11 @@ public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
         // 1. rotate from AxisAngle(near, rotationAngle) to -targetQuaternion by 45deg
         // 2. rotate by targetQuaternion
         // 3. rotate by AxisAngle(near, ringOffset)
+        
+        // TODO this can cause mega issues if the player is directly above or below
+        // This rotates the vector +Z across the sphere to point at the player
+        // this.Enemy.aimingDirection =
+            // Quaternion.LookRotation(this.Enemy.lastSeenPosition - this.Enemy.transform.position);
     }
     public override void OnExit()
     {
@@ -42,10 +47,30 @@ public class RingEnemyWarmup : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
         base.OnExit();
     }
 
-    public override void OnUpdate()
-    {
+    public override void OnLogic() {
+        Vector3 currentLookDirection = this.Enemy.aimingDirection * Vector3.forward;
         Vector3 targetDirection = this.Enemy.lastSeenPosition - this.Enemy.transform.position;
-        // TODO
+        Quaternion adjustment = Quaternion.FromToRotation(currentLookDirection, targetDirection);
+
+        this.Enemy.aimingDirection = adjustment * this.Enemy.aimingDirection;
+        
+        // The outermost ring should be rotated from +Z to point at the player,
+        // Then from its new +Z it should be rotated -90deg around +X
+        this.Enemy.outerTransform.localRotation =
+            this.Enemy.aimingDirection *
+            Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+        // The middle ring should be rotated from +Z to point at the player,
+        // Then from that +Z it should be rotated -120deg around +Z
+        // Then from that +Z it should be rotated -90deg around +X
+        this.Enemy.middleTransform.localRotation =
+            this.Enemy.aimingDirection *
+            Quaternion.Euler(0.0f, 0.0f, -120.0f) *
+            Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+        // The inner ring is the same but with +120deg
+        this.Enemy.innerTransform.localRotation =
+            this.Enemy.aimingDirection *
+            Quaternion.Euler(0.0f, 0.0f, 120.0f) *
+            Quaternion.Euler(-90.0f, 0.0f, 0.0f);
     }
 
     private IEnumerator WarmupTimer()

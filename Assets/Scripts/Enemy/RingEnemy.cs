@@ -41,6 +41,7 @@ public class RingEnemy : CombatEntity
     public bool isInRange = false;
     public bool isInLoS = false;
     public Vector3 lastSeenPosition;
+    public Quaternion aimingDirection;
     public Vector3 actualAttackPos;
     public float timeSinceLoS = 0;
     private const float LoSLimit = 1f;
@@ -54,6 +55,7 @@ public class RingEnemy : CombatEntity
         InitStateMachineStates();
         aimParticles.enabled = false;
 
+        aimingDirection = Quaternion.identity;
     }
 
 
