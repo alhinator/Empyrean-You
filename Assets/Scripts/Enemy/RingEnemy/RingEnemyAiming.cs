@@ -7,9 +7,11 @@ public class RingEnemyAiming : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
     private float TimeAiming = 0;
     private float TimeToLock = 2f;
     private float last = 0;
+    private bool hiBeams;
     public override void OnEnter()
     {
         base.OnEnter();
+        hiBeams = false;
         TimeAiming = 0;
         last = 0;
     }
@@ -60,14 +62,17 @@ public class RingEnemyAiming : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
 
         Enemy.aimParticles.SetPosition(0, Enemy.transform.position);
         Enemy.aimParticles.SetPosition(1, Enemy.lastSeenPosition);
-        Enemy.aimParticles.startColor = new Color(0.7f, 0, 0, 0.25f);
-        Enemy.aimParticles.endColor = new Color(0.7f, 0, 0, 0.25f);
 
-        //start flashing the beam now. Increases speed at half charge and 3/4 charge
 
-        float duration = TimeAiming < TimeToLock / 2 ? 0.5f : TimeAiming < TimeToLock * 3 / 4 ? 0.25f : 0.1f;
+        //start flashing the beam now. 
+
+        float duration = 0.12f;
         if (TimeAiming > last + duration)
         {
+            hiBeams = !hiBeams;
+            float col = hiBeams ? 0.5f : 0.3f;
+            Enemy.aimParticles.startColor = new Color(col, col, 0, 0.25f);
+            Enemy.aimParticles.endColor = new Color(col, col, 0, 0.25f);
             Enemy.aimParticles.enabled = !Enemy.aimParticles.enabled;
             last = TimeAiming;
         }

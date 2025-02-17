@@ -5,7 +5,7 @@ using UnityHFSM;
 public class RingEnemyLockon : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
 {
     public RingEnemyLockon(RingEnemy enemy) : base(enemy) { }
-    private const float AimDelay = 0.1f;
+    private const float AimDelay = 0.5f;
     private float TimeTillShoot;
     private bool isDone;
 
@@ -15,8 +15,8 @@ public class RingEnemyLockon : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
         TimeTillShoot = 0;
         isDone = false;
         Enemy.aimParticles.enabled = true;
-        Enemy.aimParticles.startColor = new Color(1f, 0, 0, 0.8f);
-        Enemy.aimParticles.endColor = new Color(1f, 0, 0, 0.8f);
+        Enemy.aimParticles.startColor = new Color(1f, 1f, 0, 0.8f);
+        Enemy.aimParticles.endColor = new Color(1f, 1f, 0, 0.8f);
 
 
     }
@@ -33,6 +33,8 @@ public class RingEnemyLockon : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
     private void DoAttack()
     {
         Enemy.aimParticles.enabled = false;
+        Enemy.aimParticles.startColor = new Color(1f, 0, 0, 0.8f);
+        Enemy.aimParticles.endColor = new Color(1f, 0, 0, 0.8f);
         Enemy.myAttack.Shoot();
         isDone = true;
     }
