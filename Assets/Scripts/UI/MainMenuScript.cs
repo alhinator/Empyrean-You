@@ -137,7 +137,7 @@ public class MainMenuScript : MonoBehaviour
         for (float percent = 0; percent <= 1000; percent++)
         {
 
-            Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, Mathf.Lerp(300, 15, percent / 1000), Singleton.elevator.position.z);
+            Singleton.elevator.position = new Vector3(Singleton.elevator.position.x, Mathf.Lerp(300, 20, percent / 1000), Singleton.elevator.position.z);
             yield return new WaitForSeconds(0.01f);
         }
         // //DEBUG TO SKIP ROLLING
