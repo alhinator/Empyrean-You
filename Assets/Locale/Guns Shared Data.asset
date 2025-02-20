@@ -39,6 +39,14 @@ MonoBehaviour:
     m_Key: hidden.splash
     m_Metadata:
       m_Items: []
+  - m_Id: 2971405482299392
+    m_Key: ui.reloading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2971472226258944
+    m_Key: ui.charge
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

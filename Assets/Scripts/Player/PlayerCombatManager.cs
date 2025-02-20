@@ -46,8 +46,9 @@ public class PlayerCombatManager : CombatEntity
         currHP = maxHP;
 
         //DEBUG ONLY 
-        if (!FindObjectOfType(typeof(PlayerDataSetter))){
-            AssignWeapons(0, 0);
+        if (!FindObjectOfType(typeof(PlayerDataSetter)))
+        {
+            AssignWeapons(0, 1);
             AssignFrame(0);
         }
 
@@ -141,7 +142,9 @@ public class PlayerCombatManager : CombatEntity
         if (v.Get<float>() > InputSystem.settings.defaultButtonPressPoint)
         {
             //gun fire down;
+
             (Weapons[0] as Gun).TriggerDown();
+
         }
         else if (v.Get<float>() < InputSystem.settings.buttonReleaseThreshold)
         {
@@ -156,7 +159,9 @@ public class PlayerCombatManager : CombatEntity
         if (v.Get<float>() > InputSystem.settings.defaultButtonPressPoint)
         {
             //gun fire down;
+
             (Weapons[1] as Gun).TriggerDown();
+
         }
         else if (v.Get<float>() < InputSystem.settings.buttonReleaseThreshold)
         {

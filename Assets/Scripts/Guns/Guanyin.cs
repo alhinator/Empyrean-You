@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 public class Guanyin : Gun
 {
     [Header("Guanyin Specific vars")]
@@ -10,11 +12,14 @@ public class Guanyin : Gun
     public bool reloading;
 
     public ParticleSystem bulletTrail;
+    private StringTable gunStrings;
+
 
     void Start()
     {
         CurrentReserveAmmo = MaximumAmmo;
         currAmmo = MagazineSize;
+        gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
     }
     void Update()
     {
@@ -33,11 +38,12 @@ public class Guanyin : Gun
         }
 
 
-        myHudText.text = CurrentAmmo.ToString();
+        myHudText.text = reloading ? gunStrings.GetEntry("ui.reloading").Value : CurrentAmmo.ToString();
         myHudSecondaryText.text = CurrentReserveAmmo.ToString();
     }
     public override void TriggerDown()
     {
+        if(CurrentAmmo <= 0){Reload(); return;}
         firing = true;
     }
 
@@ -112,7 +118,6 @@ public class Guanyin : Gun
     private IEnumerator DoReloading()
     {
         audioSource.PlayOneShot(ReloadSound);
-
         yield return new WaitForSeconds(1);
         int difference = MagazineSize - currAmmo;
         if (CurrentReserveAmmo >= difference)

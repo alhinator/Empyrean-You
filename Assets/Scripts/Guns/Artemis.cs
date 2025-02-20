@@ -1,16 +1,21 @@
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 public class Artemis : Gun
 {
     [Header("Artemis Unique")]
     public AudioClip chargeSound;
     public AudioClip holdSound;
     public ParticleSystem bulletTrail;
+    private StringTable gunStrings;
+
     void Start()
     {
         bulletTrail.transform.parent = null;
-        myHudSecondaryText.text = "CHG";
+        gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
+
+        myHudSecondaryText.text = gunStrings.GetEntry("ui.charge").Value;
     }
     void Update()
     {
