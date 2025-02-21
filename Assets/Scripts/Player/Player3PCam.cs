@@ -366,6 +366,7 @@ public class Player3PCam : MonoBehaviour
     private bool FindLockableTarget(Transform origin, Vector3 direction, int LayerMask, float angleTolerance, bool ignoreCurrentTarget, string method = "close")
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
+        Debug.Log(lockables[0]);
         Debug.DrawRay(origin.position, direction * 10, Color.green, 3f);
         GameObject potentialTarget = null;
         foreach (var tg in lockables)
@@ -375,7 +376,10 @@ public class Player3PCam : MonoBehaviour
             bool ahead = Vector3.Angle(direction, (tg.transform.position - origin.position).normalized) <= angleTolerance;
             //Debug.Log(ahead + " " + Vector3.Angle(direction, (tg.transform.position - origin.position).normalized));
             Physics.Raycast(origin.position, (tg.transform.position - origin.position).normalized, out RaycastHit hit, 100, LayerMask);
+            Debug.DrawRay(origin.position, (tg.transform.position - origin.position).normalized, Color.red, 3f);
             bool los = hit.collider && hit.collider.gameObject == tg;
+            //Debug.Log("los = " + los);
+            //Debug.Log(hit.collider.gameObject.name);
             //finds closest available tg
 
             bool closest = false;
@@ -408,7 +412,7 @@ public class Player3PCam : MonoBehaviour
         }
         if (potentialTarget != null)
         {
-            //Debug.Log("in find tg, found a tg. " + potentialTarget.transform.name);
+            Debug.Log("in find tg, found a tg. " + potentialTarget.transform.name);
             if (currentTargetLock) //place lookAt position between player and target if a previous target didn't exist
             {
                 currentTargetLock = potentialTarget.transform;
