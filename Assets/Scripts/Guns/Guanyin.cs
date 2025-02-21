@@ -70,6 +70,7 @@ public class Guanyin : Gun
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyArmor"))
             {
                 audioSource.PlayOneShot(ArmorHitSound);
+                (Owner as PlayerCombatManager).SpawnFloatingText(hit.point, "BLOCK", Color.red);
             }
         }
 

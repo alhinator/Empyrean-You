@@ -11,6 +11,7 @@ TagManager:
   - SpawnPoint
   - BastShield
   - PlayerDataSetter
+  - PlayerHud
   layers:
   - Default
   - TransparentFX

@@ -1,9 +1,10 @@
 using System;
 using TMPro;
-
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerCombatManager : CombatEntity
 {
@@ -22,6 +23,7 @@ public class PlayerCombatManager : CombatEntity
     public TMP_Text rightSecondaryUIText;
 
     [SerializeField] public GameObject[] WeaponPrefabs;
+    [SerializeField] private GameObject HitmarkerText;
 
     [Header("AimPoint stuff")]
     public Transform aimPoint;
@@ -188,6 +190,22 @@ public class PlayerCombatManager : CombatEntity
         //eventually convert following line to actually use frame ID
         Abilities[0] = gameObject.AddComponent<Bast>();
         Abilities[0].SetOwner(this);
+    }
+    public override void OnHit(DamageInstance d)
+    {
+        base.OnHit(d);
+        SpawnFloatingText(d.Target.transform.position + Vector3.up * 2, d.AdjustedDamage.ToString(), Color.white);
+    }
+    public void SpawnFloatingText(Vector3 pos, string text, Color color)
+    {
+        var txt = Instantiate(HitmarkerText, GameObject.FindGameObjectWithTag("PlayerHud").transform);
+        float offset = UnityEngine.Random.Range(-0.1f, 0.1f);
+        Vector3 worldspace = pos + new Vector3(offset, offset, offset);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GameObject.FindGameObjectWithTag("PlayerHud").transform.GetComponent<RectTransform>(), player3PCam.actualCamera.WorldToScreenPoint(worldspace), player3PCam.actualCamera, out Vector2 temp);
+        txt.transform.localPosition = temp + new Vector2(60, 20);
+
+        txt.GetComponent<FloatingText>().SetText(text, color);
     }
 }
 
