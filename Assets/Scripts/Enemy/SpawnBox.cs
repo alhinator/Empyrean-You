@@ -14,11 +14,8 @@ public class SpawnBox : MonoBehaviour
 
     private void SpawnMyDudes(){
         for(int i = 0 ; i < numToSpawn ; i++){
-            GameObject en = Instantiate(EnemyPrefab, EnemyParent.transform);
-            Vector3 spawnPos = centerPoint.position + Vector3.forward * 20;
-            
-            en.transform.position = spawnPos;
-            en.transform.Rotate(centerPoint.position, 360/numToSpawn);
+            GameObject en = Instantiate(EnemyPrefab, EnemyParent.transform);          
+            en.transform.position = centerPoint.position;
         }
     }
 

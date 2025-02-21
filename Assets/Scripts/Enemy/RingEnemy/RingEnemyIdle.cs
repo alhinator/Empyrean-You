@@ -1,10 +1,11 @@
 ﻿
+using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 using UnityHFSM;
 
 public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
 {
-    const float MaxWanderDistance = 20f;
+    const float MaxWanderDistance = 10f;
     const float WanderSpeed = 5f;
     private Vector3 targetPosition = Vector3.negativeInfinity;
 
@@ -16,8 +17,12 @@ public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEven
     private void DetermineNewTargetPos()
     {
         Vector3 normalizedTarget = Random.insideUnitSphere;
+        normalizedTarget.y = Enemy._player.transform.position.y + Random.Range(0,5);
         float wanderDist = Random.Range(MaxWanderDistance / 2, MaxWanderDistance);
-        if (Physics.SphereCast(new Ray(this.Enemy.transform.position, normalizedTarget), this.Enemy.hitbox.radius * 10f, out RaycastHit hitInfo, wanderDist, Enemy.rb.includeLayers))
+        normalizedTarget.x *= wanderDist;
+        normalizedTarget.z *= wanderDist;
+        if (Physics.SphereCast(Enemy.transform.position, this.Enemy.hitbox.radius * 10f, normalizedTarget - Enemy.transform.position, out RaycastHit hitInfo, wanderDist, Enemy.rb.includeLayers))
+
         { //Hit, only move halfway to hit point
             Vector3 halfway = (hitInfo.point - this.Enemy.transform.position) / 2;
             this.targetPosition = this.Enemy.transform.position + halfway;
