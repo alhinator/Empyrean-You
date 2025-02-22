@@ -111,7 +111,7 @@ public class MainMenuScript : MonoBehaviour
                 mainMenuScreens.KeypadEnabled = false;
                 mainMenuScreens.NavigatorEnabled = true;
                 eventSystem.SetSelectedGameObject(selectMeAfterColors);
-                mainMenuScreens.DisplayFrameDetails(MainMenuScreens.FRAME.BAST);
+                mainMenuScreens.DisplayFrameDetails(Frames.BAST);
                 break;
             case STATE.GUNSELECT:
                 mainMenuScreens.DisplayGunDetails(Guns.GUANYIN);
@@ -176,10 +176,10 @@ public class MainMenuScript : MonoBehaviour
                 break;
         }
     }
-    public static void SetSelectedFrame(MainMenuScreens.FRAME f)
+    public static void SetSelectedFrame(FrameIndex f)
     {
         //Singleton. ...
-        GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().Frame = (int)f;
+        GameObject.FindGameObjectWithTag("PlayerDataSetter").GetComponent<PlayerDataSetter>().Frame = f;
 
         Singleton.TransitionToState(STATE.GUNSELECT);
     }

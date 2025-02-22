@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerDataSetter : MonoBehaviour
 {
-    public int Frame;
+    public FrameIndex Frame;
     public int LeftWeapon;
     public int RightWeapon;
     // Start is called before the first frame update

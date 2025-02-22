@@ -9,7 +9,7 @@ public class Bast : Ability
     public bool isShielded;
     public GameObject shieldModel;
 
-    void Start()
+    void Awake()
     {
         shieldModel = GameObject.FindWithTag("BastShield");
         if (shieldModel == null) { throw new System.Exception("Bast: Constructor: Could not find shield model"); }

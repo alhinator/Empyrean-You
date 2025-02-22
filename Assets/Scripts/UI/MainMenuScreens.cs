@@ -19,8 +19,7 @@ public class MainMenuScreens : MonoBehaviour
     private StringTable abilStrings;
     private StringTable gunStrings;
 
-    public enum FRAME { UNSELECTED, BAST, LAST }
-    private FRAME selectedFrame = FRAME.UNSELECTED;
+    private FrameIndex selectedFrame;
 
     private GunIndex selectedGun;
 
@@ -99,16 +98,13 @@ public class MainMenuScreens : MonoBehaviour
         }
     }
 
-    public void DisplayFrameDetails(FRAME f)
+    public void DisplayFrameDetails(FrameIndex f)
     {
-        switch (f)
-        {
-            case FRAME.BAST:
-                NavHeader.text = abilStrings.GetEntry("bast.name").Value;
-                NavBody.text = abilStrings.GetEntry("bast.splash").Value;
-                selectedFrame = FRAME.BAST;
-                break;
-        }
+
+        NavHeader.text = abilStrings.GetEntry(f.NameTranslationKey).Value;
+        NavBody.text = abilStrings.GetEntry(f.SplashTranslationKey).Value;
+        selectedFrame = f;
+
     }
     public void DisplayGunDetails(GunIndex g)
     {
@@ -122,19 +118,14 @@ public class MainMenuScreens : MonoBehaviour
         { //on frame select
 
             selectedFrame++;
-            if (selectedFrame == FRAME.LAST)
-            {
-                selectedFrame = FRAME.UNSELECTED;
-                selectedFrame++;
-            }
-            Debug.Log(selectedFrame);
+            //Debug.Log(selectedFrame);
             DisplayFrameDetails(selectedFrame);
 
         }
         else
         { //on gun select
             selectedGun++;
-            Debug.Log(selectedGun);
+            //Debug.Log(selectedGun);
             DisplayGunDetails(selectedGun);
         }
 
@@ -146,11 +137,6 @@ public class MainMenuScreens : MonoBehaviour
         { //on frame select
 
             selectedFrame--;
-            if (selectedFrame == FRAME.UNSELECTED)
-            {
-                selectedFrame = FRAME.LAST;
-                selectedFrame--;
-            }
             DisplayFrameDetails(selectedFrame);
 
         }

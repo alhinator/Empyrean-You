@@ -27,6 +27,15 @@ MonoBehaviour:
       that blocks one instance of damage. Generates faster at low health.'
     m_Metadata:
       m_Items: []
+  - m_Id: 4199140779200512
+    m_Localized: Itzi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4199176325926912
+    m_Localized: 'Hummingbird''s Wings: Gain increased air mobility and additional
+      BOOSTs. Kills while airborne replenish BOOST.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

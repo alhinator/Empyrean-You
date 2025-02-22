@@ -369,7 +369,7 @@ public class Player3PCam : MonoBehaviour
     private bool FindLockableTarget(Transform origin, Vector3 direction, int LayerMask, float angleTolerance, bool ignoreCurrentTarget, string method = "close")
     {
         GameObject[] lockables = GameObject.FindGameObjectsWithTag("TargetPoint");
-        Debug.Log(lockables[0]);
+        //Debug.Log(lockables[0]);
         Debug.DrawRay(origin.position, direction * 10, Color.green, 3f);
         GameObject potentialTarget = null;
         foreach (var tg in lockables)

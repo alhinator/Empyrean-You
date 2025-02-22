@@ -95,7 +95,7 @@ public class RingEnemy : CombatEntity
         {
             //do vision raycast here;
             Physics.Raycast(new Ray(this.transform.position, this._player.transform.position - this.transform.position), out RaycastHit hit, Vector3.Distance(this._player.transform.position, this.transform.position), hitbox.includeLayers);
-            if (hit.collider.CompareTag("Player"))
+            if (hit.collider && hit.collider.CompareTag("Player"))
             {
                 isInLoS = true;
                 timeSinceLoS = 0;

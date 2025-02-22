@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using TMPro;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -51,7 +52,7 @@ public class PlayerCombatManager : CombatEntity
         if (!FindObjectOfType(typeof(PlayerDataSetter)))
         {
             AssignWeapons(0, 1);
-            AssignFrame(0);
+            AssignFrame(Frames.ITZI);
         }
 
     }
@@ -183,13 +184,15 @@ public class PlayerCombatManager : CombatEntity
         base.OnKill(d);
         player3PCam.EnemyKilledEvent(d.Target);
     }
-    public void AssignFrame(int frame_id)
+    public void AssignFrame(FrameIndex f)
     {
         Abilities = new Ability[1];
 
         //eventually convert following line to actually use frame ID
-        Abilities[0] = gameObject.AddComponent<Itzi>();
+        Abilities[0] = gameObject.AddComponent(f.Script) as Ability;
         Abilities[0].SetOwner(this);
+        //hardcoded but whatever. saves me another headache
+        if(f.Script != typeof(Bast)) {GameObject.FindWithTag("BastShield").SetActive(false);}
     }
     public override void OnHit(DamageInstance d)
     {

@@ -23,6 +23,14 @@ MonoBehaviour:
     m_Key: bast.splash
     m_Metadata:
       m_Items: []
+  - m_Id: 4199140779200512
+    m_Key: itzi.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4199176325926912
+    m_Key: itzi.splash
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
