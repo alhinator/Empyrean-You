@@ -194,7 +194,7 @@ public class PlayerCombatManager : CombatEntity
     public override void OnHit(DamageInstance d)
     {
         base.OnHit(d);
-        SpawnFloatingText(d.Target.transform.position + Vector3.up * 2, d.AdjustedDamage.ToString(), Color.white);
+        SpawnFloatingText(d.Target.transform.position + Vector3.up * 2, d.AdjustedDamage.ToString(), new Color(1, 1, 1, 0.25f));
     }
     public void SpawnFloatingText(Vector3 pos, string text, Color color)
     {

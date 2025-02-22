@@ -16,12 +16,15 @@ public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEven
 
     private void DetermineNewTargetPos()
     {
-        Vector3 normalizedTarget = Random.insideUnitSphere;
-        normalizedTarget.y = Enemy._player.transform.position.y + Random.Range(0,5);
+        Vector3 direction = Random.insideUnitSphere;
+        if (Enemy._player != null)
+        {
+            float ideal = Enemy._player.transform.position.y + Random.Range(0, 2);
+            direction.y = ideal < Enemy.transform.position.y ? -1 : 1;
+        }
         float wanderDist = Random.Range(MaxWanderDistance / 2, MaxWanderDistance);
-        normalizedTarget.x *= wanderDist;
-        normalizedTarget.z *= wanderDist;
-        if (Physics.SphereCast(Enemy.transform.position, this.Enemy.hitbox.radius * 10f, normalizedTarget - Enemy.transform.position, out RaycastHit hitInfo, wanderDist, Enemy.rb.includeLayers))
+        direction *= wanderDist;
+        if (Physics.SphereCast(Enemy.transform.position, this.Enemy.hitbox.radius * 10f, direction, out RaycastHit hitInfo, wanderDist, Enemy.rb.includeLayers))
 
         { //Hit, only move halfway to hit point
             Vector3 halfway = (hitInfo.point - this.Enemy.transform.position) / 2;
@@ -29,7 +32,7 @@ public class RingEnemyIdle : EnemyState<RingEnemy, RingEnemyState, RingEnemyEven
         }
         else
         { //No hit, we can move all the way to our ideal target.
-            this.targetPosition = this.Enemy.transform.position + (normalizedTarget * wanderDist);
+            this.targetPosition = this.Enemy.transform.position + (direction * wanderDist);
         }
         //Debug.Log("RingEnemy: My ideal position is:" + this.targetPosition);
 

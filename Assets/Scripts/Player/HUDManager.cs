@@ -11,6 +11,7 @@ public class HUDManager : MonoBehaviour
     public Camera mainCamera;
     public Canvas staticPlayerHud;
     public TMP_Text BoostBar;
+    public TMP_Text BoostLabel;
     public TMP_Text HealthBar;
     // Start is called before the first frame update
     public TMP_Text AlertBar;
@@ -47,6 +48,7 @@ public class HUDManager : MonoBehaviour
         string tmp = "";
         for (int i = 0; i < player3PCam.BoostsRemaining; i++) { tmp += "*"; }
         BoostBar.text = tmp;
+        BoostLabel.color = player3PCam.BoostsRemaining == 0 ? Color.red : Color.green;
 
         //Health bar squares
         string tmp2 = "";

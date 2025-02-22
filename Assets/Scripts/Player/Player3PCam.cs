@@ -75,6 +75,7 @@ public class Player3PCam : MonoBehaviour
     public bool inputLocked;
     private bool dashing = false;
     private bool sprinting = false;
+    private bool sprintInput = false;
     private bool allowedToDash = true;
 
 
@@ -110,6 +111,8 @@ public class Player3PCam : MonoBehaviour
 
         DetectTargetBumps();
         AdjustDamping();
+
+        EnableSprint();
 
     }
     private void FixedUpdate()
@@ -519,14 +522,19 @@ public class Player3PCam : MonoBehaviour
     {
         if (v.Get<float>() == 1)
         {
-            sprintDuration += Time.deltaTime;
+            sprintInput = true;
         }
         else
         {
-            sprintDuration = 0;
+            sprintInput = false;
         }
+    }
+    public void EnableSprint()
+    {
+        if (sprintInput) { sprintDuration += Time.deltaTime; } else { sprintDuration = 0; }
         //TODO: Move animator updates to a different script
-        if (v.Get<float>() == 1 && rawMoveInput.magnitude > 0 && isGrounded && !dashing && sprintDuration > 0.3f)
+
+        if (rawMoveInput.magnitude > 0 && isGrounded && !dashing && sprintDuration > 0.3f)
         {
             sprinting = true;
             playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", true);
@@ -537,7 +545,6 @@ public class Player3PCam : MonoBehaviour
             playerObj.GetComponentInChildren<Animator>().SetBool("Sprinting", false);
             sprinting = false;
         }
-
     }
 
     public void OnCameraLock()

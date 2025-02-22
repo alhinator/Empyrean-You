@@ -30,12 +30,12 @@ public class Bast : Ability
     public override void OnKill(DamageInstance d)
     {
         base.OnKill(d);
-        CurrentKills++;
+        if (!isShielded) { CurrentKills++; }
         if (CurrentKills >= Owner.CurrentHP)
         {
             isShielded = true;
             shieldModel.SetActive(true);
-            //Do shield animation.
+            CurrentKills = 0;
             (Owner as PlayerCombatManager).gameObject.GetComponent<HUDManager>().QueueAlert("Shield UP", new Color(225, 172, 255), true);
         }
     }
