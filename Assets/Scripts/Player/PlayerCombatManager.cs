@@ -188,7 +188,7 @@ public class PlayerCombatManager : CombatEntity
         Abilities = new Ability[1];
 
         //eventually convert following line to actually use frame ID
-        Abilities[0] = gameObject.AddComponent<Bast>();
+        Abilities[0] = gameObject.AddComponent<Itzi>();
         Abilities[0].SetOwner(this);
     }
     public override void OnHit(DamageInstance d)

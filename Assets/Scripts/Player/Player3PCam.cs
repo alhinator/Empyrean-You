@@ -616,6 +616,13 @@ public class Player3PCam : MonoBehaviour
             StartCoroutine(DashCooldown(0.25f));
         }
     }
+    public void RecoverADash()
+    {
+        if (currMidairBoosts < maxMidairBoosts)
+        {
+            currMidairBoosts++;
+        }
+    }
     private IEnumerator DashCooldown(float dashDur)
     {
         yield return new WaitForSeconds(dashDur);
