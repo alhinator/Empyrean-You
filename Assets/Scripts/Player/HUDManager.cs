@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,16 +13,21 @@ public class HUDManager : MonoBehaviour
     public TMP_Text BoostBar;
     public TMP_Text HealthBar;
     // Start is called before the first frame update
-
+    public TMP_Text AlertBar;
+    private float timeSinceAlert;
 
     [Header("Reticle Variables")]
     public float reticleSpeed;
     public Image reticle;
     Vector2 reticleIdealPosition;
 
+    private Queue<string> notificationQueue;
+    private Queue<Color> notificationQueueColors;
     void Start()
     {
-
+        notificationQueue = new();
+        notificationQueueColors = new();
+        ClearAlerts();
     }
 
     // Update is called once per frame
@@ -30,7 +37,8 @@ public class HUDManager : MonoBehaviour
         UpdateBasicHudText();
         SetReticleIdealPosition();
         MoveReticle();
-
+        timeSinceAlert += Time.deltaTime;
+        if(timeSinceAlert > 3){ ClearAlerts();}
     }
 
     private void UpdateBasicHudText()
@@ -67,6 +75,42 @@ public class HUDManager : MonoBehaviour
             adjustedReticleSpeed *= 3;
         }
         reticle.rectTransform.localPosition = Vector3.Lerp(reticle.transform.localPosition, reticleIdealPosition, adjustedReticleSpeed);
+
+    }
+
+    public void QueueAlert(string alertText, Color c, bool priority)
+    {
+        if (!priority)
+        {
+            notificationQueue.Enqueue(alertText);
+            notificationQueueColors.Enqueue(c);
+            StartCoroutine(AlertUpdater());
+        }
+        else
+        {
+            DisplayAlert(alertText, c);
+        }
+    }
+    private void DisplayAlert(string alertText, Color c)
+    {
+        AlertBar.text = alertText;
+        AlertBar.color = c;
+        timeSinceAlert = 0;
+    }
+    public void ClearAlerts()
+    {
+        AlertBar.text = "";
+        AlertBar.color = Color.white;
+    }
+    private IEnumerator AlertUpdater()
+    {
+        while (timeSinceAlert < 2)
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
+        
+        DisplayAlert(notificationQueue.Dequeue(), notificationQueueColors.Dequeue());
+        
 
     }
 }

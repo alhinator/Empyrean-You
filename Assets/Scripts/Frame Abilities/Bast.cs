@@ -36,6 +36,7 @@ public class Bast : Ability
             isShielded = true;
             shieldModel.SetActive(true);
             //Do shield animation.
+            (Owner as PlayerCombatManager).gameObject.GetComponent<HUDManager>().QueueAlert("Shield UP", new Color(225, 172, 255), true);
         }
     }
 
@@ -47,6 +48,8 @@ public class Bast : Ability
             shieldModel.SetActive(false);
             CurrentKills = 0;
             //Do break shield animation
+            (Owner as PlayerCombatManager).gameObject.GetComponent<HUDManager>().QueueAlert("Shield DOWN", new Color(225, 172, 255), true);
+
             return false;
         }
         else

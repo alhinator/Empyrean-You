@@ -36,6 +36,8 @@ public class LotusBossEnemy : CombatEntity {
         this._stateMachine.AddState(LotusBossEnemyState.Dying, new LotusBossEnemyDying(this));
         
         this._stateMachine.SetStartState(LotusBossEnemyState.Spawning);
+
+        //this._stateMachine.AddTransition(LotusBossEnemyState.Spawning, LotusBossEnemyState.Phase1Idle, )
         this._stateMachine.Init();
     }
 }
