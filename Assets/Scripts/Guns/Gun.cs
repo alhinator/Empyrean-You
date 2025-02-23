@@ -1,6 +1,8 @@
 
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 
 /// <summary>
 /// A derived class specifically for player-held weapons.
@@ -99,9 +101,20 @@ public abstract class Gun : Weapon
     /// </summary>
     protected int currAmmo;
 
+    [Header("Localization Table Reference")]
+    protected static StringTable gunStrings;
+
+
     public abstract void TriggerDown();
     public abstract void TriggerUp();
 
+    protected virtual void Start()
+    {
+        if (!gunStrings)
+        {
+            gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
+        }
+    }
     /// <summary>
     /// Choose a firing direction given a starting direction and spread radius.
     /// </summary>

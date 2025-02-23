@@ -51,6 +51,10 @@ MonoBehaviour:
     m_Localized: CHARGE
     m_Metadata:
       m_Items: []
+  - m_Id: 4348290887946240
+    m_Localized: AMMO
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -12,14 +12,13 @@ public class Guanyin : Gun
     public bool reloading;
 
     public ParticleSystem bulletTrail;
-    private StringTable gunStrings;
 
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         CurrentReserveAmmo = MaximumAmmo;
         currAmmo = MagazineSize;
-        gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
     }
     void Update()
     {

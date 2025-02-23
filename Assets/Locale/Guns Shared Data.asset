@@ -47,6 +47,10 @@ MonoBehaviour:
     m_Key: ui.charge
     m_Metadata:
       m_Items: []
+  - m_Id: 4348290887946240
+    m_Key: ui.ammo
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -8,12 +8,11 @@ public class Artemis : Gun
     public AudioClip chargeSound;
     public AudioClip holdSound;
     public ParticleSystem bulletTrail;
-    private StringTable gunStrings;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         bulletTrail.transform.parent = null;
-        gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
 
         myHudSecondaryText.text = gunStrings.GetEntry("ui.charge").Value;
     }
