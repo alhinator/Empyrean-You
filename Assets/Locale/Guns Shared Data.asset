@@ -51,6 +51,14 @@ MonoBehaviour:
     m_Key: ui.ammo
     m_Metadata:
       m_Items: []
+  - m_Id: 4368487069880320
+    m_Key: raijin.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4368530992631808
+    m_Key: raijin.splash
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

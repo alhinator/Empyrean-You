@@ -55,6 +55,15 @@ MonoBehaviour:
     m_Localized: AMMO
     m_Metadata:
       m_Items: []
+  - m_Id: 4368487069880320
+    m_Localized: RAIJIN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4368530992631808
+    m_Localized: Heavy machine gun with a high damage output after spinning up to
+      speed. High ammo capacity and low accuracy.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

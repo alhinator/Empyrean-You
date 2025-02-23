@@ -81,8 +81,8 @@ Material:
     - _WireThickness: 385
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+    - _BaseColor: {r: 0.80784315, g: 0.7411765, b: 0.96862745, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WireColor: {r: 0.6, g: 0.4, b: 0.33333334, a: 1}
+    - _WireColor: {r: 0.07058824, g: 0.22352941, b: 0.03137255, a: 1}
   m_BuildTextureStacks: []

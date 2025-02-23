@@ -49,13 +49,13 @@ public struct FrameIndex
 
     public static FrameIndex operator ++(FrameIndex now)
     {
-        return new((now.index + 1) % Guns.all.Length);
+        return new((now.index + 1) % Frames.all.Length);
     }
 
     public static FrameIndex operator --(FrameIndex now)
     {
         int nextIndex = now.index - 1;
-        if (nextIndex < 0) nextIndex = Guns.all.Length - 1;
+        if (nextIndex < 0) nextIndex = Frames.all.Length - 1;
         return new(nextIndex);
     }
 

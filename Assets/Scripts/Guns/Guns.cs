@@ -7,11 +7,13 @@ public sealed class Guns {
     private Guns() {}
     public static readonly GunEntry[] all = {
         new("artemis.name", "artemis.splash"),
-        new("guanyin.name", "guanyin.splash")
+        new("guanyin.name", "guanyin.splash"),
+        new("raijin.name", "raijin.splash")
     };
 
     public static readonly GunIndex ARTEMIS = new(0);
     public static readonly GunIndex GUANYIN = new(1);
+    public static readonly GunIndex RAIJIN = new(2);
 }
 
 /// <summary>

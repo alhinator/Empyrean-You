@@ -14831,7 +14831,7 @@ MonoBehaviour:
   range: 100
   UsesAmmunition: 0
   UsesMaxAmmunition: 1
-  MaximumAmmo: 4000
+  MaximumAmmo: 2000
   MagazineSize: 0
   SecondaryBulletOrigin: {fileID: 4198844615151731645}
   secondaryParticles: {fileID: 5302274224225069552}
