@@ -1,11 +1,8 @@
 using System;
-using System.Reflection;
 using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class PlayerCombatManager : CombatEntity
 {
@@ -59,7 +56,7 @@ public class PlayerCombatManager : CombatEntity
     void Update()
     {
 
-        float furthest = Math.Max(LeftWeapon.GetComponent<Gun>().range, RightWeapon.GetComponent<Gun>().range);
+        float furthest = Mathf.Max(LeftWeapon.GetComponent<Gun>().range, RightWeapon.GetComponent<Gun>().range);
         Vector3 direction = (Hud.reticle.transform.position - realCamera.transform.position).normalized;
         Physics.Raycast(realCamera.transform.position, direction, out RaycastHit hit, furthest, LayerMask.GetMask("WalkableTerrain", "CameraObstacle", "Enemy"));
         if (hit.transform)
@@ -209,6 +206,13 @@ public class PlayerCombatManager : CombatEntity
         txt.transform.localPosition = temp + new Vector2(60, 20);
 
         txt.GetComponent<FloatingText>().SetText(text, color);
+    }
+    public override bool OnDeath(DamageInstance d)
+    {
+        var fx = GetComponent<PlayerDeathFX>();
+        fx.DoDeathEffects();
+        return base.OnDeath(d);
+
     }
 }
 

@@ -768,6 +768,14 @@ public class Player3PCam : MonoBehaviour
             return sprinting;
         }
     }
+
+    public bool IsHovering
+    {
+        get
+        {
+            return hovering;
+        }
+    }
 }
 
 
