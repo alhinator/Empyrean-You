@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 190851103135370174}
   - component: {fileID: 2272795999843855}
   - component: {fileID: 4392086447597879937}
-  - component: {fileID: 5994664074166993041}
   m_Layer: 13
   m_Name: Outer ring
   m_TagString: Untagged
@@ -84,28 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5994664074166993041
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1267721582492582914}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 8192
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8935400953450650619, guid: 5a6554188cb146d4aa669ace4c5e8a93, type: 3}
 --- !u!1 &1654310819364912491
 GameObject:
   m_ObjectHideFlags: 0
@@ -5087,7 +5064,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5948340853344134676
 Rigidbody:
@@ -5108,7 +5085,7 @@ Rigidbody:
     m_Bits: 23560
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 32
+    m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -5143,6 +5120,7 @@ MonoBehaviour:
   isInRange: 0
   isInLoS: 0
   lastSeenPosition: {x: 0, y: 0, z: 0}
+  aimingDirection: {x: 0, y: 0, z: 0, w: 0}
   actualAttackPos: {x: 0, y: 0, z: 0}
   timeSinceLoS: 0
   AttackRange: 100
@@ -5373,7 +5351,6 @@ GameObject:
   - component: {fileID: 29138580709848701}
   - component: {fileID: 195005307411461825}
   - component: {fileID: 100108904857971979}
-  - component: {fileID: 7249660471099826405}
   m_Layer: 13
   m_Name: Center ring
   m_TagString: Untagged
@@ -5446,28 +5423,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7249660471099826405
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5776513710953288318}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 8192
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 1625782493271252080, guid: 5a6554188cb146d4aa669ace4c5e8a93, type: 3}
 --- !u!1 &6819320283232430208
 GameObject:
   m_ObjectHideFlags: 0
@@ -5479,7 +5434,6 @@ GameObject:
   - component: {fileID: 7508037705006674664}
   - component: {fileID: 2986210773605457958}
   - component: {fileID: 7394969357291009405}
-  - component: {fileID: 7123812789138448913}
   m_Layer: 13
   m_Name: Middle Ring
   m_TagString: Untagged
@@ -5552,28 +5506,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7123812789138448913
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6819320283232430208}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 8192
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5612819533600621406, guid: 5a6554188cb146d4aa669ace4c5e8a93, type: 3}
 --- !u!1 &8364561263017646352
 GameObject:
   m_ObjectHideFlags: 0
