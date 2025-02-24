@@ -70,7 +70,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0.23
+    - _OutlineWidth: 0.2
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.9
@@ -120,9 +120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: HUD Font
   m_EditorClassIdentifier: 
-  hashCode: -801186333
+  hashCode: 311601354
   material: {fileID: -5182857656717178297}
-  materialHashCode: -1858621597
+  materialHashCode: -1140931158
   m_Version: 1.1.0
   m_SourceFontFileGUID: f1dd6aafba74d3641a2cb784a309c550
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: f1dd6aafba74d3641a2cb784a309c550, type: 3}

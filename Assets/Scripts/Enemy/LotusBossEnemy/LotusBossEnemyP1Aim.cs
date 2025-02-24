@@ -12,21 +12,25 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
 
     private float TimeInAim, TimeAiming, last;
     private float TimeToStartCharging = 1;
+    private float TimeToLock = 5f;
 
     private float BobbingAccumulator = 0.0f;
 
     private bool hiBeams;
 
+    private Vector3 delayedAimPos;
+
     public override void OnEnter()
     {
         base.OnEnter();
-        Debug.Log("In Phase 1 aim");
+        //Debug.Log("In Phase 1 aim");
 
         this.BobbingAccumulator = 0.0f;
         TimeInAim = 0;
         TimeAiming = 0;
         last = 0;
         hiBeams = false;
+        delayedAimPos = Enemy.lastSeenPosition;
     }
     public override void OnExit()
     {
@@ -62,7 +66,9 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
     {
         if (!Enemy.isInLoS) { TimeAiming = 0; last = 0; return; }//Don't do beam logic + reset timer if we can't see player
         Enemy.actualAttackPos = Enemy.lastSeenPosition;
-        Debug.Log("In DoPetalEffects");
+        //Debug.Log("In DoPetalEffects");
+
+        delayedAimPos = Vector3.MoveTowards(delayedAimPos, Enemy.lastSeenPosition, BeamLerpSpeed * Time.deltaTime);
 
         float duration = 0.12f;
         bool flashAll = TimeAiming > last + duration;
@@ -73,7 +79,7 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
             p.aimParticles.SetPosition(0, p.ChargePoint.position);
 
 
-            p.aimParticles.SetPosition(1, Vector3.MoveTowards(p.aimParticles.GetPosition(1), Enemy.lastSeenPosition, BeamLerpSpeed * Time.deltaTime));
+            p.aimParticles.SetPosition(1, delayedAimPos);
 
 
             //start flashing the beam now. 
@@ -85,6 +91,13 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
                 p.aimParticles.startColor = new Color(col, col, 0, 0.25f);
                 p.aimParticles.endColor = new Color(col, col, 0, 0.25f);
                 p.aimParticles.enabled = !p.aimParticles.enabled;
+            }
+            if (TimeAiming > TimeToLock - 0.5f)
+            {
+                float col = 1;
+                p.aimParticles.startColor = new Color(col, col, 0, 0.25f);
+                p.aimParticles.endColor = new Color(col, col, 0, 0.25f);
+                p.aimParticles.enabled = true;
             }
         }
 
@@ -112,6 +125,21 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
 
             }
             i++;
+        }
+    }
+
+    public bool IsDone
+    {
+        get
+        {
+            return TimeAiming > TimeToLock;
+        }
+    }
+    public Vector3 DelayedAimPosition
+    {
+        get
+        {
+            return delayedAimPos;
         }
     }
 }
