@@ -12,6 +12,8 @@ TagManager:
   - BastShield
   - PlayerDataSetter
   - PlayerHud
+  - LotusChargePoint
+  - LotusAimParticles
   layers:
   - Default
   - TransparentFX

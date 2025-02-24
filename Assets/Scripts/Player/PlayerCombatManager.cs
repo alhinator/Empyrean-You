@@ -51,7 +51,7 @@ public class PlayerCombatManager : CombatEntity
         //DEBUG ONLY 
         if (!FindObjectOfType(typeof(PlayerDataSetter)))
         {
-            AssignWeapons(3,3);
+            AssignWeapons(2,2);
             AssignFrame(Frames.ITZI);
         }
 
