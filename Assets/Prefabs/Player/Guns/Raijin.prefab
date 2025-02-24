@@ -6356,25 +6356,25 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.7811587, b: 0, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 0.13725491}
-        key2: {r: 1, g: 1, b: 1, a: 0}
+        key0: {r: 0.011360182, g: 0, b: 0.4056604, a: 1}
+        key1: {r: 0.24519403, g: 0.31094542, b: 0.3584906, a: 0.16464937}
+        key2: {r: 1, g: 1, b: 1, a: 0.13725491}
         key3: {r: 0.4433962, g: 0.4433962, b: 0.4745098, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 7132
-        ctime1: 37586
-        ctime2: 30455
+        ctime1: 23323
+        ctime2: 24672
         ctime3: 46453
         ctime4: 0
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 36430
-        atime2: 65342
+        atime1: 19468
+        atime2: 36430
         atime3: 65342
         atime4: 0
         atime5: 0
@@ -6383,7 +6383,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14826,7 +14826,7 @@ MonoBehaviour:
   chargeTime: 0
   perShotRecoil: 0.003
   recoilRecovery: 0.008
-  maxRecoil: 0.05
+  maxRecoil: 0.04
   APR: 0
   range: 100
   UsesAmmunition: 0
@@ -14837,8 +14837,8 @@ MonoBehaviour:
   secondaryParticles: {fileID: 5302274224225069552}
   BulletTrail: {fileID: 3673051539837595173}
   BaseRateOfFire: 3
-  RateOfFireAcceleration: 2
-  MaxRateOfFire: 15
+  RateOfFireAcceleration: 8
+  MaxRateOfFire: 20
   BaseRotationSpeed: 0
   RotationSpeedAcceleration: 2030
   MaxRotationSpeed: 2000
