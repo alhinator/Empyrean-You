@@ -14,6 +14,7 @@ TagManager:
   - PlayerHud
   - LotusChargePoint
   - LotusAimParticles
+  - PlayerCameraPrefab
   layers:
   - Default
   - TransparentFX
