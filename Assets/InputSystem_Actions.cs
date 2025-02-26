@@ -125,6 +125,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DismissPopup"",
+                    ""type"": ""Button"",
+                    ""id"": ""3ae44837-533a-4864-87da-6eca5798e52d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -411,6 +420,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse;Gamepad"",
                     ""action"": ""DebugReset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6dcb584a-2fc6-4f73-b04b-28433505ea13"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DismissPopup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ffac722-c1d7-4b39-a189-bab612eaec89"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DismissPopup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1025,6 +1056,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Ingame_Fire2 = m_Ingame.FindAction("Fire2", throwIfNotFound: true);
         m_Ingame_Reload = m_Ingame.FindAction("Reload", throwIfNotFound: true);
         m_Ingame_DebugReset = m_Ingame.FindAction("DebugReset", throwIfNotFound: true);
+        m_Ingame_DismissPopup = m_Ingame.FindAction("DismissPopup", throwIfNotFound: true);
         // CustomUI
         m_CustomUI = asset.FindActionMap("CustomUI", throwIfNotFound: true);
         m_CustomUI_Navigate = m_CustomUI.FindAction("Navigate", throwIfNotFound: true);
@@ -1115,6 +1147,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Ingame_Fire2;
     private readonly InputAction m_Ingame_Reload;
     private readonly InputAction m_Ingame_DebugReset;
+    private readonly InputAction m_Ingame_DismissPopup;
     public struct IngameActions
     {
         private @InputSystem_Actions m_Wrapper;
@@ -1130,6 +1163,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         public InputAction @Fire2 => m_Wrapper.m_Ingame_Fire2;
         public InputAction @Reload => m_Wrapper.m_Ingame_Reload;
         public InputAction @DebugReset => m_Wrapper.m_Ingame_DebugReset;
+        public InputAction @DismissPopup => m_Wrapper.m_Ingame_DismissPopup;
         public InputActionMap Get() { return m_Wrapper.m_Ingame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1172,6 +1206,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @DebugReset.started += instance.OnDebugReset;
             @DebugReset.performed += instance.OnDebugReset;
             @DebugReset.canceled += instance.OnDebugReset;
+            @DismissPopup.started += instance.OnDismissPopup;
+            @DismissPopup.performed += instance.OnDismissPopup;
+            @DismissPopup.canceled += instance.OnDismissPopup;
         }
 
         private void UnregisterCallbacks(IIngameActions instance)
@@ -1209,6 +1246,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @DebugReset.started -= instance.OnDebugReset;
             @DebugReset.performed -= instance.OnDebugReset;
             @DebugReset.canceled -= instance.OnDebugReset;
+            @DismissPopup.started -= instance.OnDismissPopup;
+            @DismissPopup.performed -= instance.OnDismissPopup;
+            @DismissPopup.canceled -= instance.OnDismissPopup;
         }
 
         public void RemoveCallbacks(IIngameActions instance)
@@ -1402,6 +1442,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         void OnFire2(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnDebugReset(InputAction.CallbackContext context);
+        void OnDismissPopup(InputAction.CallbackContext context);
     }
     public interface ICustomUIActions
     {
