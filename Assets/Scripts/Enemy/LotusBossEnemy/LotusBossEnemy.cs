@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TreeEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityHFSM;
 
 public class LotusBossEnemy : CombatEntity
@@ -53,6 +49,12 @@ public class LotusBossEnemy : CombatEntity
                 p.aimParticles.useWorldSpace = true;
             }
         }
+    }
+
+    public override bool OnDeath(DamageInstance d)
+    {
+        Destroy(this.gameObject);
+        return base.OnDeath(d);
     }
 
     private void FixedUpdate()

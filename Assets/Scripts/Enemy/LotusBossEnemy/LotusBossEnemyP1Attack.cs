@@ -1,6 +1,4 @@
-﻿using UnityEditor.Localization.Plugins.XLIFF.V12;
-using UnityEditor.VersionControl;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent>
 {

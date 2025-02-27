@@ -1,7 +1,4 @@
-﻿using UnityEditor.Localization.Plugins.XLIFF.V20;
-using UnityEditor.Rendering;
-using UnityEngine;
-using UnityEngine.Rendering.Universal;
+﻿using UnityEngine;
 public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent>
 {
     public LotusBossEnemyP1Aim(LotusBossEnemy enemy) : base(enemy) { }
