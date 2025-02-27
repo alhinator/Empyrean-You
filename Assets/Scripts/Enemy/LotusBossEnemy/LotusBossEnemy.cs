@@ -26,9 +26,8 @@ public class LotusBossEnemy : CombatEntity
     public float AttackRange = 100f;
     // TODO replace me with a collider!
     public float EnrageAttackRange = 100f;
-    // TODO replace me with GameObjects with colliders!
-    // This should realistically be an ObjectPool of some kind
-    public Vector3[] Projectiles = new Vector3[3];
+    public LotusBullet PetalBulletPrefab;
+    public readonly LotusBullet[] PetalBullets = new LotusBullet[3];
 
     [Header("Behavior")]
     public float p1DefenseThreshold;
@@ -53,6 +52,7 @@ public class LotusBossEnemy : CombatEntity
             {
                 //Debug.Log("found a scr");
                 PetalScripts[i] = p;
+                PetalBullets[i] = LotusBullet.createAsChildOf(PetalBulletPrefab, this, p);
                 i++;
                 p.aimParticles.useWorldSpace = true;
             }
