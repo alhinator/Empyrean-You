@@ -32,9 +32,9 @@ public class LotusBossEnemyP1Idle : EnemyState<LotusBossEnemy, LotusBossEnemySta
             }
         }
         reachedIdentity = allReached;
-        if (allReached == true)
-        {
-            Debug.Log("ready to keep spinning");
-        }
+        // if (allReached == true)
+        // {
+        //     //Debug.Log("ready to keep spinning");
+        // }
     }
 }

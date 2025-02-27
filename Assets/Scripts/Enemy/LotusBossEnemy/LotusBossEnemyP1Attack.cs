@@ -9,7 +9,7 @@ public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
     const float attackSize = 1.0f;
     private const float AttackingRotationSpeed = 5;
     private const float LerpSpeed = 5;
-    public float BeamLerpSpeed = 2;
+    public float BeamLerpSpeed = 5;
 
     private float BobbingAccumulator = 0.0f;
 

@@ -5,15 +5,15 @@ using UnityEngine;
 public class PlayerDeathFX : MonoBehaviour
 {
     [SerializeField] ParticleSystem DeathExplosion;
-    // Start is called before the first frame update
-    void Start()
-    {
+    // // Start is called before the first frame update
+    // void Start()
+    // {
 
-    }
+    // }
 
     public void DoDeathEffects()
     {
-        StartCoroutine(LerpDownTime());
+        //StartCoroutine(LerpDownTime());
         DeathExplosion.Play();
     }
     private IEnumerator LerpDownTime()

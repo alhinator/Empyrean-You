@@ -32,15 +32,10 @@ public class HelperPopupPanel : MonoBehaviour
     void OnEnable()
     {
         _playerInput.currentActionMap.Enable();
-        InputSystem.onActionChange += TrackActions;
 
     }
-    void OnDisable()
-    {
-        InputSystem.onActionChange -= TrackActions;
-
-    }
-    private void TrackActions(object obj, InputActionChange change)
+   
+    public void TrackActions(object obj, InputActionChange change)
     {
         if (change == InputActionChange.ActionPerformed)
         {
@@ -97,6 +92,11 @@ public class HelperPopupPanel : MonoBehaviour
         {
             AlertList.Enqueue(alert);
         }
+        dismissText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(
+            msgStrings.GetEntry("ui.dismiss").Value,
+            activeDevice,
+            _playerInput,
+            listOfTmpSpriteAssets);
     }
     public void OnDismissPopup(InputValue v)
     {

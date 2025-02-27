@@ -19,7 +19,7 @@ public class LotusBossEnemyP1Defend : EnemyState<LotusBossEnemy, LotusBossEnemyS
 
         foreach (GameObject petal in Enemy.Petals)
         {
-            Vector3 idealPosition = Vector3.MoveTowards(petal.transform.localPosition, new Vector3(0, 1, 0), DefendRotationSpeed/4 * Time.deltaTime);
+            Vector3 idealPosition = Vector3.MoveTowards(petal.transform.localPosition, new Vector3(0, 1, 0), DefendRotationSpeed / 4 * Time.deltaTime);
             petal.transform.localPosition = idealPosition;
             if (!reachedIdentity)
             {
@@ -33,7 +33,7 @@ public class LotusBossEnemyP1Defend : EnemyState<LotusBossEnemy, LotusBossEnemyS
             }
         }
         reachedIdentity = allReached;
-        if (allReached == true) { Debug.Log("ready to keep spinning"); }
+        //if (allReached == true) { Debug.Log("ready to keep spinning"); }
     }
 }
 

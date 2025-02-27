@@ -110,7 +110,6 @@ public class Player3PCam : MonoBehaviour
 
 
         DetectTargetBumps();
-        AdjustDamping();
 
         EnableSprint();
 
@@ -323,23 +322,6 @@ public class Player3PCam : MonoBehaviour
         }
 
 
-    }
-    private void AdjustDamping()
-    {
-
-        for (int i = 0; i < 3; i++)
-        {
-
-            //Modify horizontal damping if player is dashing & locked.
-
-            var clc = combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineOrbitalTransposer>();
-            clc.m_XDamping = dashing ? 1 : Mathf.Lerp(clc.m_XDamping, 0, 2 * Time.deltaTime);
-            clc.m_ZDamping = dashing ? 1 : Mathf.Lerp(clc.m_ZDamping, 0, 2 * Time.deltaTime);
-
-            var ac = aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineOrbitalTransposer>();
-            ac.m_XDamping = dashing ? 1 : Mathf.Lerp(ac.m_XDamping, 0, 2 * Time.deltaTime);
-            ac.m_ZDamping = dashing ? 1 : Mathf.Lerp(ac.m_ZDamping, 0, 2 * Time.deltaTime);
-        }
     }
     private void GroundedCheckAndDrag()
     {

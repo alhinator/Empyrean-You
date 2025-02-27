@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
     public Player3PCam player3PCam;
     public PlayerCombatManager playerCombatManager;
+    [SerializeField] HelperPopupPanel helperPopupPanel;
     public Camera mainCamera;
     public Canvas staticPlayerHud;
     public TMP_Text BoostBar;
@@ -30,7 +32,16 @@ public class HUDManager : MonoBehaviour
         notificationQueueColors = new();
         ClearAlerts();
     }
+    void OnEnable()
+    {
+        InputSystem.onActionChange += TrackActions;
 
+    }
+    void OnDisable()
+    {
+        InputSystem.onActionChange -= TrackActions;
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -39,7 +50,7 @@ public class HUDManager : MonoBehaviour
         SetReticleIdealPosition();
         MoveReticle();
         timeSinceAlert += Time.deltaTime;
-        if(timeSinceAlert > 3){ ClearAlerts();}
+        if (timeSinceAlert > 3) { ClearAlerts(); }
     }
 
     private void UpdateBasicHudText()
@@ -110,9 +121,17 @@ public class HUDManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.2f);
         }
-        
-        DisplayAlert(notificationQueue.Dequeue(), notificationQueueColors.Dequeue());
-        
 
+        DisplayAlert(notificationQueue.Dequeue(), notificationQueueColors.Dequeue());
+
+
+    }
+    private void OnDismissPopup(InputValue v)
+    {
+        helperPopupPanel.OnDismissPopup(v);
+    }
+    private void TrackActions(object obj, InputActionChange change)
+    {
+        helperPopupPanel.TrackActions(obj, change);
     }
 }

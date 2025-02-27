@@ -47,7 +47,7 @@ public class LotusBossEnemy : CombatEntity
         {
             if (petal.TryGetComponent(out Petal p))
             {
-                Debug.Log("found a scr");
+                //Debug.Log("found a scr");
                 PetalScripts[i] = p;
                 i++;
                 p.aimParticles.useWorldSpace = true;
