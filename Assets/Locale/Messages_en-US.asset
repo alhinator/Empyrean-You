@@ -36,7 +36,23 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 43201415188480
     m_Localized: Use {Fire1} and {Fire2} to shoot. Your mech can automatically aim
-      by pressing {CameraLock} if enemies are visible.
+      by pressing {CameraLock} if enemies are in range of your weapons.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 80781078794240
+    m_Localized: The beam emanating from an Angel's eye glows brightly as it is about
+      to attack. Quickly tap and release {Dodge}, and your mech will dodge in the
+      direction it's moving.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88040836009984
+    m_Localized: Your mech is equipped with a set of powerful boosters that activate
+      by pressing {Jump}. Double tapping {Hover} midair will enter hover mode.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88926194864128
+    m_Localized: Jumping - but not hovering - consumes BOOST. BOOST recharges when
+      your mech lands on the ground.
     m_Metadata:
       m_Items: []
   references:

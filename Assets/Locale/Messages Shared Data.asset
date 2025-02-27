@@ -31,6 +31,18 @@ MonoBehaviour:
     m_Key: tutorial.second
     m_Metadata:
       m_Items: []
+  - m_Id: 80781078794240
+    m_Key: tutorial.dodging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88040836009984
+    m_Key: tutorial.jumping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88926194864128
+    m_Key: tutorial.jumping2
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
