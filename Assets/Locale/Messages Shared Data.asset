@@ -43,6 +43,10 @@ MonoBehaviour:
     m_Key: tutorial.jumping2
     m_Metadata:
       m_Items: []
+  - m_Id: 91091038736384
+    m_Key: tutorial.sprinting
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

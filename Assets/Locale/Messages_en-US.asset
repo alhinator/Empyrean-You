@@ -47,12 +47,17 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 88040836009984
     m_Localized: Your mech is equipped with a set of powerful boosters that activate
-      by pressing {Jump}. Double tapping {Hover} midair will enter hover mode.
+      by pressing {Jump}. Double tapping {Hover} midair will toggle hover mode.
     m_Metadata:
       m_Items: []
   - m_Id: 88926194864128
     m_Localized: Jumping - but not hovering - consumes BOOST. BOOST recharges when
       your mech lands on the ground.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91091038736384
+    m_Localized: Hold {Sprint} while on the ground to sprint. Sprinting allows for
+      fast, grounded traversal at the cost of accuracy.
     m_Metadata:
       m_Items: []
   references:

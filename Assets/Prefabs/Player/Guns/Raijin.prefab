@@ -14826,7 +14826,7 @@ MonoBehaviour:
   chargeTime: 0
   perShotRecoil: 0.003
   recoilRecovery: 0.008
-  maxRecoil: 0.04
+  maxRecoil: 0.02
   APR: 0
   range: 100
   UsesAmmunition: 0
@@ -14838,7 +14838,7 @@ MonoBehaviour:
   BulletTrail: {fileID: 3673051539837595173}
   BaseRateOfFire: 3
   RateOfFireAcceleration: 8
-  MaxRateOfFire: 20
+  MaxRateOfFire: 18
   BaseRotationSpeed: 0
   RotationSpeedAcceleration: 2030
   MaxRotationSpeed: 2000
