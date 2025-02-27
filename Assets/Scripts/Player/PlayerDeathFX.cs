@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDeathFX : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class PlayerDeathFX : MonoBehaviour
 
     public void DoDeathEffects()
     {
-        //StartCoroutine(LerpDownTime());
-        DeathExplosion.Play();
+        StartCoroutine(LerpDownTime());
+        //DeathExplosion.Play();
     }
     private IEnumerator LerpDownTime()
     {
@@ -25,5 +26,9 @@ public class PlayerDeathFX : MonoBehaviour
             yield return new WaitForSecondsRealtime(timeStep);
             Time.timeScale -= timeStep;
         }
+        Time.timeScale = 1;
+        yield return new WaitForSecondsRealtime(3);
+        Application.Quit();
+
     }
 }

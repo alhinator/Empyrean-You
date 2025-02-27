@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,7 +35,7 @@ public class HelperPopupPanel : MonoBehaviour
         _playerInput.currentActionMap.Enable();
 
     }
-   
+
     public void TrackActions(object obj, InputActionChange change)
     {
         if (change == InputActionChange.ActionPerformed)
@@ -66,6 +67,12 @@ public class HelperPopupPanel : MonoBehaviour
             _playerInput,
             listOfTmpSpriteAssets);
 
+        StartCoroutine(QueueInitial());
+
+    }
+    private IEnumerator QueueInitial()
+    {
+        yield return new WaitForSeconds(0.5f);
         QueueAlert(msgStrings.GetEntry("tutorial.first").Value);
         QueueAlert(msgStrings.GetEntry("tutorial.second").Value);
     }
