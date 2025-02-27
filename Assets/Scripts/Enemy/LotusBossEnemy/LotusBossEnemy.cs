@@ -22,10 +22,18 @@ public class LotusBossEnemy : CombatEntity
     public Vector3 actualAttackPos;
     [SerializeField] public LayerMask visionLayerMask;
 
+    [Header("Attack Parts")]
     public float AttackRange = 100f;
+    // TODO replace me with a collider!
+    public float EnrageAttackRange = 100f;
+    // TODO replace me with GameObjects with colliders!
+    // This should realistically be an ObjectPool of some kind
+    public Vector3[] Projectiles = new Vector3[3];
 
     [Header("Behavior")]
     public float p1DefenseThreshold;
+    public float p2AttackThreshold;
+    public float p2DefenseThreshold;
 
     private void Awake()
     {
@@ -96,9 +104,9 @@ public class LotusBossEnemy : CombatEntity
         this._stateMachine.AddState(LotusBossEnemyState.Phase1Attack, new LotusBossEnemyP1Attack(this));
         this._stateMachine.AddState(LotusBossEnemyState.Phase1Defend, new LotusBossEnemyP1Defend(this));
         this._stateMachine.AddState(LotusBossEnemyState.Enraging, new LotusBossEnemyEnraging(this));
-        this._stateMachine.AddState(LotusBossEnemyState.Phase2Aim, new LotusBossEnemyP2Aim(this));
+        this._stateMachine.AddState(LotusBossEnemyState.Phase2Idle, new LotusBossEnemyP2Idle(this));
         this._stateMachine.AddState(LotusBossEnemyState.Phase2Attack, new LotusBossEnemyP2Attack(this));
-        this._stateMachine.AddState(LotusBossEnemyState.Phase3Defend, new LotusBossEnemyP3Defend(this));
+        this._stateMachine.AddState(LotusBossEnemyState.Phase2Defend, new LotusBossEnemyP2Defend(this));
         this._stateMachine.AddState(LotusBossEnemyState.Dying, new LotusBossEnemyDying(this));
 
         this._stateMachine.SetStartState(LotusBossEnemyState.Spawning);
@@ -108,29 +116,34 @@ public class LotusBossEnemy : CombatEntity
 
         // phase 1 attack loop
         this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Idle, LotusBossEnemyState.Phase1Aim, self => { return this.CurrentHP < this.MaximumHP; }));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Phase1Attack, self => false));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Attack, LotusBossEnemyState.Phase1Idle, self => false));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Phase1Attack, ShouldFinishAim));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Attack, LotusBossEnemyState.Phase1Idle, self => { return (this._stateMachine.ActiveState as LotusBossEnemyP1Attack).IsDone; }));
 
         // phase 1 defend loop
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Idle, LotusBossEnemyState.Phase1Defend, ShouldDefend));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Phase1Defend, ShouldDefend));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Defend, LotusBossEnemyState.Phase1Idle, self => !ShouldDefend(self)));
-
-        //Attack in phase 1 when aiming is done
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Phase1Attack, ShouldFinishAim));
-
-        //Return to idle when done with beam attack.
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Attack, LotusBossEnemyState.Phase1Idle, (self) => { return (this._stateMachine.ActiveState as LotusBossEnemyP1Attack).IsDone; }));
-
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Idle, LotusBossEnemyState.Phase1Defend, ShouldDefendP1));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Phase1Defend, ShouldDefendP1));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Defend, LotusBossEnemyState.Phase1Idle, self => !ShouldDefendP1(self)));
 
         // enter phase 2
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Idle, LotusBossEnemyState.Enraging, self => false));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Enraging, LotusBossEnemyState.Phase2Aim, self => false));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Idle, LotusBossEnemyState.Enraging, ShouldEnrage));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Enraging, ShouldEnrage));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Defend, LotusBossEnemyState.Enraging, ShouldEnrage));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Enraging, LotusBossEnemyState.Phase2Idle, self => { return (this._stateMachine.ActiveState as LotusBossEnemyEnraging).IsDone; }));
+        
+        // phase 2 attack
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Idle, LotusBossEnemyState.Phase2Attack, ShouldAttackP2));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Attack, LotusBossEnemyState.Phase2Idle,
+            self => !ShouldAttackP2(self)));
+        
+        // phase 2 defend
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Idle, LotusBossEnemyState.Phase2Defend, ShouldDefendP2));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Defend, LotusBossEnemyState.Phase2Idle,
+            self => !ShouldDefendP2(self)));
 
         this._stateMachine.Init();
     }
 
-    private bool ShouldDefend(Transition<LotusBossEnemyState> self)
+    private bool ShouldDefendP1(Transition<LotusBossEnemyState> self)
     {
         return Vector3.Distance(transform.position, _player.transform.position) <= p1DefenseThreshold;
     }
@@ -138,5 +151,17 @@ public class LotusBossEnemy : CombatEntity
     {
         actualAttackPos = (this._stateMachine.ActiveState as LotusBossEnemyP1Aim).DelayedAimPosition;
         return (this._stateMachine.ActiveState as LotusBossEnemyP1Aim).IsDone;
+    }
+    private bool ShouldEnrage(Transition<LotusBossEnemyState> self)
+    {
+        return this.CurrentHP <= (this.MaximumHP / 2.0f);
+    }
+    private bool ShouldAttackP2(Transition<LotusBossEnemyState> self)
+    {
+        return Vector3.Distance(transform.position, _player.transform.position) <= p2AttackThreshold;
+    }
+    private bool ShouldDefendP2(Transition<LotusBossEnemyState> self)
+    {
+        return Vector3.Distance(transform.position, _player.transform.position) <= p2DefenseThreshold;
     }
 }

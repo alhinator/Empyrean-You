@@ -9,8 +9,8 @@
     /// Phase 1 to Phase 2 transition state
     /// </summary>
     Enraging,
-    Phase2Aim,
+    Phase2Idle,
     Phase2Attack,
-    Phase3Defend,
+    Phase2Defend,
     Dying
 }
