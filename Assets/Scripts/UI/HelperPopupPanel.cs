@@ -1,20 +1,123 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
+
+//Contains modified code from https://www.youtube.com/watch?v=JdGgrMWIknE
+//and https://www.youtube.com/watch?v=eVMy_Umjcys
 
 public class HelperPopupPanel : MonoBehaviour
 {
+    private PlayerInput _playerInput;
+    [SerializeField] private InputBindingHelper.DeviceType activeDevice = InputBindingHelper.DeviceType.Keyboard;
     public Vector2 idealPosition;
-    
+
+    private StringTable msgStrings;
+
+    public float moveSpeed;
+    [SerializeField] Vector2 OnScreenPos, OffScreenPos;
+
+    [SerializeField] TMP_Text messageText, dismissText;
+    [SerializeField] ListOfTmpSpriteAssets listOfTmpSpriteAssets;
+
+    Queue<string> AlertList;
+    private bool currentlyDisplaying = false;
+
+    void Awake()
+    {
+        _playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
+    }
+    void OnEnable()
+    {
+        _playerInput.currentActionMap.Enable();
+        InputSystem.onActionChange += TrackActions;
+
+    }
+    void OnDisable()
+    {
+        InputSystem.onActionChange -= TrackActions;
+
+    }
+    private void TrackActions(object obj, InputActionChange change)
+    {
+        if (change == InputActionChange.ActionPerformed)
+        {
+            InputAction inputAction = (InputAction)obj;
+            InputControl activeControl = inputAction.activeControl;
+            if (activeControl.device is Keyboard)
+            {
+                activeDevice = InputBindingHelper.DeviceType.Keyboard;
+            }
+            if (activeControl.device is Gamepad)
+            {
+                activeDevice = InputBindingHelper.DeviceType.Gamepad;
+            }
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        
+        msgStrings = LocalizationSettings.StringDatabase.GetTable("Messages");
+        idealPosition = OffScreenPos;
+        transform.localPosition = idealPosition;
+        AlertList = new();
+
+
+        dismissText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(
+            msgStrings.GetEntry("ui.dismiss").Value,
+            activeDevice,
+            _playerInput,
+            listOfTmpSpriteAssets);
+
+        QueueAlert(msgStrings.GetEntry("tutorial.first").Value);
+        QueueAlert(msgStrings.GetEntry("tutorial.second").Value);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        transform.localPosition = Vector2.MoveTowards(transform.localPosition, idealPosition, moveSpeed * Time.deltaTime);
+        if (!currentlyDisplaying && (Vector2)transform.localPosition == OffScreenPos && AlertList.Count > 0)
+        {
+            QueueAlert(AlertList.Dequeue());
+        }
     }
+
+    public void QueueAlert(string alert)
+    {
+        if (!currentlyDisplaying)
+        {
+            currentlyDisplaying = true;
+            idealPosition = OnScreenPos;
+            SetText(alert);
+        }
+        else
+        {
+            AlertList.Enqueue(alert);
+        }
+    }
+    public void OnDismissPopup(InputValue v)
+    {
+        if (v.Get<float>() == 1)
+        {
+            currentlyDisplaying = false;
+            idealPosition = OffScreenPos;
+        }
+    }
+
+    public void SetText(string message)
+    {
+        if ((int)activeDevice > listOfTmpSpriteAssets.SpriteAssets.Count - 1)
+        {
+            //missing sprite asset for this device type.
+            return;
+        }
+        messageText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(message, activeDevice, _playerInput, listOfTmpSpriteAssets);
+    }
+
+
+
+
 }

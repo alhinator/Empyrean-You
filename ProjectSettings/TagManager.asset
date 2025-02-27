@@ -15,6 +15,7 @@ TagManager:
   - LotusChargePoint
   - LotusAimParticles
   - PlayerCameraPrefab
+  - HelperPopupPanel
   layers:
   - Default
   - TransparentFX

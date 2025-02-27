@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScreen.unity
     guid: 8a103594ae8099f4bad46489c68742e4
   - enabled: 0
-    path: Assets/Scenes/Aly-Testing.unity
+    path: Assets/Scenes/old/Aly-Testing.unity
     guid: 6407f42aef89092439fdc2ec6cfc47e0
-  - enabled: 1
-    path: Assets/Scenes/Graybox02.unity
+  - enabled: 0
+    path: Assets/Scenes/old/Graybox02.unity
     guid: 428de72724cde2645afe5e6e62e9d5fa
+  - enabled: 1
+    path: Assets/Scenes/PlaytestScene.unity
+    guid: a63141ce495460d4aadaa3013db6b919
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 7018a0bd455d1f646a34dc813232898e, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 99bb569d919b71e469c5abe766d92a41, type: 2}

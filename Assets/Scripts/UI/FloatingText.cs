@@ -12,7 +12,6 @@ public class FloatingText : MonoBehaviour
     {
         Destroy(this.gameObject, 0.5f);
         txt = GetComponent<TMP_Text>();
-
     }
 
     // Update is called once per frame
