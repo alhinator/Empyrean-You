@@ -52,7 +52,7 @@ public class LotusBossEnemy : CombatEntity
             {
                 //Debug.Log("found a scr");
                 PetalScripts[i] = p;
-                PetalBullets[i] = LotusBullet.createAsChildOf(PetalBulletPrefab, this, p);
+                PetalBullets[i] = LotusBullet.CreateAsChildOf(PetalBulletPrefab, this, p);
                 i++;
                 p.aimParticles.useWorldSpace = true;
             }

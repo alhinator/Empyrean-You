@@ -16098,8 +16098,8 @@ MonoBehaviour:
   EnrageAttackRange: 100
   PetalBulletPrefab: {fileID: 7338853003308621997, guid: 90f7cc89dbb925f49bb1a25ca7c486a5, type: 3}
   p1DefenseThreshold: 10
-  p2AttackThreshold: 30
-  p2DefenseThreshold: 20
+  p2AttackThreshold: 13
+  p2DefenseThreshold: 7
 --- !u!135 &3730896463380221455
 SphereCollider:
   m_ObjectHideFlags: 0

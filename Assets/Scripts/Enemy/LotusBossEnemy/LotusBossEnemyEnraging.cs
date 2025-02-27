@@ -3,10 +3,10 @@
 public class LotusBossEnemyEnraging : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent> {
     public LotusBossEnemyEnraging(LotusBossEnemy enemy) : base(enemy) { }
 
-    private const float EnrageTime = 3.5f;
-    private const float AttackDelay = 2f;
+    private const float EnrageTime = 5f;
+    private const float AttackDelay = 3.5f;
 
-    private const float BaseRotationSpeed = 720f;
+    private const float BaseRotationSpeed = 360f;
     private const float MaxRotationSpeed = BaseRotationSpeed * 3;
     private const float RampUpTime = 1.5f;
     private const float RampDownTime = 1.0f;
