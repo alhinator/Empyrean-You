@@ -2,8 +2,8 @@
 using UnityEngine;
 
 public class LotusBullet : MonoBehaviour {
-    private const float RiseSpeed = 1f;
-    private const float ShootSpeed = 1f;
+    private const float RiseSpeed = 2f;
+    private const float ShootSpeed = 4f;
     
     public LotusBossEnemy owner;
     public Petal associatedPetal;
