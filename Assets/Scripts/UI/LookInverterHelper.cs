@@ -32,7 +32,7 @@ public class LookInverterHelper : MonoBehaviour
     }
     public void InvertYLook(bool value)
     {
-        inverts[1] = value;
+        inverts[1] = !value;
         ApplySettingsToCameras();
     }
     public void SetXSens(float value){

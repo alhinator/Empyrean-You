@@ -10852,7 +10852,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!43 &697110257
 Mesh:
   m_ObjectHideFlags: 0
@@ -17839,8 +17839,8 @@ MonoBehaviour:
   m_text: 'lorem ipsum ability body text goes here lorem ipsum lorem ipsum ability
     body text goes here lorem ipsum '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: cd0701630132f30419c91dcf68bb8492, type: 2}
-  m_sharedMaterial: {fileID: -5182857656717178297, guid: cd0701630132f30419c91dcf68bb8492, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5c75f756fe4c939478fca722fcaa0620, type: 2}
+  m_sharedMaterial: {fileID: 7686501210803001505, guid: 5c75f756fe4c939478fca722fcaa0620, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -23062,8 +23062,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 115
+  m_fontSizeBase: 115
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -27753,8 +27753,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '# ABCDEF'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f31ba2111501d084180801b26cf357ae, type: 2}
-  m_sharedMaterial: {fileID: -3278196601196532575, guid: f31ba2111501d084180801b26cf357ae, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cd0701630132f30419c91dcf68bb8492, type: 2}
+  m_sharedMaterial: {fileID: -5182857656717178297, guid: cd0701630132f30419c91dcf68bb8492, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -31174,7 +31174,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 450}
-  m_SizeDelta: {x: 1000, y: 50}
+  m_SizeDelta: {x: 1920, y: 131.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986499911
 MonoBehaviour:
@@ -31223,8 +31223,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 110
+  m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

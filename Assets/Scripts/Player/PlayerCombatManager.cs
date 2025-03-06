@@ -48,7 +48,7 @@ public class PlayerCombatManager : CombatEntity
         //DEBUG ONLY 
         if (!FindObjectOfType(typeof(PlayerDataSetter)))
         {
-            AssignWeapons(2,2);
+            AssignWeapons(2, 2);
             AssignFrame(Frames.ITZI);
         }
 
@@ -110,7 +110,9 @@ public class PlayerCombatManager : CombatEntity
         (Weapons[1] as Gun).myHudText = rightPrimaryUIText;
         (Weapons[1] as Gun).myHudSecondaryText = rightSecondaryUIText;
 
-
+        //Set their audio panning.
+        (Weapons[0] as Gun).GetComponent<AudioSource>().panStereo = -0.5f;
+        (Weapons[1] as Gun).GetComponent<AudioSource>().panStereo = 0.5f;
 
 
 
@@ -189,7 +191,7 @@ public class PlayerCombatManager : CombatEntity
         Abilities[0] = gameObject.AddComponent(f.Script) as Ability;
         Abilities[0].SetOwner(this);
         //hardcoded but whatever. saves me another headache
-        if(f.Script != typeof(Bast)) {GameObject.FindWithTag("BastShield").SetActive(false);}
+        if (f.Script != typeof(Bast)) { GameObject.FindWithTag("BastShield").SetActive(false); }
     }
     public override void OnHit(DamageInstance d)
     {

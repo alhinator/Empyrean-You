@@ -76,6 +76,8 @@ public class Player3PCam : MonoBehaviour
     private bool dashing = false;
     private bool sprinting = false;
     private bool sprintInput = false;
+    private bool hoverInput = false;
+    private float hoverDuration = 0;
     private bool allowedToDash = true;
 
 
@@ -112,6 +114,7 @@ public class Player3PCam : MonoBehaviour
         DetectTargetBumps();
 
         EnableSprint();
+        EnableHover();
 
     }
     private void FixedUpdate()
@@ -648,13 +651,29 @@ public class Player3PCam : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(1.5f * airJumpForce * player.transform.up, ForceMode.Impulse);
     }
-    public void OnHover()
+    public void OnHover(InputValue v)
     {
-        if (!isGrounded)
+        Debug.Log("OnHover Called" + v.Get<float>());
+        if (v.Get<float>() == 1)
         {
-            //Debug.Log("got a hover input");
-            StopCoroutine(lastBoostCo);
-            hovering = !hovering;
+            hoverInput = true;
+        }
+        else
+        {
+            hoverInput = false;
+        }
+    }
+    public void EnableHover()
+    {
+        if (hoverInput) { hoverDuration += Time.deltaTime; } else { hoverDuration = 0; }
+        if (hoverInput && hoverDuration > 0.3f)
+        {
+            if(lastBoostCo != null){StopCoroutine(lastBoostCo);}
+            hovering = true;
+        }
+        else
+        {
+            hovering = false;
         }
     }
     public void OnDebugReset()

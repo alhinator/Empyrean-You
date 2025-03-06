@@ -8,7 +8,11 @@ public class PlayerController : MonoBehaviour
 {
     private Animator animController;
     private Player3PCam player;
+
+    [SerializeField] AudioSource audioSource;
     [SerializeField] ParticleSystem boostLeft, boostRight, hoverLeft, hoverRight;
+
+    [SerializeField] AudioClip hoverSound, jumpSound, dodgeSound;
 
 
     private void Start()
@@ -19,10 +23,23 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(player.IsHovering){
+        if (player.IsHovering)
+        {
             hoverLeft.Play();
             hoverRight.Play();
-        }   
+            if (audioSource.clip == null)
+            {
+                audioSource.loop = true;
+                audioSource.clip = hoverSound;
+                audioSource.Play();
+            }
+
+        }
+        else
+        {
+            audioSource.loop = false;
+            audioSource.clip = null;
+        }
     }
     public void OnMove(InputValue v)
     {
@@ -33,12 +50,20 @@ public class PlayerController : MonoBehaviour
 
     public void OnDodge(InputValue v)
     {
-        boostLeft.Play();
-        boostRight.Play();
+        if (player.BoostsRemaining > 0)
+        {
+            boostLeft.Play();
+            boostRight.Play();
+            audioSource.PlayOneShot(dodgeSound);
+        }
+
     }
     public void OnJump(InputValue v)
     {
-        StartCoroutine(ParticlesAfterDelay(0.2f));
+        if (player.BoostsRemaining > 0)
+        {
+            StartCoroutine(ParticlesAfterDelay(0.2f));
+        }
     }
 
     private IEnumerator ParticlesAfterDelay(float delay)
@@ -46,6 +71,8 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(delay);
         boostLeft.Play();
         boostRight.Play();
+        audioSource.PlayOneShot(jumpSound);
+
     }
 
 
