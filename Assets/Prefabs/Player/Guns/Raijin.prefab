@@ -14818,7 +14818,7 @@ MonoBehaviour:
   pivotPoint: {fileID: 28083932261684584}
   primaryParticles: {fileID: 9209107718333989557}
   audioSource: {fileID: 0}
-  shootSound: {fileID: 8300000, guid: cc9d165493da17941880f26197f9f5cd, type: 3}
+  shootSound: {fileID: 8300000, guid: 956fd3165f0d8b644b8d1dc6b281b34f, type: 3}
   playerReference: {fileID: 0}
   myHudText: {fileID: 0}
   myHudSecondaryText: {fileID: 0}
@@ -14844,7 +14844,8 @@ MonoBehaviour:
   MaxRotationSpeed: 2000
   topBarrel: {fileID: 511774590534340918}
   BottomBarrel: {fileID: 2164841645720584738}
-  ArmorHitSound: {fileID: 0}
+  HitSound: {fileID: 8300000, guid: 536fd4ff763716d4d9a975ec55c04cae, type: 3}
+  ArmorHitSound: {fileID: 8300000, guid: 56146b1cbea8c5b4ba36b97aa01514be, type: 3}
 --- !u!82 &4700052335888894172
 AudioSource:
   m_ObjectHideFlags: 0

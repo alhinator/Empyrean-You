@@ -7,6 +7,7 @@ public class Artemis : Gun
     [Header("Artemis Unique")]
     public AudioClip chargeSound;
     public AudioClip holdSound;
+    public AudioClip hitSound;
     public ParticleSystem bulletTrail;
 
     protected override void Start()
@@ -102,6 +103,7 @@ public class Artemis : Gun
             h.transform.gameObject.TryGetComponent<CombatEntity>(out CombatEntity tg);
             if (tg != null)
             {
+                audioSource.PlayOneShot(hitSound);
                 new DamageInstance(this.Owner, this, tg);
             }
         }

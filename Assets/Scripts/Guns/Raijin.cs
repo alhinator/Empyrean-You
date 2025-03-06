@@ -16,6 +16,7 @@ public class Raijin : Gun
     [SerializeField] Transform topBarrel, BottomBarrel;
     private float CurrRotationSpeed;
 
+    public AudioClip HitSound;
     public AudioClip ArmorHitSound;
 
 
@@ -83,6 +84,8 @@ public class Raijin : Gun
             hit.transform.gameObject.TryGetComponent<CombatEntity>(out CombatEntity tg);
             if (tg != null)
             {
+                audioSource.PlayOneShot(HitSound);
+
                 new DamageInstance(this.Owner, this, tg);
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyArmor"))

@@ -131,7 +131,7 @@ public class Guanyin : Gun
             CurrentReserveAmmo -= CurrentReserveAmmo;
         }
 
-        audioSource.PlayOneShot(ReloadSound); //don't need a second sound once the reload sound actually lasts a second.
+        //audioSource.PlayOneShot(ReloadSound); //don't need a second sound once the reload sound actually lasts a second.
         reloading = false;
 
     }

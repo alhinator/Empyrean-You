@@ -5006,7 +5006,7 @@ MonoBehaviour:
   pivotPoint: {fileID: 135491821282292014}
   primaryParticles: {fileID: 7696203356894934479}
   audioSource: {fileID: 432742687210322865}
-  shootSound: {fileID: 8300000, guid: 780fac092f953da4dbc6eda5ef0e5f91, type: 3}
+  shootSound: {fileID: 8300000, guid: 107049fdc045fef4aa0ee262ac81354e, type: 3}
   playerReference: {fileID: 0}
   myHudText: {fileID: 0}
   myHudSecondaryText: {fileID: 0}
@@ -5021,8 +5021,9 @@ MonoBehaviour:
   UsesMaxAmmunition: 0
   MaximumAmmo: 0
   MagazineSize: 0
-  chargeSound: {fileID: 8300000, guid: 15dcdda58ed889548a101fc9ca03a6f0, type: 3}
-  holdSound: {fileID: 8300000, guid: 90518f80634b194419d76369c80f361e, type: 3}
+  chargeSound: {fileID: 8300000, guid: 28059cf9443a8e647952c7717b9f1e1d, type: 3}
+  holdSound: {fileID: 8300000, guid: cc3eb724b7e4f8b4a8e27bdb3533fbb6, type: 3}
+  hitSound: {fileID: 8300000, guid: 536fd4ff763716d4d9a975ec55c04cae, type: 3}
   bulletTrail: {fileID: 5158671862880277030}
 --- !u!1 &2797120614543130418
 GameObject:
