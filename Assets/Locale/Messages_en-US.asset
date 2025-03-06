@@ -49,7 +49,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 88040836009984
     m_Localized: Your mech is equipped with a set of powerful boosters that activate
-      by pressing {Jump}. Double tapping {Hover} midair will toggle hover mode.
+      by pressing {Jump}. When holding {Hover}, your mech will descend slowly.
     m_Metadata:
       m_Items: []
   - m_Id: 88926194864128
