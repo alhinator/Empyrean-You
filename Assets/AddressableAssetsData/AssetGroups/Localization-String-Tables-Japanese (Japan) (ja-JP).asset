@@ -10,34 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Localization-Locales
+  m_Name: Localization-String-Tables-Japanese (Japan) (ja-JP)
   m_EditorClassIdentifier: 
-  m_GroupName: Localization-Locales
+  m_GroupName: Localization-String-Tables-Japanese (Japan) (ja-JP)
   m_Data:
     m_SerializedData: []
-  m_GUID: ca7a6710d8368ad438d8eb6101c5b56f
+  m_GUID: b15f6cec98fed1345a64b0a3be649d8e
   m_SerializeEntries:
-  - m_GUID: 1b492d795e5bdba46964f662396a369f
-    m_Address: Japanese (Japan) (ja-JP)
+  - m_GUID: 1367f7444dc7b794093ce447eeafd80d
+    m_Address: Guns_ja-JP
     m_ReadOnly: 1
     m_SerializedLabels:
-    - Locale
+    - Locale-ja-JP
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3c4c8692042df11419c687f801ea165b
-    m_Address: Arabic (ar)
+  - m_GUID: 4ebc394bf624a684db220592dcd42595
+    m_Address: Title Screen_ja-JP
     m_ReadOnly: 1
     m_SerializedLabels:
-    - Locale
+    - Locale-ja-JP
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b7a7cc0788e0c4a4aa0278cca439adb4
-    m_Address: English (United States) (en-US)
+  - m_GUID: 5d729ec4a838df140beca4b4af322f18
+    m_Address: Abilities_ja-JP
     m_ReadOnly: 1
     m_SerializedLabels:
-    - Locale
+    - Locale-ja-JP
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 218b8ef258517804e9d2e1f9a94087e0, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: cf8dce8babb3fa24a853c35eb729856b, type: 2}
-    - {fileID: 11400000, guid: 0b77a256ea4a36c448277cf4967ca19c, type: 2}
+    - {fileID: 11400000, guid: ae47ef2b1fbf8bd47864151e28bbefe9, type: 2}
+    - {fileID: 11400000, guid: 772b5a99f4e6f20489009f283d7bf425, type: 2}
