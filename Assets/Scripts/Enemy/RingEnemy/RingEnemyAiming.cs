@@ -14,12 +14,13 @@ public class RingEnemyAiming : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
         hiBeams = false;
         TimeAiming = 0;
         last = 0;
+        Enemy.audioSource.PlayOneShot(Enemy.aimingSound);
     }
     public override void OnExit()
     {
         Enemy.aimParticles.enabled = false;
         base.OnExit();
-
+        Enemy.audioSource.Stop();
     }
 
     public override void OnUpdate()

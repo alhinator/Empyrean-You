@@ -32,6 +32,7 @@ public class RingEnemyLockon : EnemyState<RingEnemy, RingEnemyState, RingEnemyEv
     }
     private void DoAttack()
     {
+        Enemy.audioSource.PlayOneShot(Enemy.fireSound);
         Enemy.aimParticles.enabled = false;
         Enemy.aimParticles.startColor = new Color(1f, 0, 0, 0.8f);
         Enemy.aimParticles.endColor = new Color(1f, 0, 0, 0.8f);

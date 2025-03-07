@@ -5,17 +5,20 @@ public class RingEnemy : CombatEntity
 {
     [Header("References")]
     public GameObject _player;
+    public AudioSource audioSource;
 
     private StateMachine<RingEnemyState, RingEnemyEvent> stateMachine;
-    public LineRenderer aimParticles;
-    public ParticleSystem fireParticles;
+    
     private readonly float[] _largePrimes = {
         101f, 103f, 107f, 109f, 113f, 127f,
         131f, 137f, 139f, 149f, 151f, 157f,
         163f, 167f, 173f, 179f, 181f, 191f
     };
     public RingEnemyAttack myAttack;
-
+    [Header("Particles")]
+    public LineRenderer aimParticles;
+    public ParticleSystem fireParticles;
+    public ParticleSystem deathParticles;
     // TODO should these be get; private set;?
 
     [Header("Rings")]
@@ -47,6 +50,12 @@ public class RingEnemy : CombatEntity
     private const float LoSLimit = 1f;
     public float AttackRange = 100;
 
+    [Header("Audio Clips")]
+    public AudioClip aimingSound;
+    public AudioClip fireSound;
+    public AudioClip deathSound;
+
+
     //[Header("DebugInfo")]
 
 
@@ -71,6 +80,7 @@ public class RingEnemy : CombatEntity
         Weapons[0] = myAttack;
         fireParticles.transform.parent = null;
         aimParticles.transform.parent = null;
+        deathParticles.transform.parent = null;
         aimParticles.useWorldSpace = true;
 
         currHP = MaximumHP;
@@ -148,6 +158,13 @@ public class RingEnemy : CombatEntity
         Debug.Log("my name is " + transform.name + " and i just died");
         Destroy(aimParticles);
         Destroy(fireParticles, fireParticles.main.duration);
+        deathParticles.Play();
+        Destroy(deathParticles, deathParticles.main.duration);
+
+        audioSource.transform.parent = null;
+        audioSource.Stop();
+        audioSource.PlayOneShot(deathSound);
+        Destroy(audioSource.gameObject, 5f);
 
         Destroy(this.gameObject);
         return true;
