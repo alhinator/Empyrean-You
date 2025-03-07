@@ -33,6 +33,7 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
     {
         base.OnExit();
         Enemy.CentralCharger.Stop();
+        Enemy.actualAttackPos = DelayedAimPosition;
         foreach (Petal p in Enemy.PetalScripts)
         {
             p.aimParticles.enabled = false;

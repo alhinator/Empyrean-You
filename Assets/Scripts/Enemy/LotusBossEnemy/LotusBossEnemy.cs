@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityHFSM;
 
@@ -94,6 +95,7 @@ public class LotusBossEnemy : CombatEntity
         {
             lotusBossEnemyState.OnUpdate();
         }
+        GameObject.FindGameObjectWithTag("BossDebug").GetComponent<TMP_Text>().text = "current state: " + _stateMachine.ActiveStateName; 
     }
 
     private void InitStateMachineStates()
@@ -149,7 +151,6 @@ public class LotusBossEnemy : CombatEntity
     }
     private bool ShouldFinishAim(Transition<LotusBossEnemyState> self)
     {
-        actualAttackPos = (this._stateMachine.ActiveState as LotusBossEnemyP1Aim).DelayedAimPosition;
         return (this._stateMachine.ActiveState as LotusBossEnemyP1Aim).IsDone;
     }
     private bool ShouldEnrage(Transition<LotusBossEnemyState> self)
@@ -158,15 +159,25 @@ public class LotusBossEnemy : CombatEntity
     }
     private bool ShouldAttackP2(Transition<LotusBossEnemyState> self)
     {
-        return (this._stateMachine.ActiveState as LotusBossEnemyP2Idle).DoneFiringBullets;
+        return (this._stateMachine.ActiveState as LotusBossEnemyP2Idle).DoneFiringBullets || this._stateMachine.ActiveStateName != LotusBossEnemyState.Phase2Idle && Vector3.Distance(transform.position, _player.transform.position) > p2AttackThreshold;
     }
     private bool ShouldIdleP2(Transition<LotusBossEnemyState> self)
     {
-        float dist = Vector3.Distance(transform.position, _player.transform.position);
-        return dist > p2DefenseThreshold && dist < p2AttackThreshold;
+        return (this._stateMachine.ActiveState as LotusBossEnemyP2Attack).IsDone || this._stateMachine.ActiveStateName != LotusBossEnemyState.Phase2Attack && Vector3.Distance(transform.position, _player.transform.position) > p2DefenseThreshold;
     }
     private bool ShouldDefendP2(Transition<LotusBossEnemyState> self)
     {
         return Vector3.Distance(transform.position, _player.transform.position) <= p2DefenseThreshold;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Vector3 direction = (actualAttackPos - CentralCharger.transform.position).normalized;
+        for(int i = 0; i < Vector3.Distance(actualAttackPos ,CentralCharger.transform.position); i++)
+        {
+            Gizmos.DrawWireSphere(CentralCharger.transform.position + direction * i, 0.5f);
+
+        }
     }
 }

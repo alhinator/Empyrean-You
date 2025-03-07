@@ -25,7 +25,7 @@ public class LotusDangerZone : MonoBehaviour
     {
         timeAlive += Time.deltaTime;
 
-        if(timeAlive > fuseTime)
+        if(timeAlive > fuseTime && !slowPlayer)
         {
             Explode();
         }
@@ -36,6 +36,7 @@ public class LotusDangerZone : MonoBehaviour
         mesh.enabled = false;
         explodeParticles.Play();
         slowPlayer = true;
+        Destroy(this.gameObject, 11f);
     }
     private void OnTriggerStay(Collider other)
     {
@@ -48,7 +49,6 @@ public class LotusDangerZone : MonoBehaviour
     private IEnumerator Flashing()
     {
         yield return new WaitForSeconds(0.2f);
-        Debug.Log("in flashing");
 
         hiBeams = !hiBeams;
         var mats = mesh.materials;

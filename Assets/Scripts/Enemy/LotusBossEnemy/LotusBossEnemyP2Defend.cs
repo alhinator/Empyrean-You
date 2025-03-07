@@ -1,25 +1,38 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class LotusBossEnemyP2Defend : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent> {
-    public LotusBossEnemyP2Defend(LotusBossEnemy enemy) : base(enemy) { }
-    
-    private float DefendRotationSpeed = 600;
+public class LotusBossEnemyP2Defend : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent>
+{
+    private LotusBossEnemyP2Idle concurrent;
+    public LotusBossEnemyP2Defend(LotusBossEnemy enemy) : base(enemy) { concurrent = new(enemy); }
+
+    private float DefendRotationSpeed = 300;
     private bool reachedIdentity = false;
     public override void OnEnter()
     {
         base.OnEnter();
+        concurrent.OnEnter();
         reachedIdentity = false;
+        SpawnZoneCenteredOnMe();
+    }
+    public override void OnExit()
+    {
+        base.OnExit();
+        concurrent.OnExit();
     }
 
-    public override void OnLogic() {
+
+    public override void OnLogic()
+    {
         base.OnLogic();
-        
+        concurrent.OnLogic();
         // TODO decide when to spawn attack
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
+        concurrent.OnLogic();
         bool allReached = true;
 
         foreach (GameObject petal in Enemy.Petals)
@@ -38,5 +51,16 @@ public class LotusBossEnemyP2Defend : EnemyState<LotusBossEnemy, LotusBossEnemyS
             }
         }
         reachedIdentity = allReached;
+    }
+
+    private void SpawnZoneCenteredOnMe()
+    {
+
+        Vector3 originPos = Enemy.transform.position;
+        var newZone = GameObject.Instantiate(Enemy.DangerZonePrefab);
+        newZone.transform.position = originPos + Vector3.up * 2;
+
+
+
     }
 }

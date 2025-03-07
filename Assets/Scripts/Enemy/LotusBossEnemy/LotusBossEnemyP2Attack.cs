@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Rendering;
 
 public class LotusBossEnemyP2Attack : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent>
 {
-    public LotusBossEnemyP2Attack(LotusBossEnemy enemy) : base(enemy) { }
+    private LotusBossEnemyP1Attack concurrentAttack;
+    private LotusBossEnemyP1Aim concurrentAim;
 
-    private float rotationSpeed = 10;
-    private bool reachedIdentity = false;
+    public LotusBossEnemyP2Attack(LotusBossEnemy enemy) : base(enemy) { concurrentAim = new(enemy); concurrentAttack = new(enemy); }
 
     [Header("AoE zone variables")]
     private float timeBetweenZones = 2;
@@ -17,46 +18,74 @@ public class LotusBossEnemyP2Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
     private int zonesPerBurst = 3;
     private int currBurstZones;
 
+    private float TimeInP2Attack = 0;
+    private float MaxAttackTime = 20;
+
+    private bool amFiring;
 
 
 
     public override void OnEnter()
     {
         base.OnEnter();
+        concurrentAim.OnEnter();
+
         zoneTimer = 0;
         currBurstZones = 0;
-
+        TimeInP2Attack = 0;
+        amFiring = false;
     }
     public override void OnLogic()
     {
         base.OnLogic();
 
-        DoZoneTimer();
+        //flag here
+        if (concurrentAim.IsDone && amFiring == false)
+        {
+            amFiring = true;
+            concurrentAim.OnExit();
+            concurrentAttack.OnEnter();
+        }
+        else if (concurrentAttack.IsDone && amFiring)
+        {
+            amFiring = false;
+            concurrentAttack.OnExit();
+            concurrentAim.OnEnter();
+        }
 
+        if (!amFiring)
+        {
+            concurrentAim.OnLogic();
+        }
+        else
+        {
+            concurrentAttack.OnLogic();
+        }
 
+    }
+    public override void OnExit()
+    {
+        base.OnExit();
+        concurrentAim.OnExit();
+        concurrentAttack.OnExit();
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
-        bool allReached = true;
-
-        foreach (GameObject petal in Enemy.Petals)
+        if (!amFiring)
         {
-            Vector3 idealPosition = Vector3.MoveTowards(petal.transform.localPosition, new Vector3(0, 1, 0), rotationSpeed / 3 * Time.deltaTime);
-            petal.transform.localPosition = idealPosition;
-            if (!reachedIdentity)
-            {
-                Quaternion idealRotation = Quaternion.RotateTowards(petal.transform.localRotation, Quaternion.identity, rotationSpeed * Time.deltaTime);
-                petal.transform.localRotation = idealRotation;
-                if (petal.transform.localRotation != Quaternion.identity) { allReached = false; }
-            }
-            else
-            {
-                petal.transform.Rotate(0.01f * Mathf.Sin(Time.time), rotationSpeed * Time.deltaTime, 0.01f * Mathf.Sin(Time.time));
-            }
+            concurrentAim.OnUpdate();
         }
-        reachedIdentity = allReached;
+        else
+        {
+            concurrentAttack.OnUpdate();
+        }
+
+        DoZoneTimer();
+
+        TimeInP2Attack += Time.deltaTime;
+
     }
     private void DoZoneTimer()
     {
@@ -83,11 +112,16 @@ public class LotusBossEnemyP2Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
         {
             var newZone = GameObject.Instantiate(Enemy.DangerZonePrefab);
 
-            newZone.transform.position = hit.point + Vector3.up*2;
+            newZone.transform.position = hit.point + Vector3.up * 2;
 
         }
+    }
 
-
-
+    public bool IsDone
+    {
+        get
+        {
+            return TimeInP2Attack > MaxAttackTime;
+        }
     }
 }

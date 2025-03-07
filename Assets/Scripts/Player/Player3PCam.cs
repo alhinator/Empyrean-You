@@ -653,7 +653,7 @@ public class Player3PCam : MonoBehaviour
     }
     public void OnHover(InputValue v)
     {
-        Debug.Log("OnHover Called" + v.Get<float>());
+        //Debug.Log("OnHover Called" + v.Get<float>());
         if (v.Get<float>() == 1)
         {
             hoverInput = true;

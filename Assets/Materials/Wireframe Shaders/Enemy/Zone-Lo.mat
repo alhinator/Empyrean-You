@@ -84,5 +84,5 @@ Material:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WireColor: {r: 1, g: 0.9411765, b: 0, a: 0.15686275}
+    - _WireColor: {r: 0.9411765, g: 0.31372547, b: 0, a: 0.15686275}
   m_BuildTextureStacks: []

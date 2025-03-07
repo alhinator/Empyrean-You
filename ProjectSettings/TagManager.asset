@@ -16,6 +16,7 @@ TagManager:
   - LotusAimParticles
   - PlayerCameraPrefab
   - HelperPopupPanel
+  - BossDebug
   layers:
   - Default
   - TransparentFX

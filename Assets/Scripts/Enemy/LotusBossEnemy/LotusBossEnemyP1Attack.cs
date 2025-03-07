@@ -4,7 +4,7 @@ public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
 {
     public LotusBossEnemyP1Attack(LotusBossEnemy enemy) : base(enemy) { }
 
-    const float attackSize = 1.0f;
+    const float attackSize = 0.5f;
     private const float AttackingRotationSpeed = 5;
     private const float LerpSpeed = 5;
     public float BeamLerpSpeed = 5;
@@ -136,7 +136,7 @@ public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
     {
         Vector3 beamOrigin = Enemy.CentralCharger.transform.position;
         Vector3 beamForward = (targetPosition - Enemy.CentralCharger.transform.position).normalized;
-        Debug.DrawRay(beamOrigin, beamForward * Enemy.AttackRange, Color.cyan, 1f);
+        //Debug.DrawRay(beamOrigin, beamForward * Enemy.AttackRange, Color.cyan, 1f);
 
         //Firstly, we want to draw a raycast *through* the current aimPoint until we hit a scene object or hit our max range.
         //This will determine our max raycast length when checking for hits against enemies.
@@ -172,7 +172,7 @@ public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
     private void DoAimAdjustment()
     {
         targetPosition = Vector3.MoveTowards(targetPosition, Enemy.lastSeenPosition, BeamLerpSpeed * Time.deltaTime);
-
+        Enemy.actualAttackPos = targetPosition;
     }
 
     public bool IsDone
@@ -182,4 +182,6 @@ public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
             return TimeShooting > MaxShootingTime;
         }
     }
+
+    
 }
