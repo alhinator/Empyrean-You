@@ -1,24 +1,49 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System;
 
-public class LotusBossEnemyP2Attack : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent> {
+public class LotusBossEnemyP2Attack : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent>
+{
     public LotusBossEnemyP2Attack(LotusBossEnemy enemy) : base(enemy) { }
-    
+
     private float rotationSpeed = 10;
     private bool reachedIdentity = false;
 
-    public override void OnLogic() {
+    [Header("AoE zone variables")]
+    private float timeBetweenZones = 2;
+    private float timeBetweenBursts = 5;
+    public float zoneTimer;
+
+    private int zonesPerBurst = 3;
+    private int currBurstZones;
+
+
+
+
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        zoneTimer = 0;
+        currBurstZones = 0;
+
+    }
+    public override void OnLogic()
+    {
         base.OnLogic();
-        
-        // TODO spawn attack under player
+
+        DoZoneTimer();
+
+
     }
 
-    public override void OnUpdate() {
+    public override void OnUpdate()
+    {
         base.OnUpdate();
         bool allReached = true;
 
         foreach (GameObject petal in Enemy.Petals)
         {
-            Vector3 idealPosition = Vector3.MoveTowards(petal.transform.localPosition, new Vector3(0, 1, 0), rotationSpeed/3 * Time.deltaTime);
+            Vector3 idealPosition = Vector3.MoveTowards(petal.transform.localPosition, new Vector3(0, 1, 0), rotationSpeed / 3 * Time.deltaTime);
             petal.transform.localPosition = idealPosition;
             if (!reachedIdentity)
             {
@@ -32,5 +57,37 @@ public class LotusBossEnemyP2Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
             }
         }
         reachedIdentity = allReached;
+    }
+    private void DoZoneTimer()
+    {
+        zoneTimer += Time.deltaTime;
+        if (zoneTimer > timeBetweenZones)
+        {
+            zoneTimer = 0;
+            currBurstZones++;
+            SpawnZone();
+            if (currBurstZones >= zonesPerBurst)
+            {
+                currBurstZones = 0;
+                zoneTimer = -timeBetweenBursts;
+            }
+        }
+    }
+    private void SpawnZone()
+    {
+        //first, get position to spawn at:
+        //track player pos, raycast straight down, angle at the normal direction
+        Vector3 originPos = Enemy._player.transform.position;
+        Physics.Raycast(originPos, Vector3.down, out RaycastHit hit, 100, LayerMask.GetMask("WalkableTerrain", "CameraObstacle"));
+        if (hit.point != null && hit.normal != null)
+        {
+            var newZone = GameObject.Instantiate(Enemy.DangerZonePrefab);
+
+            newZone.transform.position = hit.point + Vector3.up*2;
+
+        }
+
+
+
     }
 }

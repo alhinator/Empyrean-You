@@ -66,4 +66,21 @@ public class LotusBossEnemyP2Idle : EnemyState<LotusBossEnemy, LotusBossEnemySta
         }
         reachedIdentity = allReached;
     }
+
+    // Returns false if at least one bullet is not in flight.
+    public bool DoneFiringBullets
+    {
+        get
+        {
+            //Debug.Log("in doneFiringBullets");
+            foreach (LotusBullet b in Enemy.PetalBullets)
+            {
+                if (!b.IsInFlight())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 }

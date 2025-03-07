@@ -5,7 +5,7 @@ using UnityEngine;
 public class LotusBullet : MonoBehaviour
 {
     private const float RiseSpeed = 5f;
-    private const float ShootSpeed = 20f;
+    private const float ShootSpeed = 25f;
 
     public ParticleSystem explodeParticles;
     public LotusBulletWeapon myWeapon;

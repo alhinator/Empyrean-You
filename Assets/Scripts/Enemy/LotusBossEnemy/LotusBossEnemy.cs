@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityHFSM;
 
 public class LotusBossEnemy : CombatEntity
@@ -28,6 +29,7 @@ public class LotusBossEnemy : CombatEntity
     public float EnrageAttackRange = 100f;
     public LotusBullet PetalBulletPrefab;
     public readonly LotusBullet[] PetalBullets = new LotusBullet[3];
+    public GameObject DangerZonePrefab;
 
     [Header("Behavior")]
     public float p1DefenseThreshold;
@@ -129,16 +131,14 @@ public class LotusBossEnemy : CombatEntity
         this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Aim, LotusBossEnemyState.Enraging, ShouldEnrage));
         this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase1Defend, LotusBossEnemyState.Enraging, ShouldEnrage));
         this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Enraging, LotusBossEnemyState.Phase2Idle, self => { return (this._stateMachine.ActiveState as LotusBossEnemyEnraging).IsDone; }));
-        
+
         // phase 2 attack
         this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Idle, LotusBossEnemyState.Phase2Attack, ShouldAttackP2));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Attack, LotusBossEnemyState.Phase2Idle,
-            self => !ShouldAttackP2(self)));
-        
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Attack, LotusBossEnemyState.Phase2Idle, ShouldIdleP2));
+
         // phase 2 defend
         this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Idle, LotusBossEnemyState.Phase2Defend, ShouldDefendP2));
-        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Defend, LotusBossEnemyState.Phase2Idle,
-            self => !ShouldDefendP2(self)));
+        this._stateMachine.AddTransition(new Transition<LotusBossEnemyState>(LotusBossEnemyState.Phase2Defend, LotusBossEnemyState.Phase2Idle, ShouldIdleP2));
 
         this._stateMachine.Init();
     }
@@ -158,7 +158,12 @@ public class LotusBossEnemy : CombatEntity
     }
     private bool ShouldAttackP2(Transition<LotusBossEnemyState> self)
     {
-        return Vector3.Distance(transform.position, _player.transform.position) <= p2AttackThreshold;
+        return (this._stateMachine.ActiveState as LotusBossEnemyP2Idle).DoneFiringBullets;
+    }
+    private bool ShouldIdleP2(Transition<LotusBossEnemyState> self)
+    {
+        float dist = Vector3.Distance(transform.position, _player.transform.position);
+        return dist > p2DefenseThreshold && dist < p2AttackThreshold;
     }
     private bool ShouldDefendP2(Transition<LotusBossEnemyState> self)
     {
