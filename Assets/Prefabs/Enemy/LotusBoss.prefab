@@ -160,7 +160,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4072278290586880408}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16074,7 +16074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 5000
-  currHP: 5000
+  currHP: 2000
   _player: {fileID: 0}
   animator: {fileID: 0}
   Petals:
@@ -16324,7 +16324,7 @@ GameObject:
   - component: {fileID: 7573809755812179178}
   - component: {fileID: 1640968436728638351}
   - component: {fileID: 7198572850534245044}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}

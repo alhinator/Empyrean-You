@@ -3,7 +3,7 @@
 public class LotusBossEnemyP2Idle : EnemyState<LotusBossEnemy, LotusBossEnemyState, LotusBossEnemyEvent> {
     public LotusBossEnemyP2Idle(LotusBossEnemy enemy) : base(enemy) { }
     
-    const float TimeBetweenProjectiles = 4f;
+    const float TimeBetweenProjectiles = 2f;
     
     private float IdleRotationSpeed = 40;
     private bool reachedIdentity = false;
