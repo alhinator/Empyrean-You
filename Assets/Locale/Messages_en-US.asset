@@ -62,6 +62,15 @@ MonoBehaviour:
       fast, grounded traversal at the cost of accuracy.
     m_Metadata:
       m_Items: []
+  - m_Id: 3607375273627648
+    m_Localized: Use {Move.Composite} to move. Look around with {Look}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3609412543549440
+    m_Localized: Looking in any direction while your mech is locked-on to a target
+      will attempt to find a new target in that direction.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

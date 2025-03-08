@@ -74,7 +74,7 @@ public class HelperPopupPanel : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         QueueAlert(msgStrings.GetEntry("tutorial.first").Value);
-        QueueAlert(msgStrings.GetEntry("tutorial.second").Value);
+        //QueueAlert(msgStrings.GetEntry("tutorial.second").Value);
     }
 
     // Update is called once per frame

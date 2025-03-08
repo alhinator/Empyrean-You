@@ -138,7 +138,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": ""wasd Vector"",
+                    ""name"": ""Composite"",
                     ""id"": ""682bf2c2-661e-40b7-b193-23e38a820a36"",
                     ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",

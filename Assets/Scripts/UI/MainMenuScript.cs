@@ -122,7 +122,7 @@ public class MainMenuScript : MonoBehaviour
                 mainMenuScreens.ColorHeader = mmStrings.GetEntry("title_screen.left_screen.gun_select_2").Value;
                 break;
             case STATE.NAMESELECT:
-                SceneManager.LoadScene("PlaytestScene");
+                SceneManager.LoadScene("TutorialLevel");
                 break;
 
         }
