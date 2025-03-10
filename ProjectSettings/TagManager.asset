@@ -17,6 +17,8 @@ TagManager:
   - PlayerCameraPrefab
   - HelperPopupPanel
   - BossDebug
+  - GlobalVolume
+  - UIVolume
   layers:
   - Default
   - TransparentFX

@@ -8,17 +8,19 @@ public class PlayerController : MonoBehaviour
 {
     private Animator animController;
     private Player3PCam player;
+    private PlayerPostProcessing postProcessing;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] ParticleSystem boostLeft, boostRight, hoverLeft, hoverRight;
 
-    [SerializeField] AudioClip hoverSound, jumpSound, dodgeSound;
+    [SerializeField] AudioClip hoverSound, jumpSound, dodgeSound, hurtSound;
 
 
     private void Start()
     {
         animController = GetComponentInChildren<Animator>();
         player = GetComponent<Player3PCam>();
+        postProcessing = GetComponent<PlayerPostProcessing>();
     }
 
     void Update()
@@ -75,6 +77,10 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
+    public void Hurt()
+    {
+        audioSource.PlayOneShot(hurtSound);
+        postProcessing.TriggerAberration();
+    }
 
 }

@@ -28,6 +28,7 @@ public class PlayerCombatManager : CombatEntity
     public Camera realCamera;
     private Player3PCam player3PCam;
     private HUDManager Hud;
+    private PlayerController controller;
 
 
     // Start is called before the first frame update
@@ -35,6 +36,7 @@ public class PlayerCombatManager : CombatEntity
     {
         //set player reference variables
         player3PCam = GetComponent<Player3PCam>();
+        controller = GetComponent<PlayerController>();
         Hud = GetComponent<HUDManager>();
 
         //Assign Constraints to their transforms.
@@ -214,6 +216,12 @@ public class PlayerCombatManager : CombatEntity
         var fx = GetComponent<PlayerDeathFX>();
         fx.DoDeathEffects();
         return base.OnDeath(d);
+
+    }
+    public override bool OnDamage(DamageInstance d)
+    {
+        controller.Hurt();
+        return base.OnDamage(d);
 
     }
 }
