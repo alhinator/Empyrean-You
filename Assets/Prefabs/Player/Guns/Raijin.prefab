@@ -14829,10 +14829,10 @@ MonoBehaviour:
   maxRecoil: 0.02
   APR: 0
   range: 100
-  UsesAmmunition: 0
-  UsesMaxAmmunition: 1
-  MaximumAmmo: 2000
-  MagazineSize: 0
+  UsesAmmunition: 1
+  UsesMaxAmmunition: 0
+  MaxReserveAmmo: 0
+  MaxMagazineSize: 2000
   SecondaryBulletOrigin: {fileID: 4198844615151731645}
   secondaryParticles: {fileID: 5302274224225069552}
   BulletTrail: {fileID: 3673051539837595173}

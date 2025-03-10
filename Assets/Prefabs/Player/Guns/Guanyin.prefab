@@ -10028,9 +10028,9 @@ MonoBehaviour:
   APR: 0
   range: 95
   UsesAmmunition: 1
-  UsesMaxAmmunition: 1
-  MaximumAmmo: 600
-  MagazineSize: 50
+  UsesReserveAmmunition: 1
+  MaxReserveAmmo: 500
+  MaxMagazineSize: 50
   OnHitSound: {fileID: 8300000, guid: 536fd4ff763716d4d9a975ec55c04cae, type: 3}
   ArmorHitSound: {fileID: 8300000, guid: 56146b1cbea8c5b4ba36b97aa01514be, type: 3}
   ReloadSound: {fileID: 8300000, guid: aea635b819fe8354ca988efe27f7db26, type: 3}

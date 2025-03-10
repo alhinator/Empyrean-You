@@ -25,7 +25,7 @@ public class Raijin : Gun
     {
         base.Start();
         RateOfFire = BaseRateOfFire;
-        currAmmo = MaximumAmmo;
+        currAmmo = MaxMagazineSize;
 
 
 

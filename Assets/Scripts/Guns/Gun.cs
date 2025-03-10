@@ -81,17 +81,18 @@ public abstract class Gun : Weapon
     /// </summary>
     public bool UsesAmmunition;
     /// <summary>
-    /// Indicates whether or not this weapon has a maximum pool of ammunition to draw from.
+    /// If non-reserve ammunition is used, how many shots may be fired before reloading.
     /// </summary>
-    public bool UsesMaxAmmunition;
+    public int MaxMagazineSize;
     /// <summary>
-    /// The total number of rounds that can be fired before this gun no longer fires.
+    /// Indicates whether or not this weapon has a reserve pool of ammunition to draw from.
     /// </summary>
-    public int MaximumAmmo;
+    public bool UsesReserveAmmunition;
     /// <summary>
-    /// If ammunition is used, how many shots may be fired before reloading.
+    /// The total number of rounds in reserve that can be fired before this gun no longer fires.
     /// </summary>
-    public int MagazineSize;
+    public int MaxReserveAmmo;
+    
     /// <summary>
     /// If a maximum ammunition is used, how much is left in reserve.
     /// </summary>
@@ -117,6 +118,22 @@ public abstract class Gun : Weapon
         }
         audioSource = GetComponent<AudioSource>();
     }
+
+    /// <summary>
+    /// Replenishes all current and backup ammo of weapon.
+    /// </summary>
+    public virtual void ReplenishAmmo()
+    {
+        if (this.UsesAmmunition)
+        {
+            this.currAmmo = MaxMagazineSize;
+        }
+        if (this.UsesReserveAmmunition)
+        {
+            this.CurrentReserveAmmo = MaxReserveAmmo;
+        }
+    }
+
     /// <summary>
     /// Choose a firing direction given a starting direction and spread radius.
     /// </summary>

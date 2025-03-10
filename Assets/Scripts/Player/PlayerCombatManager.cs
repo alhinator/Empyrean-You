@@ -224,6 +224,16 @@ public class PlayerCombatManager : CombatEntity
         return base.OnDamage(d);
 
     }
+    public void Heal(int amount)
+    {
+        currHP += amount;
+        currHP = Math.Clamp(currHP, 0, maxHP);
+    }
+    public void ReplenishAmmo()
+    {
+        (Weapons[0] as Gun).ReplenishAmmo();
+        (Weapons[1] as Gun).ReplenishAmmo();
+    }
 }
 
 

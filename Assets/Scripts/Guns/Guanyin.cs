@@ -17,8 +17,8 @@ public class Guanyin : Gun
     protected override void Start()
     {
         base.Start();
-        CurrentReserveAmmo = MaximumAmmo;
-        currAmmo = MagazineSize;
+        CurrentReserveAmmo = MaxReserveAmmo;
+        currAmmo = MaxMagazineSize;
     }
     void Update()
     {
@@ -109,7 +109,7 @@ public class Guanyin : Gun
     }
     public override void Reload()
     {
-        if (currAmmo < MagazineSize && CurrentReserveAmmo > 0 && !reloading)
+        if (currAmmo < MaxMagazineSize && CurrentReserveAmmo > 0 && !reloading)
         {
             reloading = true;
             StartCoroutine(DoReloading());
@@ -119,7 +119,7 @@ public class Guanyin : Gun
     {
         audioSource.PlayOneShot(ReloadSound);
         yield return new WaitForSeconds(1);
-        int difference = MagazineSize - currAmmo;
+        int difference = MaxMagazineSize - currAmmo;
         if (CurrentReserveAmmo >= difference)
         {
             CurrentReserveAmmo -= difference;
