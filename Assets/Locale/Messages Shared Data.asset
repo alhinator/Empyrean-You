@@ -55,6 +55,10 @@ MonoBehaviour:
     m_Key: tutorial.shooting2
     m_Metadata:
       m_Items: []
+  - m_Id: 4324017980936192
+    m_Key: alerts.savepoint
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

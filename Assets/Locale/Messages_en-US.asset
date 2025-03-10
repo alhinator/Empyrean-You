@@ -71,6 +71,10 @@ MonoBehaviour:
       will attempt to find a new target in that direction.
     m_Metadata:
       m_Items: []
+  - m_Id: 4324017980936192
+    m_Localized: SAVED GAME
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

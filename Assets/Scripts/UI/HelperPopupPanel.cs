@@ -67,7 +67,7 @@ public class HelperPopupPanel : MonoBehaviour
             _playerInput,
             listOfTmpSpriteAssets);
 
-        StartCoroutine(QueueInitial());
+        //StartCoroutine(QueueInitial());
 
     }
     private IEnumerator QueueInitial()
