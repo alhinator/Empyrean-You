@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 
+[RequireComponent(typeof(AudioSource))]
 /// <summary>
 /// A derived class specifically for player-held weapons.
 /// </summary>
@@ -114,6 +115,7 @@ public abstract class Gun : Weapon
         {
             gunStrings = LocalizationSettings.StringDatabase.GetTable("Guns", null);
         }
+        audioSource = GetComponent<AudioSource>();
     }
     /// <summary>
     /// Choose a firing direction given a starting direction and spread radius.

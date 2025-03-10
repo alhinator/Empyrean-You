@@ -13,7 +13,7 @@ public class PlayerPostProcessing : MonoBehaviour
     private MotionBlur blur;
     private LensDistortion fisheye;
     private ColorAdjustments grayscale;
-    private void Start()
+    private void Awake()
     {
         ingameVol = GameObject.FindGameObjectWithTag("GlobalVolume").GetComponent<Volume>();
         HUDVol = GameObject.FindGameObjectWithTag("UIVolume").GetComponent<Volume>();
@@ -62,7 +62,7 @@ public class PlayerPostProcessing : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         blur.active = false;
     }
-    private bool GrayScaleActive
+    public bool GrayScaleActive
     {
         get
         {
@@ -70,6 +70,7 @@ public class PlayerPostProcessing : MonoBehaviour
         }
         set
         {
+            Debug.Log("playerPostProc: trying to set grayscale ");
             grayscale.active = value;
         }
     }

@@ -13,6 +13,7 @@ public class Artemis : Gun
     protected override void Start()
     {
         base.Start();
+
         bulletTrail.transform.parent = null;
 
         myHudSecondaryText.text = gunStrings.GetEntry("ui.charge").Value;

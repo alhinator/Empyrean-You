@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
-[RequireComponent(typeof(AudioSource))]
 public class Raijin : Gun
 {
     [Header("Weapon Specific Properties")]
@@ -26,7 +25,6 @@ public class Raijin : Gun
     {
         base.Start();
         RateOfFire = BaseRateOfFire;
-        audioSource = GetComponent<AudioSource>();
         currAmmo = MaximumAmmo;
 
 

@@ -1,6 +1,8 @@
 
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 
@@ -8,6 +10,7 @@ public class LookInverterHelper : MonoBehaviour
 {
     public bool[] inverts;
     public float[] sens;
+    public bool grayscale;
 
     // Start is called before the first frame update
     void Start()
@@ -35,12 +38,19 @@ public class LookInverterHelper : MonoBehaviour
         inverts[1] = !value;
         ApplySettingsToCameras();
     }
-    public void SetXSens(float value){
+    public void SetXSens(float value)
+    {
         sens[0] = value;
         ApplySettingsToCameras();
     }
-        public void SetYSens(float value){
+    public void SetYSens(float value)
+    {
         sens[1] = value;
+        ApplySettingsToCameras();
+    }
+    public void SetGrayscale(bool value)
+    {
+        grayscale = value;
         ApplySettingsToCameras();
     }
 
@@ -59,10 +69,28 @@ public class LookInverterHelper : MonoBehaviour
             }
         }
         GameObject p = GameObject.FindGameObjectWithTag("Player");
-        if(p != null){p.GetComponent<Player3PCam>().SetInvertBumps(inverts);}
+        if (p != null)
+        {
+            p.GetComponent<Player3PCam>().SetInvertBumps(inverts);
+            p.GetComponent<PlayerPostProcessing>().GrayScaleActive = grayscale;
+        }
+        else
+        {
+            Debug.Log("trying to find grayscale vol manually");
+            var HUDVol = GameObject.FindGameObjectWithTag("UIVolume").GetComponent<Volume>();
+            if (HUDVol.profile.TryGet<ColorAdjustments>(out var gr))
+            {
+                gr.active = grayscale;
+            } else
+            {
+                Debug.Log("no gr");
+            }
+        }
 
     }
-    public void ApplySettingsOnSceneChange(Scene current, Scene next){
+
+    public void ApplySettingsOnSceneChange(Scene current, Scene next)
+    {
         ApplySettingsToCameras();
     }
 
