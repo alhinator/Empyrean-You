@@ -37,6 +37,12 @@ MonoBehaviour:
     - Locale-ja-JP
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f8bbf2bb1b29a046b88b885b2e531ac
+    m_Address: Messages_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 218b8ef258517804e9d2e1f9a94087e0, type: 2}
   m_SchemaSet:
