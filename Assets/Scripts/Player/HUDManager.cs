@@ -89,6 +89,10 @@ public class HUDManager : MonoBehaviour
         }
         reticle.rectTransform.localPosition = Vector3.Lerp(reticle.transform.localPosition, reticleIdealPosition, adjustedReticleSpeed);
 
+        //debug only:
+        //reticle.rectTransform.localPosition = reticleIdealPosition;
+
+
     }
 
     public void QueueAlert(string alertText, Color c, bool priority)

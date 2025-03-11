@@ -40,6 +40,7 @@ public class Player3PCam : MonoBehaviour
     public CinemachineFreeLook aerialCombatCamera;
     public CinemachineFreeLook aerialCloseCamera;
     public CinemachineBrain cinemachineBrain;
+    public CinemachineTargetGroup aerialTargets;
     public float minimumRadius;
     public float maximumRadius;
     public float minSlopeValue;
@@ -160,19 +161,19 @@ public class Player3PCam : MonoBehaviour
             if (!isGrounded && flatDist < 5)
             {
                 aerialCombatCamera.Priority = -1;
-                aerialCloseCamera.Priority = 11;
+                //aerialCloseCamera.Priority = 11;
 
             }
             else if (!isGrounded && flatDist >= 5)
             {
                 aerialCombatCamera.Priority = 11;
-                aerialCloseCamera.Priority = -1;
+                //aerialCloseCamera.Priority = -1;
 
             }
             else if (isGrounded)
             {
                 aerialCombatCamera.Priority = -1;
-                aerialCloseCamera.Priority = 10;
+                //aerialCloseCamera.Priority = 10;
             }
             combatLockCamera.Priority = isGrounded ? 11 : -1;
         }
@@ -196,9 +197,20 @@ public class Player3PCam : MonoBehaviour
 
         //Set orientation and flat orientation.
         //If not grounded, and targeting something, and very close, lerp orientation to avoid camera jerkiness.
+        //if (isGrounded)
+        //{
+        //    orientation.forward = viewDir.normalized;
+        //    orientationFlat.forward = new Vector3(orientation.forward.x, 0, orientation.forward.z);
+        //} else
+        //{
 
-        orientation.forward = viewDir.normalized;
-        orientationFlat.forward = new Vector3(orientation.forward.x, 0, orientation.forward.z);
+        //just lerp  to prevent jerkiness always lul
+            orientation.forward = Vector3.Slerp(orientation.forward, viewDir.normalized, rotationSpeed * Time.deltaTime);
+            orientationFlat.forward = new Vector3(orientation.forward.x, 0, orientation.forward.z);
+
+
+        //}
+
 
 
 
@@ -244,11 +256,11 @@ public class Player3PCam : MonoBehaviour
         //Now adjust player forward and other housekeeping based on which cameras are active
         if (currCamMode == CameraMode.Free)
         {
-            // //only adjust the player model rotation if there is a movement input or the player is off the ground.
-            // if (rawMoveInput.magnitude > 0 || !isGrounded)
-            // {
-            //     playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
-            // }
+            //only adjust the player model rotation if there is a movement input or the player is off the ground.
+            if (rawMoveInput.magnitude > 0 || !isGrounded)
+            {
+                playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
+            }
             //Updated for gun aim code: always adjust player model rotation.
             playerObj.forward = Vector3.Lerp(playerObj.forward, offset, Time.deltaTime * rotationSpeed);
         }
@@ -258,12 +270,25 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
             combatLockCamera.m_Follow = orientationFlat;
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
-            aerialCombatCamera.m_Follow = orientation;
+            if(verticalDist != Mathf.NegativeInfinity)
+            {
+                if (verticalDist <= 0) //above target
+                {
+                    aerialTargets.m_Targets[0].weight = Mathf.Lerp(aerialTargets.m_Targets[0].weight, 1, Time.deltaTime * 2); //lerp orientation to 1 weight
+                    aerialTargets.m_Targets[1].weight = Mathf.Lerp(aerialTargets.m_Targets[1].weight, 0, Time.deltaTime * 2); //lerp orientationFlat to 0 weight
+
+                } else //below target
+                {
+                    aerialTargets.m_Targets[0].weight = Mathf.Lerp(aerialTargets.m_Targets[0].weight, 0, Time.deltaTime * 2); //lerp orientation to 0 weight
+                    aerialTargets.m_Targets[1].weight = Mathf.Lerp(aerialTargets.m_Targets[1].weight, 1, Time.deltaTime * 2); //lerp orientationFlat to 1 weight
+                }
+
+            }
             aerialCloseCamera.m_Follow = playerObj;
             if (!cinemachineBrain.IsBlending && timeInLockedCam >= 0.5f)
             {
-                unlockLookCamera.m_XAxis.Value = orientationFlat.localEulerAngles.y;
-                unlockLookCamera.m_YAxis.Value = 0.5f;
+                unlockLookCamera.m_XAxis.Value = orientationFlat.localEulerAngles.y - 45f;
+                //unlockLookCamera.m_YAxis.Value = 0.5f;
             }
 
 
@@ -306,6 +331,7 @@ public class Player3PCam : MonoBehaviour
         Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
 
         int i = 0;
+        float idealAerialHeight = verticalDist > 10 ? -2 : verticalDist > 1 ? 0 : 1.5f;
 
         foreach (var orbeez in combatLockCamera.m_Orbits)
         {
@@ -313,12 +339,13 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.m_Orbits[i].m_Radius = Mathf.Lerp(currRad, idealRadius, 0.1f * Time.deltaTime);
             //And adjust close camera
 
-            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius * 2, Time.deltaTime);
-            aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 1.5f, rotationSpeed * Time.deltaTime);
-            combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 2, rotationSpeed * Time.deltaTime);
-            aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 4, rotationSpeed * Time.deltaTime);
+            aerialCloseCamera.m_Orbits[i].m_Radius = Mathf.Lerp(aerialCloseCamera.m_Orbits[i].m_Radius, idealRadius, Time.deltaTime);
+            //aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCloseCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 1.5f, rotationSpeed * Time.deltaTime);
+            //combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(combatLockCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 2, rotationSpeed * Time.deltaTime);
+            //aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y = Mathf.Lerp(aerialCombatCamera.GetRig(i).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.y, (here.y - tg.y) / 4, rotationSpeed * Time.deltaTime);
 
 
+            aerialCombatCamera.m_Orbits[i].m_Height = Mathf.Lerp(aerialCombatCamera.m_Orbits[i].m_Height, idealAerialHeight, Time.deltaTime * 3f);
 
 
             i++;
@@ -750,6 +777,16 @@ public class Player3PCam : MonoBehaviour
             Vector3 tg = currentTargetLock.position;
             Vector3 here = player.transform.position;
             return Vector2.Distance(new(tg.x, tg.z), new(here.x, here.z));
+        }
+    }
+    private float verticalDist
+    {
+        get
+        {
+            if (!currentTargetLock) { return Mathf.NegativeInfinity; }
+            Vector3 tg = currentTargetLock.position;
+            Vector3 here = player.transform.position;
+            return tg.y - here.y;
         }
     }
 
