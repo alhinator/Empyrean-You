@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -22,6 +23,7 @@ public class PlayerCombatManager : CombatEntity
 
     [SerializeField] public GameObject[] WeaponPrefabs;
     [SerializeField] private GameObject HitmarkerText;
+    public Vector3 lastSavePoint;
 
     [Header("AimPoint stuff")]
     public Transform aimPoint;
@@ -54,6 +56,11 @@ public class PlayerCombatManager : CombatEntity
             AssignFrame(Frames.ITZI);
         }
 
+
+    }
+    private void Start()
+    {
+        lastSavePoint = transform.position;
     }
     void Update()
     {
@@ -215,6 +222,7 @@ public class PlayerCombatManager : CombatEntity
     {
         var fx = GetComponent<PlayerDeathFX>();
         fx.DoDeathEffects();
+        StartCoroutine(DoDeathStuff());
         return base.OnDeath(d);
 
     }
@@ -233,6 +241,17 @@ public class PlayerCombatManager : CombatEntity
     {
         (Weapons[0] as Gun).ReplenishAmmo();
         (Weapons[1] as Gun).ReplenishAmmo();
+    }
+    private IEnumerator DoDeathStuff()
+    {
+        Hud.Blackout();
+        yield return new WaitForSecondsRealtime(2);
+        player3PCam.SendMeToSomewhere(lastSavePoint);
+        Heal((int)maxHP);
+        ReplenishAmmo();
+        yield return new WaitForSecondsRealtime(1);
+
+        Hud.LightsUp();
     }
 }
 

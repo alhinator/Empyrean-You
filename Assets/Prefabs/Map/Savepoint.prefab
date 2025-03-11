@@ -396,6 +396,7 @@ Transform:
   - {fileID: 5198325722608508371}
   - {fileID: 7804778561062334448}
   - {fileID: 6081628641662566607}
+  - {fileID: 3098259613679703214}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4050740064047972251
@@ -433,6 +434,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOneWay: 1
   door: {fileID: 9695862229150864}
+  pointToRespawnAt: {fileID: 3098259613679703214}
 --- !u!1 &322687467699869265
 GameObject:
   m_ObjectHideFlags: 0
@@ -7474,17 +7476,9 @@ MonoBehaviour:
   m_Mesh: {fileID: 0}
   m_VersionIndex: 3338
   m_IsSelectable: 1
-  m_SelectedFaces: 05000000
-  m_SelectedEdges:
-  - a: 20
-    b: 21
-  - a: 22
-    b: 20
-  - a: 21
-    b: 23
-  - a: 23
-    b: 22
-  m_SelectedVertices: 14000000150000001600000017000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!114 &561082639086663755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8188,17 +8182,9 @@ MonoBehaviour:
   m_Mesh: {fileID: 0}
   m_VersionIndex: 3376
   m_IsSelectable: 1
-  m_SelectedFaces: 02000000
-  m_SelectedEdges:
-  - a: 8
-    b: 9
-  - a: 10
-    b: 8
-  - a: 9
-    b: 11
-  - a: 11
-    b: 10
-  m_SelectedVertices: 08000000090000000a0000000b000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!114 &666419219713204066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8299,6 +8285,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!1 &6373001699946708324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3098259613679703214}
+  m_Layer: 17
+  m_Name: point to respawn at
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3098259613679703214
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6373001699946708324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.5, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2435424715493240294}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8358029844022994737
 GameObject:
   m_ObjectHideFlags: 0

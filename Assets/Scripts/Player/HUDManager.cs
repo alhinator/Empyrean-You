@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -63,7 +62,7 @@ public class HUDManager : MonoBehaviour
         if (timeSinceAlert > 3) { ClearAlerts(); }
 
         //set alpha of everythign blocker
-        float new_alpha = Mathf.MoveTowards(everythingBlocker.color.a, idealBlockerOpacity, Time.deltaTime/5);
+        float new_alpha = Mathf.MoveTowards(everythingBlocker.color.a, idealBlockerOpacity, Time.unscaledDeltaTime);
         everythingBlocker.color = new Color(everythingBlocker.color.r, everythingBlocker.color.g, everythingBlocker.color.b, new_alpha);
     }
 

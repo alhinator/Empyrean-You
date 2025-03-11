@@ -23,7 +23,7 @@ public class TutorialObserver : EnemiesKilledCondition
     private IEnumerator NextCoroutine()
     {
         yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("TutorialLevel");
+        SceneManager.LoadScene("Petrichor");
 
         //mayube do a save game here again too?
     }

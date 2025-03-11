@@ -41,6 +41,7 @@ public class Player3PCam : MonoBehaviour
     public CinemachineFreeLook aerialCloseCamera;
     public CinemachineBrain cinemachineBrain;
     public CinemachineTargetGroup aerialTargets;
+    public CinemachineTargetGroup groundedTargets;
     public float minimumRadius;
     public float maximumRadius;
     public float minSlopeValue;
@@ -270,20 +271,7 @@ public class Player3PCam : MonoBehaviour
             combatLockCamera.m_RecenterToTargetHeading.m_enabled = true;
             combatLockCamera.m_Follow = orientationFlat;
             aerialCombatCamera.m_RecenterToTargetHeading.m_enabled = true;
-            if(verticalDist != Mathf.NegativeInfinity)
-            {
-                if (verticalDist <= 0) //above target
-                {
-                    aerialTargets.m_Targets[0].weight = Mathf.Lerp(aerialTargets.m_Targets[0].weight, 1, Time.deltaTime * 2); //lerp orientation to 1 weight
-                    aerialTargets.m_Targets[1].weight = Mathf.Lerp(aerialTargets.m_Targets[1].weight, 0, Time.deltaTime * 2); //lerp orientationFlat to 0 weight
-
-                } else //below target
-                {
-                    aerialTargets.m_Targets[0].weight = Mathf.Lerp(aerialTargets.m_Targets[0].weight, 0, Time.deltaTime * 2); //lerp orientation to 0 weight
-                    aerialTargets.m_Targets[1].weight = Mathf.Lerp(aerialTargets.m_Targets[1].weight, 1, Time.deltaTime * 2); //lerp orientationFlat to 1 weight
-                }
-
-            }
+            
             aerialCloseCamera.m_Follow = playerObj;
             if (!cinemachineBrain.IsBlending && timeInLockedCam >= 0.5f)
             {
@@ -306,7 +294,21 @@ public class Player3PCam : MonoBehaviour
 
     private void AdjustCameraOrbit()
     {
+        if (verticalDist != Mathf.NegativeInfinity)
+        {
+            if (verticalDist <= 0 && currentTargetLock != null) //above target
+            {
+                aerialTargets.m_Targets[0].weight = Mathf.Lerp(aerialTargets.m_Targets[0].weight, 1, Time.deltaTime * 2); //lerp orientation to 1 weight
+                aerialTargets.m_Targets[1].weight = Mathf.Lerp(aerialTargets.m_Targets[1].weight, 0, Time.deltaTime * 2); //lerp orientationFlat to 0 weight
 
+            }
+            else //below target
+            {
+                aerialTargets.m_Targets[0].weight = Mathf.Lerp(aerialTargets.m_Targets[0].weight, 0, Time.deltaTime * 2); //lerp orientation to 0 weight
+                aerialTargets.m_Targets[1].weight = Mathf.Lerp(aerialTargets.m_Targets[1].weight, 1, Time.deltaTime * 2); //lerp orientationFlat to 1 weight
+            }
+
+        }
         //Adjust camera orbit if the radio between player-height-target-height-distance is high. AND the player is grounded.
         Vector3 tg = actualLookPosition.position;
         Vector3 here = player.transform.position;
@@ -706,6 +708,11 @@ public class Player3PCam : MonoBehaviour
     public void OnDebugReset()
     {
         rb.position = GameObject.FindWithTag("SpawnPoint").transform.position;
+        rb.velocity = Vector3.zero;
+    }
+    public void SendMeToSomewhere(Vector3 pos)
+    {
+        rb.position = pos;
         rb.velocity = Vector3.zero;
     }
 

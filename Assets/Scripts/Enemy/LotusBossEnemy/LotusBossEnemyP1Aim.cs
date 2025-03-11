@@ -16,8 +16,6 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
     private bool hiBeams;
 
     private Vector3 delayedAimPos;
-    bool startedAudio = false;
-
     public override void OnEnter()
     {
         base.OnEnter();

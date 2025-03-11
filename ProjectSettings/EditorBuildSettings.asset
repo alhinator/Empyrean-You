@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/old/PlaytestScene.unity
     guid: a63141ce495460d4aadaa3013db6b919
   - enabled: 1
-    path: Assets/Scenes/TutorialLevel.unity
+    path: Assets/Scenes/Petrichor.unity
     guid: 0262c0de771397f4e91e7a169930f9df
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 7018a0bd455d1f646a34dc813232898e, type: 2}

@@ -12,6 +12,7 @@ public class Savepoint : MonoBehaviour
     private Vector3 openPos = new Vector3(-1.25f, -3, -4.1f);
     private Vector3 closedPos = new Vector3(-1.25f, -0.2f, -4.1f);
     private static StringTable messages;
+    [SerializeField] private Transform pointToRespawnAt;
 
     private void Start()
     {
@@ -41,7 +42,9 @@ public class Savepoint : MonoBehaviour
             player.ReplenishAmmo();
             var pl_hud = other.GetComponent<HUDManager>();
             pl_hud.QueueAlert(messages.GetEntry("alerts.savepoint").Value, Color.green, false);
-            //do game saving stuff here aly
+            //do game saving stuff here aly this is placeholder
+            player.lastSavePoint = pointToRespawnAt.position;
+
         }
     }
 

@@ -15,7 +15,7 @@ public class PlayerDeathFX : MonoBehaviour
     public void DoDeathEffects()
     {
         StartCoroutine(LerpDownTime());
-        //DeathExplosion.Play();
+        DeathExplosion.Play();
     }
     private IEnumerator LerpDownTime()
     {
@@ -26,9 +26,11 @@ public class PlayerDeathFX : MonoBehaviour
             yield return new WaitForSecondsRealtime(timeStep);
             Time.timeScale -= timeStep;
         }
+        yield return new WaitForSecondsRealtime(1);
+        DeathExplosion.Clear();
+        yield return new WaitForSecondsRealtime(1);
+
         Time.timeScale = 1;
-        yield return new WaitForSecondsRealtime(3);
-        Application.Quit();
 
     }
 }
