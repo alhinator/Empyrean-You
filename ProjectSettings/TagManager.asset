@@ -19,6 +19,7 @@ TagManager:
   - BossDebug
   - GlobalVolume
   - UIVolume
+  - EverythingBlocker
   layers:
   - Default
   - TransparentFX

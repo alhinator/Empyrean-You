@@ -159,8 +159,9 @@ public class RingEnemy : Enemy
         Debug.Log("my name is " + transform.name + " and i just died");
         Destroy(aimParticles);
         Destroy(fireParticles, fireParticles.main.duration);
+        deathParticles.transform.position = transform.position;
         deathParticles.Play();
-        Destroy(deathParticles, deathParticles.main.duration);
+        Destroy(deathParticles, deathParticles.main.startLifetime.constantMax + deathParticles.main.duration);
 
         audioSource.transform.parent = null;
         audioSource.Stop();

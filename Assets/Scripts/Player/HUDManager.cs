@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -19,6 +20,9 @@ public class HUDManager : MonoBehaviour
     public TMP_Text AlertBar;
     private float timeSinceAlert;
 
+    private Image everythingBlocker;
+    private float idealBlockerOpacity = 0f;
+
     [Header("Reticle Variables")]
     public float reticleSpeed;
     public Image reticle;
@@ -28,6 +32,12 @@ public class HUDManager : MonoBehaviour
     private Queue<Color> notificationQueueColors;
     void Start()
     {
+        everythingBlocker = GameObject.FindGameObjectWithTag("EverythingBlocker").GetComponent<Image>();
+        //set opacity manually to 1 so that we get a fade-in
+        everythingBlocker.color = new Color(everythingBlocker.color.r, everythingBlocker.color.g, everythingBlocker.color.b, 1);
+        LightsUp();
+
+
         notificationQueue = new();
         notificationQueueColors = new();
         ClearAlerts();
@@ -51,6 +61,10 @@ public class HUDManager : MonoBehaviour
         MoveReticle();
         timeSinceAlert += Time.deltaTime;
         if (timeSinceAlert > 3) { ClearAlerts(); }
+
+        //set alpha of everythign blocker
+        float new_alpha = Mathf.MoveTowards(everythingBlocker.color.a, idealBlockerOpacity, Time.deltaTime/5);
+        everythingBlocker.color = new Color(everythingBlocker.color.r, everythingBlocker.color.g, everythingBlocker.color.b, new_alpha);
     }
 
     private void UpdateBasicHudText()
@@ -137,5 +151,14 @@ public class HUDManager : MonoBehaviour
     private void TrackActions(object obj, InputActionChange change)
     {
         helperPopupPanel.TrackActions(obj, change);
+    }
+
+    public void Blackout()
+    {
+        idealBlockerOpacity = 1f;
+    }
+    public void LightsUp()
+    {
+        idealBlockerOpacity = 0f;
     }
 }

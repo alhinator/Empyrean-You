@@ -35,8 +35,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 43201415188480
-    m_Localized: Use {Fire1} and {Fire2} to shoot. Your mech can lock on and aim
+    m_Localized: 'Use {Fire1} and {Fire2} to shoot. Your mech can lock on and aim
       at a target by pressing {CameraLock} when it is in range of your weapons.
+
+      Try
+      destroying the three targets on the far wall.'
     m_Metadata:
       m_Items: []
   - m_Id: 80781078794240
@@ -73,6 +76,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4324017980936192
     m_Localized: SAVED GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4483664964587520
+    m_Localized: ... Uplink complete. Welcome to your new body, child. Before you
+      ascend to the surface world, take some time to become accustomed to the changes
+      you've undergone.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4484930050560000
+    m_Localized: Some structures are destructible, but cannot be locked onto. Destroy
+      the fragile wall and proceed down the hallway to the SAVE POINT.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4485893905813504
+    m_Localized: Beyond this point is a simulacrum chamber containing a captured
+      Angel. Proceed, and destroy it. Prove you are capable of survival on the surface.
     m_Metadata:
       m_Items: []
   references:
