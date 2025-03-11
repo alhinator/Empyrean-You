@@ -27,6 +27,11 @@ public class DamageInstance
                 bool confirmed = Target.OnDeath(this);
                 if (confirmed)
                 {
+                    if (Target is Enemy enemy) {
+                        foreach (var enemyObserver in enemy.Observers) {
+                            enemyObserver.OnEnemyKilled(enemy);
+                        }
+                    }
                     Source.OnKill(this);
                 }
             }

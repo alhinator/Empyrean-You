@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityHFSM;
 
-public class LotusBossEnemy : CombatEntity
+public class LotusBossEnemy : Enemy
 {
 
     private StateMachine<LotusBossEnemyState, LotusBossEnemyEvent> _stateMachine;
@@ -41,7 +41,7 @@ public class LotusBossEnemy : CombatEntity
     {
         this.InitStateMachineStates();
     }
-    private void Start()
+    public override void Start()
     {
         this._player = GameObject.FindGameObjectWithTag("Player");
 

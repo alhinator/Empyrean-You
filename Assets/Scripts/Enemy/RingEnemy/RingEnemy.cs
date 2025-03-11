@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityHFSM;
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(SphereCollider))]
-public class RingEnemy : CombatEntity
+public class RingEnemy : Enemy
 {
     [Header("References")]
     public GameObject _player;
@@ -69,8 +69,9 @@ public class RingEnemy : CombatEntity
 
 
 
-    void Start()
-    {
+    public override void Start() {
+        base.Start();
+        
         this.rb = this.GetComponent<Rigidbody>();
         this.hitbox = this.GetComponent<SphereCollider>();
 
