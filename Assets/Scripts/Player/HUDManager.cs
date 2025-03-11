@@ -21,6 +21,7 @@ public class HUDManager : MonoBehaviour
 
     private Image everythingBlocker;
     private float idealBlockerOpacity = 0f;
+    public Image enemyHPBack, enemyHPFore;
 
     [Header("Reticle Variables")]
     public float reticleSpeed;
@@ -64,6 +65,19 @@ public class HUDManager : MonoBehaviour
         //set alpha of everythign blocker
         float new_alpha = Mathf.MoveTowards(everythingBlocker.color.a, idealBlockerOpacity, Time.unscaledDeltaTime);
         everythingBlocker.color = new Color(everythingBlocker.color.r, everythingBlocker.color.g, everythingBlocker.color.b, new_alpha);
+
+        if(player3PCam.currentTargetLock != null)
+        {
+            enemyHPBack.enabled = true;
+            enemyHPFore.enabled = true;
+            var en = player3PCam.currentTargetLock.GetComponent<TargetPoint>().owner.GetComponent<CombatEntity>();
+            float sc = en.CurrentHP / en.MaximumHP;
+            enemyHPFore.transform.localScale = new Vector3(sc, 1, 1);
+        } else
+        {
+            enemyHPBack.enabled = false;
+            enemyHPFore.enabled = false;
+        }
     }
 
     private void UpdateBasicHudText()

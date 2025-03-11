@@ -10697,6 +10697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac450ccf7bc8264b945618db5b1fa20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 7917630519961686193}
 --- !u!135 &5958860347633304585
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -16241,8 +16242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3591b4a590ab4f06832e5bc79fcea00b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 5000
-  currHP: 5000
+  maxHP: 6000
+  currHP: 6000
   _player: {fileID: 0}
   animator: {fileID: 0}
   Petals:

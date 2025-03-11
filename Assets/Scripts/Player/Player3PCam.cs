@@ -333,7 +333,7 @@ public class Player3PCam : MonoBehaviour
         Mathf.Clamp(idealRadius, minimumRadius, maximumRadius);
 
         int i = 0;
-        float idealAerialHeight = verticalDist > 10 ? -2 : verticalDist > 1 ? 0 : 1.5f;
+        float idealAerialHeight = verticalDist > 10 && flatDist < 10 ? -2 : 1.5f;
 
         foreach (var orbeez in combatLockCamera.m_Orbits)
         {
