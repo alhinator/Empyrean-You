@@ -29,6 +29,7 @@ public class LotusBossEnemyP1Attack : EnemyState<LotusBossEnemy, LotusBossEnemyS
         Enemy.CentralCharger.Play();
         Enemy.FireParticlesOuter.Play();
         Enemy.FireParticlesInner.Play();
+        Enemy.audioSource.PlayOneShot(Enemy.lotusFire);
         TimeShooting = 0;
     }
     public override void OnExit()

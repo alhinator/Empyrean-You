@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 [RequireComponent(typeof(TMP_Text))]

@@ -1,6 +1,5 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityHFSM;
 
 public class LotusBossEnemy : Enemy
@@ -17,6 +16,10 @@ public class LotusBossEnemy : Enemy
     public ParticleSystem CentralCharger;
     public ParticleSystem FireParticlesOuter;
     public ParticleSystem FireParticlesInner;
+    public AudioSource audioSource;
+    [Header("Audio")]
+    public AudioClip lotusAwake;
+    public AudioClip lotusCharge, lotusFire, lotusEnrage;
 
     [Header("Vision")]
     public bool isInLoS = false;
@@ -40,6 +43,7 @@ public class LotusBossEnemy : Enemy
     private void Awake()
     {
         this.InitStateMachineStates();
+        this.audioSource = GetComponent<AudioSource>();
     }
     public override void Start()
     {

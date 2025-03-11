@@ -16,6 +16,7 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
     private bool hiBeams;
 
     private Vector3 delayedAimPos;
+    bool startedAudio = false;
 
     public override void OnEnter()
     {
@@ -28,6 +29,7 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
         last = 0;
         hiBeams = false;
         delayedAimPos = Enemy.lastSeenPosition;
+
     }
     public override void OnExit()
     {
@@ -38,6 +40,7 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
         {
             p.aimParticles.enabled = false;
         }
+        Enemy.audioSource.Stop();
     }
 
 
@@ -57,7 +60,7 @@ public class LotusBossEnemyP1Aim : EnemyState<LotusBossEnemy, LotusBossEnemyStat
         if (TimeInAim > TimeToStartCharging)
         {
             DoPetalChargeEffects();
-            if (!Enemy.CentralCharger.isPlaying) { Enemy.CentralCharger.Play(); }
+            if (!Enemy.CentralCharger.isPlaying) { Enemy.CentralCharger.Play(); Enemy.audioSource.PlayOneShot(Enemy.lotusCharge); }
         }
     }
     private void DoPetalChargeEffects()
