@@ -94,6 +94,12 @@ MonoBehaviour:
       Angel. Proceed, and destroy it. Prove you are capable of survival on the surface.
     m_Metadata:
       m_Items: []
+  - m_Id: 4486124378624000
+    m_Localized: ' Move {Move}   Look {Look}  Lock Aim {CameraLock}   Jump {Jump}  
+      Hover (hold) {Hover}   Sprint (hold) {Sprint}   Dash {Dodge}   Left Hand {Fire1}  
+      Right Hand {Fire2}   Interact {DismissPopup}'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

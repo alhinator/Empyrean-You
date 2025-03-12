@@ -10,6 +10,7 @@ public class HUDManager : MonoBehaviour
     public Player3PCam player3PCam;
     public PlayerCombatManager playerCombatManager;
     [SerializeField] HelperPopupPanel helperPopupPanel;
+    [SerializeField] ControlHelperPanel ControlPopup;
     public Camera mainCamera;
     public Canvas staticPlayerHud;
     public TMP_Text BoostBar;
@@ -164,6 +165,12 @@ public class HUDManager : MonoBehaviour
     private void TrackActions(object obj, InputActionChange change)
     {
         helperPopupPanel.TrackActions(obj, change);
+        ControlPopup.TrackActions(obj, change);
+    }
+    public void OnDeviceChange()
+    {
+        var _playerInput = GetComponent<PlayerInput>();
+        Debug.Log(_playerInput.currentControlScheme);
     }
 
     public void Blackout()

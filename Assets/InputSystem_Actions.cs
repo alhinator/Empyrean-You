@@ -46,6 +46,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""CameraLock"",
+                    ""type"": ""Button"",
+                    ""id"": ""596b1387-0e5f-42c7-ad85-92e087a2a347"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""cdafb2ed-7b59-4593-b408-568fac28703a"",
@@ -76,15 +85,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Dodge"",
                     ""type"": ""Button"",
                     ""id"": ""140b6feb-5989-48e7-b14d-51647137eb24"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""CameraLock"",
-                    ""type"": ""Button"",
-                    ""id"": ""596b1387-0e5f-42c7-ad85-92e087a2a347"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -134,11 +134,29 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""25b9cae5-845d-4190-bb28-f8350f6cd022"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ViewControls"",
+                    ""type"": ""Button"",
+                    ""id"": ""50a2ceef-4c93-4b0e-9ddf-8931f1ed7827"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""Composite"",
+                    ""name"": ""KeyboardComposite"",
                     ""id"": ""682bf2c2-661e-40b7-b193-23e38a820a36"",
                     ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",
@@ -198,7 +216,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone,NormalizeVector2"",
-                    ""groups"": "";Keyboard&Mouse;Gamepad"",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -209,7 +227,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": ""InvertVector2(invertX=false,invertY=false),ScaleVector2(x=0.02,y=0.02)"",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -220,7 +238,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": ""StickDeadzone,InvertVector2(invertX=false,invertY=false)"",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -231,7 +249,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -242,7 +260,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -253,7 +271,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -264,7 +282,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -275,7 +293,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": ""Tap"",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -286,7 +304,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": ""Tap"",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -297,7 +315,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""CameraLock"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -308,7 +326,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""CameraLock"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -319,7 +337,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Fire1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -330,7 +348,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Fire1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -341,7 +359,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Fire2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -352,7 +370,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Fire2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -363,7 +381,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -374,7 +392,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -385,7 +403,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Hover"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -394,9 +412,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""e1c251d8-db79-4486-be41-d8c344ad48ff"",
                     ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": ""MultiTap"",
+                    ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Hover"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -407,7 +425,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""DebugReset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -418,7 +436,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""DebugReset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -429,7 +447,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""DismissPopup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -440,8 +458,52 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""DismissPopup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e606f4e-1330-4bcc-9e49-5b6f2dea68f5"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""56e74837-4ee5-4d2a-bfe6-c115aae67e31"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f349491e-e597-4eeb-9b9d-d720395e25c4"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ViewControls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3de57937-3dff-40aa-bdcb-5f21246e5303"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""ViewControls"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1007,39 +1069,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""isOR"": false
                 }
             ]
-        },
-        {
-            ""name"": ""Touch"",
-            ""bindingGroup"": ""Touch"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Touchscreen>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Joystick"",
-            ""bindingGroup"": ""Joystick"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Joystick>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""XR"",
-            ""bindingGroup"": ""XR"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<XRController>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
         }
     ]
 }");
@@ -1047,16 +1076,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Ingame = asset.FindActionMap("Ingame", throwIfNotFound: true);
         m_Ingame_Move = m_Ingame.FindAction("Move", throwIfNotFound: true);
         m_Ingame_Look = m_Ingame.FindAction("Look", throwIfNotFound: true);
+        m_Ingame_CameraLock = m_Ingame.FindAction("CameraLock", throwIfNotFound: true);
         m_Ingame_Jump = m_Ingame.FindAction("Jump", throwIfNotFound: true);
         m_Ingame_Hover = m_Ingame.FindAction("Hover", throwIfNotFound: true);
         m_Ingame_Sprint = m_Ingame.FindAction("Sprint", throwIfNotFound: true);
         m_Ingame_Dodge = m_Ingame.FindAction("Dodge", throwIfNotFound: true);
-        m_Ingame_CameraLock = m_Ingame.FindAction("CameraLock", throwIfNotFound: true);
         m_Ingame_Fire1 = m_Ingame.FindAction("Fire1", throwIfNotFound: true);
         m_Ingame_Fire2 = m_Ingame.FindAction("Fire2", throwIfNotFound: true);
         m_Ingame_Reload = m_Ingame.FindAction("Reload", throwIfNotFound: true);
         m_Ingame_DebugReset = m_Ingame.FindAction("DebugReset", throwIfNotFound: true);
         m_Ingame_DismissPopup = m_Ingame.FindAction("DismissPopup", throwIfNotFound: true);
+        m_Ingame_Pause = m_Ingame.FindAction("Pause", throwIfNotFound: true);
+        m_Ingame_ViewControls = m_Ingame.FindAction("ViewControls", throwIfNotFound: true);
         // CustomUI
         m_CustomUI = asset.FindActionMap("CustomUI", throwIfNotFound: true);
         m_CustomUI_Navigate = m_CustomUI.FindAction("Navigate", throwIfNotFound: true);
@@ -1138,32 +1169,36 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private List<IIngameActions> m_IngameActionsCallbackInterfaces = new List<IIngameActions>();
     private readonly InputAction m_Ingame_Move;
     private readonly InputAction m_Ingame_Look;
+    private readonly InputAction m_Ingame_CameraLock;
     private readonly InputAction m_Ingame_Jump;
     private readonly InputAction m_Ingame_Hover;
     private readonly InputAction m_Ingame_Sprint;
     private readonly InputAction m_Ingame_Dodge;
-    private readonly InputAction m_Ingame_CameraLock;
     private readonly InputAction m_Ingame_Fire1;
     private readonly InputAction m_Ingame_Fire2;
     private readonly InputAction m_Ingame_Reload;
     private readonly InputAction m_Ingame_DebugReset;
     private readonly InputAction m_Ingame_DismissPopup;
+    private readonly InputAction m_Ingame_Pause;
+    private readonly InputAction m_Ingame_ViewControls;
     public struct IngameActions
     {
         private @InputSystem_Actions m_Wrapper;
         public IngameActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Ingame_Move;
         public InputAction @Look => m_Wrapper.m_Ingame_Look;
+        public InputAction @CameraLock => m_Wrapper.m_Ingame_CameraLock;
         public InputAction @Jump => m_Wrapper.m_Ingame_Jump;
         public InputAction @Hover => m_Wrapper.m_Ingame_Hover;
         public InputAction @Sprint => m_Wrapper.m_Ingame_Sprint;
         public InputAction @Dodge => m_Wrapper.m_Ingame_Dodge;
-        public InputAction @CameraLock => m_Wrapper.m_Ingame_CameraLock;
         public InputAction @Fire1 => m_Wrapper.m_Ingame_Fire1;
         public InputAction @Fire2 => m_Wrapper.m_Ingame_Fire2;
         public InputAction @Reload => m_Wrapper.m_Ingame_Reload;
         public InputAction @DebugReset => m_Wrapper.m_Ingame_DebugReset;
         public InputAction @DismissPopup => m_Wrapper.m_Ingame_DismissPopup;
+        public InputAction @Pause => m_Wrapper.m_Ingame_Pause;
+        public InputAction @ViewControls => m_Wrapper.m_Ingame_ViewControls;
         public InputActionMap Get() { return m_Wrapper.m_Ingame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1179,6 +1214,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @CameraLock.started += instance.OnCameraLock;
+            @CameraLock.performed += instance.OnCameraLock;
+            @CameraLock.canceled += instance.OnCameraLock;
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
@@ -1191,9 +1229,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Dodge.started += instance.OnDodge;
             @Dodge.performed += instance.OnDodge;
             @Dodge.canceled += instance.OnDodge;
-            @CameraLock.started += instance.OnCameraLock;
-            @CameraLock.performed += instance.OnCameraLock;
-            @CameraLock.canceled += instance.OnCameraLock;
             @Fire1.started += instance.OnFire1;
             @Fire1.performed += instance.OnFire1;
             @Fire1.canceled += instance.OnFire1;
@@ -1209,6 +1244,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @DismissPopup.started += instance.OnDismissPopup;
             @DismissPopup.performed += instance.OnDismissPopup;
             @DismissPopup.canceled += instance.OnDismissPopup;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @ViewControls.started += instance.OnViewControls;
+            @ViewControls.performed += instance.OnViewControls;
+            @ViewControls.canceled += instance.OnViewControls;
         }
 
         private void UnregisterCallbacks(IIngameActions instance)
@@ -1219,6 +1260,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @CameraLock.started -= instance.OnCameraLock;
+            @CameraLock.performed -= instance.OnCameraLock;
+            @CameraLock.canceled -= instance.OnCameraLock;
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
@@ -1231,9 +1275,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Dodge.started -= instance.OnDodge;
             @Dodge.performed -= instance.OnDodge;
             @Dodge.canceled -= instance.OnDodge;
-            @CameraLock.started -= instance.OnCameraLock;
-            @CameraLock.performed -= instance.OnCameraLock;
-            @CameraLock.canceled -= instance.OnCameraLock;
             @Fire1.started -= instance.OnFire1;
             @Fire1.performed -= instance.OnFire1;
             @Fire1.canceled -= instance.OnFire1;
@@ -1249,6 +1290,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @DismissPopup.started -= instance.OnDismissPopup;
             @DismissPopup.performed -= instance.OnDismissPopup;
             @DismissPopup.canceled -= instance.OnDismissPopup;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @ViewControls.started -= instance.OnViewControls;
+            @ViewControls.performed -= instance.OnViewControls;
+            @ViewControls.canceled -= instance.OnViewControls;
         }
 
         public void RemoveCallbacks(IIngameActions instance)
@@ -1402,47 +1449,22 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_GamepadSchemeIndex];
         }
     }
-    private int m_TouchSchemeIndex = -1;
-    public InputControlScheme TouchScheme
-    {
-        get
-        {
-            if (m_TouchSchemeIndex == -1) m_TouchSchemeIndex = asset.FindControlSchemeIndex("Touch");
-            return asset.controlSchemes[m_TouchSchemeIndex];
-        }
-    }
-    private int m_JoystickSchemeIndex = -1;
-    public InputControlScheme JoystickScheme
-    {
-        get
-        {
-            if (m_JoystickSchemeIndex == -1) m_JoystickSchemeIndex = asset.FindControlSchemeIndex("Joystick");
-            return asset.controlSchemes[m_JoystickSchemeIndex];
-        }
-    }
-    private int m_XRSchemeIndex = -1;
-    public InputControlScheme XRScheme
-    {
-        get
-        {
-            if (m_XRSchemeIndex == -1) m_XRSchemeIndex = asset.FindControlSchemeIndex("XR");
-            return asset.controlSchemes[m_XRSchemeIndex];
-        }
-    }
     public interface IIngameActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnCameraLock(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnHover(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
-        void OnCameraLock(InputAction.CallbackContext context);
         void OnFire1(InputAction.CallbackContext context);
         void OnFire2(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnDebugReset(InputAction.CallbackContext context);
         void OnDismissPopup(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+        void OnViewControls(InputAction.CallbackContext context);
     }
     public interface ICustomUIActions
     {

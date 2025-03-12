@@ -5,7 +5,7 @@ using UnityHFSM;
 public class RingEnemyLockon : EnemyState<RingEnemy, RingEnemyState, RingEnemyEvent>
 {
     public RingEnemyLockon(RingEnemy enemy) : base(enemy) { }
-    private const float AimDelay = 0.5f;
+    private const float AimDelay = 0.25f;
     private float TimeTillShoot;
     private bool isDone;
 

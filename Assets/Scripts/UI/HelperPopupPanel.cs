@@ -21,6 +21,7 @@ public class HelperPopupPanel : MonoBehaviour
     [SerializeField] Vector2 OnScreenPos, OffScreenPos;
 
     [SerializeField] TMP_Text messageText, dismissText;
+    private string currentOriginalMessage;
     [SerializeField] ListOfTmpSpriteAssets listOfTmpSpriteAssets;
 
     Queue<string> AlertList;
@@ -42,13 +43,27 @@ public class HelperPopupPanel : MonoBehaviour
         {
             InputAction inputAction = (InputAction)obj;
             InputControl activeControl = inputAction.activeControl;
+            var last = activeDevice;
             if (activeControl.device is Keyboard)
+            {
+                activeDevice = InputBindingHelper.DeviceType.Keyboard;
+            }
+            if (activeControl.device is Mouse)
             {
                 activeDevice = InputBindingHelper.DeviceType.Keyboard;
             }
             if (activeControl.device is Gamepad)
             {
                 activeDevice = InputBindingHelper.DeviceType.Gamepad;
+            }
+
+            if (activeControl.device is Keyboard || activeControl.device is Mouse && last == InputBindingHelper.DeviceType.Gamepad
+                || (activeControl.device is Gamepad && last == InputBindingHelper.DeviceType.Keyboard))
+            { //input device different than previous active device? swap the text. hardcoded for now
+                //Debug.Log("In track actions last is different!");
+                //Debug.Log(activeDevice);
+                messageText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(currentOriginalMessage, activeDevice, _playerInput, listOfTmpSpriteAssets);
+                dismissText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(msgStrings.GetEntry("ui.dismiss").Value, activeDevice, _playerInput, listOfTmpSpriteAssets);
             }
         }
     }
@@ -121,6 +136,7 @@ public class HelperPopupPanel : MonoBehaviour
             //missing sprite asset for this device type.
             return;
         }
+        currentOriginalMessage = message;
         messageText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(message, activeDevice, _playerInput, listOfTmpSpriteAssets);
     }
 

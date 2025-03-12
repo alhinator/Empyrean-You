@@ -1,12 +1,17 @@
 //Code taken & modified from https://www.youtube.com/watch?v=JdGgrMWIknE
 // and https://www.youtube.com/watch?v=eVMy_Umjcys
 
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
+using static System.Collections.Specialized.BitVector32;
 
 public static class CompleteTextWithButtonPromptSprite
 {
@@ -30,13 +35,22 @@ public static class CompleteTextWithButtonPromptSprite
 
     public static string GetSpriteTag(string actionName, InputBindingHelper.DeviceType deviceType, PlayerInput _playerInput, ListOfTmpSpriteAssets spriteAssets)
     {
-        InputBinding dynamicBinding = InputBindingHelper.GetBinding(actionName, deviceType, _playerInput);
+
+        List<InputBinding> dynamicBindings = InputBindingHelper.GetBinding(actionName, deviceType, _playerInput);
+        //string stringButtonName = String.Join(" ", dynamicBindings);
         TMP_SpriteAsset spriteAsset = spriteAssets.SpriteAssets[(int)deviceType];
+        string retString = "";
 
-        string stringButtonName = dynamicBinding.effectivePath;
-        stringButtonName = RenameInput(stringButtonName);
 
-        return $"<sprite=\"{spriteAsset.name}\" name=\"{stringButtonName}\">";
+        foreach (InputBinding stringButtonName in dynamicBindings)
+        {
+            string renamedName = RenameInput(stringButtonName.effectivePath);
+            if (dynamicBindings.Count > 1) { Debug.Log("long bind, heres me:" + renamedName); }
+
+            retString +=  $"<sprite=\"{spriteAsset.name}\" name=\"{renamedName}\"> ";
+        }
+        return retString;
+        
     }
 
     private static string RenameInput(string stringButtonName)
