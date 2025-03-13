@@ -16,8 +16,9 @@ public class DamageInstance
     private void DoDamagePipeline()
     {
         //Order of operations as laid out in design doc: 
-        // Target.HitDetected ? Should the effects of the hit go through? -> Source.OnHit -> Target.OnDamage -> Did Target die? -> Target.OnDeath -> Source.OnKill
-        //Debug.Log("In DoDmgPipeline: before modifiactions, adjustedDamge = " + AdjustedDamage);
+        // Target.HitDetected ? Should the effects of the hit go through?
+            // -> Source.OnHit -> Target.OnDamage ->
+            // Did Target die? -> Target.OnDeath -> Source.OnKill
         if (Target.HitDetected(this))
         {
             Source.OnHit(this);

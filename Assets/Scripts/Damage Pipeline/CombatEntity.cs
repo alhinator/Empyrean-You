@@ -94,7 +94,9 @@ public abstract class CombatEntity : MonoBehaviour
         }
     }
     /// <summary>
-    /// Called externally when a DamageInstance determines its target has been confirmed killed. Searches through its weapons and abilities to apply on-kill effects to the DamageInstance.
+    /// Called externally when a DamageInstance determines its target
+    /// has been confirmed killed. Searches through its weapons and
+    /// abilities to apply on-kill effects to the DamageInstance.
     /// </summary>
     public virtual void OnKill(DamageInstance d)
     {
@@ -115,7 +117,8 @@ public abstract class CombatEntity : MonoBehaviour
     }
 
     /// <summary>
-    /// Called externally by a DamageInstance after this CombatEntity determines that a hit was valid and the Source's on-hit effects have been applied.
+    /// Called externally by a DamageInstance after this CombatEntity determines
+    /// that a hit was valid and the Source's on-hit effects have been applied.
     /// </summary>
     /// <returns> True if the damage kills this CombatEntity. Otherwise, false.</returns>
     public virtual bool OnDamage(DamageInstance d)
@@ -151,9 +154,11 @@ public abstract class CombatEntity : MonoBehaviour
     }
 
     /// <summary>
-    /// Called externally by a DamageInstance when it believes this CombatEntity should die due to damage.
+    /// Called externally by a DamageInstance when
+    /// it believes this CombatEntity should die due to damage.
     /// </summary>
-    /// <returns>True by default, false if one of this CombatEntity's abilities determines it should neither die nor trigger on-kill effects.</returns>
+    /// <returns>True by default, false if one of this CombatEntity's
+    /// abilities determines it should neither die nor trigger on-kill effects.</returns>
     public virtual bool OnDeath(DamageInstance d)
     {
         bool actuallyDied = true;
