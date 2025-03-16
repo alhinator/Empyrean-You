@@ -100,7 +100,7 @@ public class HelperPopupPanel : MonoBehaviour
 
     public void QueueAlert(string alert)
     {
-        if (!currentlyDisplaying)
+        if (!currentlyDisplaying && (Vector2)transform.localPosition == OffScreenPos && AlertList.Count == 0)
         {
             currentlyDisplaying = true;
             idealPosition = OnScreenPos;
@@ -116,13 +116,10 @@ public class HelperPopupPanel : MonoBehaviour
             _playerInput,
             listOfTmpSpriteAssets);
     }
-    public void OnDismissPopup(InputValue v)
+    public void OnDismissPopup()
     {
-        if (v.Get<float>() == 1)
-        {
-            currentlyDisplaying = false;
-            idealPosition = OffScreenPos;
-        }
+        currentlyDisplaying = false;
+        idealPosition = OffScreenPos;
     }
 
     public void SetText(string message)

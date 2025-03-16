@@ -75,6 +75,10 @@ MonoBehaviour:
     m_Key: ui.controlPanel
     m_Metadata:
       m_Items: []
+  - m_Id: 6456474616303616
+    m_Key: ui.signpostInteractPrompt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

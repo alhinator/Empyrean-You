@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization.Settings;
@@ -10,6 +11,7 @@ public class TooltipPopup : MonoBehaviour
 
     private string actualMessage;
     private bool playerNear;
+
 
     void Start()
     {
@@ -33,14 +35,14 @@ public class TooltipPopup : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             playerNear = false;
-
         }
     }
     public void DoMyMessage()
     {
         if (playerNear)
         {
-            GameObject.FindGameObjectWithTag("HelperPopupPanel").GetComponent<HelperPopupPanel>().QueueAlert(actualMessage);
+            HelperPopupPanel h = GameObject.FindGameObjectWithTag("HelperPopupPanel").GetComponent<HelperPopupPanel>();
+            h.QueueAlert(actualMessage);
         }
     }
 }

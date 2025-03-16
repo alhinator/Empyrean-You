@@ -162,7 +162,7 @@ public class HUDManager : MonoBehaviour
     {
         if (helperPopupPanel.currentlyDisplaying)
         {
-            helperPopupPanel.OnDismissPopup(v);
+            helperPopupPanel.OnDismissPopup();
         } else {
             foreach(var sp in GameObject.FindGameObjectsWithTag("Signpost")){
                 sp.GetComponent<TooltipPopup>().DoMyMessage();
