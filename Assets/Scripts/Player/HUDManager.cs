@@ -158,9 +158,20 @@ public class HUDManager : MonoBehaviour
 
 
     }
-    private void OnDismissPopup(InputValue v)
+    public void OnDismissPopup(InputValue v)
     {
-        helperPopupPanel.OnDismissPopup(v);
+        if (helperPopupPanel.currentlyDisplaying)
+        {
+            helperPopupPanel.OnDismissPopup(v);
+        } else {
+            foreach(var sp in GameObject.FindGameObjectsWithTag("Signpost")){
+                sp.GetComponent<TooltipPopup>().DoMyMessage();
+            }
+        }
+    }
+    public void OnViewControls()
+    {
+        ControlPopup.OnViewControls();
     }
     private void TrackActions(object obj, InputActionChange change)
     {

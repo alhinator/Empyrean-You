@@ -35,29 +35,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 43201415188480
-    m_Localized: 'Use {Fire1} and {Fire2} to shoot. Your mech can lock on and aim
-      at a target by pressing {CameraLock} when it is in range of your weapons.
+    m_Localized: 'Use {Fire1} and {Fire2} to shoot.
 
-      Try
-      destroying the three targets on the far wall.'
+
+      Lock on to targets with
+      {CameraLock}. Looking with {Look} while the camera is locked will switch targets.'
     m_Metadata:
       m_Items: []
   - m_Id: 80781078794240
-    m_Localized: 'The beam emanating from an Angel''s eye glows brightly as it is
-      about to attack. Quickly tap and release {Dodge}, and your mech will dodge
-      in the direction it''s moving.
-
-      {CameraLock} (Lock to target)'
+    m_Localized: "The beam emanating from an Angel's eye glows brightly as it is
+      about to attack. \n\nQuickly tap and release {Dodge} to Dodge in the direction
+      you're moving."
     m_Metadata:
       m_Items: []
   - m_Id: 88040836009984
-    m_Localized: Your mech is equipped with a set of powerful boosters that activate
-      by pressing {Jump}. When holding {Hover}, your mech will descend slowly.
+    m_Localized: You can Jump {Jump} and Hover {Hover} midair at the cost of BOOST.
+      BOOST recharges when your mech lands on the ground.
     m_Metadata:
       m_Items: []
   - m_Id: 88926194864128
-    m_Localized: Jumping - but not hovering - consumes BOOST. BOOST recharges when
-      your mech lands on the ground.
+    m_Localized: 'Jumping - but not hovering - consumes BOOST. '
     m_Metadata:
       m_Items: []
   - m_Id: 91091038736384
@@ -85,8 +82,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4484930050560000
-    m_Localized: Some structures are destructible, but cannot be locked onto. Destroy
-      the fragile wall and proceed down the hallway to the SAVE POINT.
+    m_Localized: Some structures are destructible, but cannot be locked onto.
     m_Metadata:
       m_Items: []
   - m_Id: 4485893905813504
@@ -95,9 +91,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4486124378624000
-    m_Localized: ' Move {Move}   Look {Look}  Lock Aim {CameraLock}   Jump {Jump}  
-      Hover (hold) {Hover}   Sprint (hold) {Sprint}   Dash {Dodge}   Left Hand {Fire1}  
-      Right Hand {Fire2}   Interact {DismissPopup}'
+    m_Localized: ' Move {Move} Look {Look} Lock Aim {CameraLock}  Jump {Jump}  Hover
+      (hold) {Hover}  Sprint (hold) {Sprint}  Dash {Dodge}  Left Hand {Fire1}  Right
+      Hand {Fire2}  Interact {DismissPopup}'
     m_Metadata:
       m_Items: []
   references:

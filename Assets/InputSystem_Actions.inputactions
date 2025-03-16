@@ -1029,11 +1029,6 @@
                     "devicePath": "<Mouse>",
                     "isOptional": false,
                     "isOR": false
-                },
-                {
-                    "devicePath": "<Gamepad>",
-                    "isOptional": true,
-                    "isOR": false
                 }
             ]
         },
@@ -1044,6 +1039,11 @@
                 {
                     "devicePath": "<Gamepad>",
                     "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<XInputController>",
+                    "isOptional": true,
                     "isOR": false
                 }
             ]

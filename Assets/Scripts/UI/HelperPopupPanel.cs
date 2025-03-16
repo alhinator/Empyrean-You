@@ -25,7 +25,7 @@ public class HelperPopupPanel : MonoBehaviour
     [SerializeField] ListOfTmpSpriteAssets listOfTmpSpriteAssets;
 
     Queue<string> AlertList;
-    private bool currentlyDisplaying = false;
+    public bool currentlyDisplaying = false;
 
     void Awake()
     {
@@ -48,16 +48,12 @@ public class HelperPopupPanel : MonoBehaviour
             {
                 activeDevice = InputBindingHelper.DeviceType.Keyboard;
             }
-            if (activeControl.device is Mouse)
-            {
-                activeDevice = InputBindingHelper.DeviceType.Keyboard;
-            }
             if (activeControl.device is Gamepad)
             {
                 activeDevice = InputBindingHelper.DeviceType.Gamepad;
             }
 
-            if (activeControl.device is Keyboard || activeControl.device is Mouse && last == InputBindingHelper.DeviceType.Gamepad
+            if (activeControl.device is Keyboard && last == InputBindingHelper.DeviceType.Gamepad
                 || (activeControl.device is Gamepad && last == InputBindingHelper.DeviceType.Keyboard))
             { //input device different than previous active device? swap the text. hardcoded for now
                 //Debug.Log("In track actions last is different!");

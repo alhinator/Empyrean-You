@@ -36,16 +36,13 @@ public class ControlHelperPanel : MonoBehaviour
             {
                 activeDevice = InputBindingHelper.DeviceType.Keyboard;
             }
-            if (activeControl.device is Mouse)
-            {
-                activeDevice = InputBindingHelper.DeviceType.Keyboard;
-            }
+            
             if (activeControl.device is Gamepad)
             {
                 activeDevice = InputBindingHelper.DeviceType.Gamepad;
             }
 
-            if (activeControl.device is Keyboard || activeControl.device is Mouse && last == InputBindingHelper.DeviceType.Gamepad
+            if (activeControl.device is Keyboard && last == InputBindingHelper.DeviceType.Gamepad
                 || (activeControl.device is Gamepad && last == InputBindingHelper.DeviceType.Keyboard))
             { //input device different than previous active device? swap the text. hardcoded for now
                 //Debug.Log("In track actions last is different!");
@@ -59,8 +56,8 @@ public class ControlHelperPanel : MonoBehaviour
     void Start()
     {
         msgStrings = LocalizationSettings.StringDatabase.GetTable("Messages");
-        idealPosition = OffScreenPos;
-        //transform.localPosition = idealPosition;
+        idealPosition = OnScreenPos;
+        transform.localPosition = idealPosition;
         string message = msgStrings.GetEntry("ui.controlPanel").Value;
         messageText.text = CompleteTextWithButtonPromptSprite.ReplaceAllBindings(message, activeDevice, _playerInput, listOfTmpSpriteAssets);
 
@@ -69,7 +66,11 @@ public class ControlHelperPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //transform.localPosition = Vector2.MoveTowards(transform.localPosition, idealPosition, 1 * Time.deltaTime);
+        transform.localPosition = Vector2.MoveTowards(transform.localPosition, idealPosition, 100 * Time.deltaTime);
 
+    }
+    public void OnViewControls()
+    {
+        idealPosition = idealPosition == OnScreenPos ? OffScreenPos : OnScreenPos; 
     }
 }

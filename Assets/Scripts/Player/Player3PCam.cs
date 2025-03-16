@@ -707,8 +707,8 @@ public class Player3PCam : MonoBehaviour
     }
     public void OnDebugReset()
     {
-        rb.position = GameObject.FindWithTag("SpawnPoint").transform.position;
-        rb.velocity = Vector3.zero;
+        //rb.position = GameObject.FindWithTag("SpawnPoint").transform.position;
+        //rb.velocity = Vector3.zero;
     }
     public void SendMeToSomewhere(Vector3 pos)
     {
@@ -803,7 +803,7 @@ public class Player3PCam : MonoBehaviour
         //Debug.Log(!inverts[1]);
 
         invertX = inverts[0];
-        invertY = !inverts[1];
+        invertY = inverts[1];
     }
 
     public bool IsSprinting

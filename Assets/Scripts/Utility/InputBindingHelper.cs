@@ -52,10 +52,15 @@ public static class InputBindingHelper
 
 
                 }
-                Debug.Log(ib.Count);
-                Debug.Log(String.Join(" ", ib));
+                //Debug.Log(ib.Count);
+                //Debug.Log(String.Join(" ", ib));
 
+                if (ib.Count > 0)
+                {
                 return ib;
+
+                }
+
 
             }
         }

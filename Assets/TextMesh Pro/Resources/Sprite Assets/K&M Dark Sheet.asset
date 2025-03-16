@@ -49,7 +49,7 @@ MonoBehaviour:
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 0
-    m_Scale: 0.5
+    m_Scale: 1
     m_Name: Mouse_middleButton
     m_HashCode: -1700781435
   - m_ElementType: 2
@@ -62,8 +62,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 2
     m_Scale: 1
-    m_Name: K&M Dark Sheet_2
-    m_HashCode: -310116482
+    m_Name: Mouse_delta
+    m_HashCode: -1857573850
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 3
@@ -617,7 +617,7 @@ MonoBehaviour:
       m_Y: 0
       m_Width: 86
       m_Height: 86
-    m_Scale: 1.5
+    m_Scale: 2
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: -1039587836, guid: f3daaffbba92bbb4585843802f46ddcc, type: 3}
@@ -633,7 +633,7 @@ MonoBehaviour:
       m_Y: 0
       m_Width: 86
       m_Height: 86
-    m_Scale: 2.5
+    m_Scale: 2
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: 1490567601, guid: f3daaffbba92bbb4585843802f46ddcc, type: 3}
@@ -649,7 +649,7 @@ MonoBehaviour:
       m_Y: 0
       m_Width: 86
       m_Height: 86
-    m_Scale: 1.5
+    m_Scale: 2
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: -420976353, guid: f3daaffbba92bbb4585843802f46ddcc, type: 3}
@@ -883,7 +883,7 @@ MonoBehaviour:
       m_Height: 86
       m_HorizontalBearingX: -40
       m_HorizontalBearingY: 70
-      m_HorizontalAdvance: 10
+      m_HorizontalAdvance: 40
     m_GlyphRect:
       m_X: 1379
       m_Y: 0
@@ -1059,7 +1059,7 @@ MonoBehaviour:
       m_Height: 86
       m_HorizontalBearingX: -40
       m_HorizontalBearingY: 70
-      m_HorizontalAdvance: 10
+      m_HorizontalAdvance: 40
     m_GlyphRect:
       m_X: 2328
       m_Y: 0
@@ -1347,7 +1347,7 @@ MonoBehaviour:
       m_Height: 86
       m_HorizontalBearingX: -40
       m_HorizontalBearingY: 70
-      m_HorizontalAdvance: 10
+      m_HorizontalAdvance: 40
     m_GlyphRect:
       m_X: 3880
       m_Y: 0
@@ -1603,7 +1603,7 @@ MonoBehaviour:
       m_Height: 86
       m_HorizontalBearingX: -40
       m_HorizontalBearingY: 70
-      m_HorizontalAdvance: 10
+      m_HorizontalAdvance: 40
     m_GlyphRect:
       m_X: 5260
       m_Y: 0
@@ -1939,7 +1939,7 @@ MonoBehaviour:
       m_Height: 86
       m_HorizontalBearingX: -40
       m_HorizontalBearingY: 70
-      m_HorizontalAdvance: 10
+      m_HorizontalAdvance: 40
     m_GlyphRect:
       m_X: 7070
       m_Y: 0
