@@ -17,8 +17,8 @@ public class DamageInstance
     {
         //Order of operations as laid out in design doc: 
         // Target.HitDetected ? Should the effects of the hit go through?
-            // -> Source.OnHit -> Target.OnDamage ->
-            // Did Target die? -> Target.OnDeath -> Source.OnKill
+        // -> Source.OnHit -> Target.OnDamage ->
+        // Did Target die? -> Target.OnDeath -> Source.OnKill
         if (Target.HitDetected(this))
         {
             Source.OnHit(this);
@@ -28,9 +28,14 @@ public class DamageInstance
                 bool confirmed = Target.OnDeath(this);
                 if (confirmed)
                 {
-                    if (Target is Enemy enemy) {
-                        foreach (var enemyObserver in enemy.Observers) {
-                            enemyObserver.OnEnemyKilled(enemy);
+                    if (Target is Enemy enemy)
+                    {
+                        if (enemy.Observers != null && enemy.Observers.Length > 0)
+                        {
+                            foreach (var enemyObserver in enemy.Observers)
+                            {
+                                enemyObserver.OnEnemyKilled(enemy);
+                            }
                         }
                     }
                     Source.OnKill(this);

@@ -100,7 +100,7 @@ public class LotusBossEnemy : Enemy
         {
             lotusBossEnemyState.OnUpdate();
         }
-        GameObject.FindGameObjectWithTag("BossDebug").GetComponent<TMP_Text>().text = "current state: " + _stateMachine.ActiveStateName; 
+        //GameObject.FindGameObjectWithTag("BossDebug").GetComponent<TMP_Text>().text = "current state: " + _stateMachine.ActiveStateName; 
     }
 
     private void InitStateMachineStates()
