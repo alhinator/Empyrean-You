@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 25312727040
-    m_Localized: Press {DismissPopup} to dismiss.
+    m_Localized: '{DismissPopup} dismiss'
     m_Metadata:
       m_Items: []
   - m_Id: 121890770944
@@ -35,11 +35,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 43201415188480
-    m_Localized: 'Use {Fire1} and {Fire2} to shoot.
+    m_Localized: 'Lock on to targets with {CameraLock}.
 
 
-      Lock on to targets with
-      {CameraLock}. Looking with {Look} while the camera is locked will switch targets.'
+      Use {Fire1} and {Fire2}
+      to shoot.'
     m_Metadata:
       m_Items: []
   - m_Id: 80781078794240
@@ -49,8 +49,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 88040836009984
-    m_Localized: You can Jump {Jump} and Hover {Hover} midair at the cost of BOOST.
-      BOOST recharges when your mech lands on the ground.
+    m_Localized: 'You can Jump {Jump} midair as long as you have BOOST.
+
+      BOOST
+      recharges when your mech lands on the ground.
+
+
+      Hold {Hover} to hover.'
     m_Metadata:
       m_Items: []
   - m_Id: 88926194864128
@@ -72,7 +77,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4324017980936192
-    m_Localized: SAVED GAME
+    m_Localized: CHECKPOINT
     m_Metadata:
       m_Items: []
   - m_Id: 4483664964587520
