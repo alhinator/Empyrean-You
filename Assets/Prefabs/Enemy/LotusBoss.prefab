@@ -16274,7 +16274,8 @@ MonoBehaviour:
   DangerZonePrefab: {fileID: 6222751484064760685, guid: e2bd181f19940a1479a2be3bd8759e33, type: 3}
   p1DefenseThreshold: 10
   p2AttackThreshold: 20
-  p2DefenseThreshold: 7
+  p2DefenseThreshold: 12
+  maxAttackRange: 75
 --- !u!135 &3730896463380221455
 SphereCollider:
   m_ObjectHideFlags: 0

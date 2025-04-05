@@ -164,17 +164,26 @@ public class LotusBossEnemy : Enemy
     }
     private bool ShouldAttackP2(Transition<LotusBossEnemyState> self)
     {
-        return (this._stateMachine.ActiveState as LotusBossEnemyP2Idle).DoneFiringBullets
-            || this._stateMachine.ActiveStateName != LotusBossEnemyState.Phase2Idle
-            && Vector3.Distance(transform.position, _player.transform.position) > p2AttackThreshold
-            && Vector3.Distance(transform.position, _player.transform.position) < maxAttackRange;
+        bool a, b, c, d;
+        float dist = Vector3.Distance(transform.position, _player.transform.position);
+        a = this._stateMachine.ActiveStateName == LotusBossEnemyState.Phase2Idle && (this._stateMachine.ActiveState as LotusBossEnemyP2Idle).DoneFiringBullets;
+        b = this._stateMachine.ActiveStateName != LotusBossEnemyState.Phase2Idle;
+        c = dist > p2AttackThreshold;
+        d = dist < maxAttackRange;
+
+        return (a || (b && c)) && d;
+            
     }
     private bool ShouldIdleP2(Transition<LotusBossEnemyState> self)
     {
-        return ((this._stateMachine.ActiveState as LotusBossEnemyP2Attack).IsDone
-            || this._stateMachine.ActiveStateName != LotusBossEnemyState.Phase2Attack
-            && Vector3.Distance(transform.position, _player.transform.position) > p2DefenseThreshold)
-            || Vector3.Distance(transform.position, _player.transform.position) > maxAttackRange;
+        bool a, b, c, d;
+        float dist = Vector3.Distance(transform.position, _player.transform.position);
+        a = this._stateMachine.ActiveStateName == LotusBossEnemyState.Phase2Attack && (this._stateMachine.ActiveState as LotusBossEnemyP2Attack).IsDone;
+        b = this._stateMachine.ActiveStateName != LotusBossEnemyState.Phase2Attack;
+        c = dist > p2DefenseThreshold;
+        d = dist > maxAttackRange;
+
+        return (a || (b && c)) || d;
     }
     private bool ShouldDefendP2(Transition<LotusBossEnemyState> self)
     {
